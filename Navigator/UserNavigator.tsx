@@ -18,6 +18,7 @@ import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import ClinicInfoNavigator from "./ClinicInfoNavigator";
 import ClinicListNavigator from "../screens/UserScreen/ClinicList/ClinicList";
 import { IClinicInfo } from "../types/clinic.types";
+import RoleNavigator from "./RoleNavigator";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -31,6 +32,7 @@ export type UserNavigatorDrawerParamList = {
     clinicList: IClinicInfo[];
     setClinic: (clinic: IClinicInfo) => void;
   };
+  RoleNavigator: undefined;
 };
 
 export type ProfileNavigatorProps = NativeStackScreenProps<
@@ -58,6 +60,11 @@ export type ClinicListNavigatorProps = NativeStackScreenProps<
 export type ClinicInfoNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "ClinicInfoNavigator"
+>;
+
+export type RoleNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "RoleNavigator"
 >;
 
 const UserNavigatorDrawer =
@@ -184,6 +191,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 initialParams={{
                   clinic,
                 }}
+              />
+              <UserNavigatorDrawer.Screen
+                name="RoleNavigator"
+                options={{
+                  title: "Vai trò",
+                  drawerIcon: ({ color }) => (
+                    <Ionicons name="settings-outline" size={24} color={color} />
+                  ),
+                }}
+                component={RoleNavigator}
               />
               <UserNavigatorDrawer.Screen
                 name="ChattingNavigator"

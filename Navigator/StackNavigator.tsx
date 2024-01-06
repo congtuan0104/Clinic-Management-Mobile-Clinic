@@ -25,8 +25,10 @@ import { NavigationContainerRef } from "@react-navigation/native";
 
 // Create an object type with mappings for route name to the params of the route
 export type RootNativeStackParamList = {
-  // undefined: the route doesn't have params
-  Login: { setLogin: (user: IUserInfo | null, token: string | null) => void };
+  // undefined: the route doesn't have paramsa
+  Login: {
+    setLogin: (user: IUserInfo | null, token: string | null) => void | any;
+  };
   Register: {
     setLogin: (user: IUserInfo | null, token: string | null) => void;
   };
