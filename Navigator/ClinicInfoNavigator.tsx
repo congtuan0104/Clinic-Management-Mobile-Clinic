@@ -4,9 +4,10 @@ import {
 } from "@react-navigation/native-stack";
 import { ClinicInfoNavigatorProps } from "./UserNavigator";
 import ClinicInfoDashboardScreen from "../screens/ClinicInfoScreen/ClinicInfoDashboardScreen";
+import { IClinicInfo } from "../types/clinic.types";
 
 export type SubscriptionNavigatorStackParamList = {
-  ClinicInfoDashboard: { clinic: any };
+  ClinicInfoDashboard: undefined;
 };
 
 export type ClinicInfoDashboardScreenProps = NativeStackScreenProps<
@@ -28,7 +29,6 @@ export default function ClinicInfoNavigator({
         name="ClinicInfoDashboard"
         component={ClinicInfoDashboardScreen}
         options={{ headerShown: false }}
-        initialParams={{ clinic }}
       />
     </ClinicInfoStackNavigator.Navigator>
   );

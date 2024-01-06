@@ -1,6 +1,6 @@
 import { axiosClient } from "../config/axios";
 import { IApiResponse } from "../types";
-import { IUserInClinicInfo } from "../types/clinic.types";
+import { IClinicInfo, IUserInClinicInfo } from "../types/clinic.types";
 
 export const clinicService = {
   async getUsersInClinic(
@@ -8,7 +8,7 @@ export const clinicService = {
   ): Promise<IApiResponse<IUserInClinicInfo[]>> {
     return axiosClient.get(`/clinics/${clinicId}/users`);
   },
-  async getAllClinic() {
+  async getAllClinic(): Promise<IApiResponse<IClinicInfo[]>> {
     return axiosClient.get(`/clinics`);
   },
   async getCLinicByUserId(userId: any) {
