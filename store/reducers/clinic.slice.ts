@@ -16,8 +16,15 @@ export const ClinicSlice = createSlice({
   name: "clinic",
   initialState,
   reducers: {
-    updateClinic: (state, action: PayloadAction<any>) => {
-      state.clinic = action.payload;
+    updateClinic: (state, action: PayloadAction<IClinicInfo>) => {
+      if (state.clinic) {
+        state.clinic.name = action.payload.name;
+        state.clinic.address = action.payload.address;
+        state.clinic.email = action.payload.email;
+        state.clinic.phone = action.payload.phone;
+        state.clinic.logo = action.payload.logo;
+        state.clinic.description = action.payload.description;
+      }
     },
     changeClinic: (state, action: PayloadAction<IClinicInfo>) => {
       state.clinic = action.payload;

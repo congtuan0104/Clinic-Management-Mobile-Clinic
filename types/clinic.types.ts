@@ -46,9 +46,9 @@ export interface IClinicCreate {
   email: string;
   phone: string;
   address: string;
-  logo: string;
-  description: string;
-  planId: string;
+  logo?: string;
+  description?: string;
+  planId?: string;
 }
 
 export interface IUserInClinicInfo {
