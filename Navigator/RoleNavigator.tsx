@@ -4,7 +4,6 @@ import {
 } from "@react-navigation/native-stack";
 import { RoleNavigatorProps } from "./UserNavigator";
 import RoleDashboardScreen from "../screens/RoleScreen/RoleDashboardScreen";
-import CreateNewRoleScreen from "../screens/RoleScreen/CreateNewRole";
 
 export type RoleNavigatorStackParamList = {
   RoleDashboard: undefined;
@@ -14,11 +13,6 @@ export type RoleNavigatorStackParamList = {
 export type RoleDashboardScreenProps = NativeStackScreenProps<
   RoleNavigatorStackParamList,
   "RoleDashboard"
->;
-
-export type CreateNewRoleScreenProps = NativeStackScreenProps<
-  RoleNavigatorStackParamList,
-  "CreateNewRole"
 >;
 
 const RoleStackNavigator =
@@ -33,11 +27,6 @@ export default function RoleNavigator({
       <RoleStackNavigator.Screen
         name="RoleDashboard"
         component={RoleDashboardScreen}
-        options={{ headerShown: false }}
-      />
-      <RoleStackNavigator.Screen
-        name="CreateNewRole"
-        component={CreateNewRoleScreen}
         options={{ headerShown: false }}
       />
     </RoleStackNavigator.Navigator>

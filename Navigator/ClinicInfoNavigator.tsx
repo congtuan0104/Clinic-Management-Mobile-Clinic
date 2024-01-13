@@ -62,7 +62,7 @@ export default function ClinicInfoNavigator({
       }
     };
     getClinicDetail();
-  }, []);
+  }, [clinic.id]);
   return (
     <ClinicInfoStackNavigator.Navigator initialRouteName="ClinicInfoDashboard">
       <ClinicInfoStackNavigator.Screen

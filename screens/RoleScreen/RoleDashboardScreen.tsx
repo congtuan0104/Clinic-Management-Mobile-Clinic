@@ -11,7 +11,7 @@ import {
   useToast,
 } from "native-base";
 import { SubscriptionDashboardScreenProps } from "../../Navigator/SubscriptionNavigator";
-import { ClinicSelector, userInfoSelector } from "../../store";
+import { ClinicSelector, changeRoles, userInfoSelector } from "../../store";
 import { appColor } from "../../theme";
 import { useEffect, useState } from "react";
 import ToastAlert from "../../components/Toast/Toast";
@@ -19,32 +19,41 @@ import { clinicService } from "../../services";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import { openBrowserAsync } from "expo-web-browser";
 import { ClinicInfoDashboardScreenProps } from "../../Navigator/ClinicInfoNavigator";
-import { useAppSelector } from "../../hooks";
+import { useAppDispatch, useAppSelector } from "../../hooks";
 import dayjs from "dayjs";
 import { RoleDashboardScreenProps } from "../../Navigator/RoleNavigator";
 import { IRole } from "../../types/role.types";
+import AddRoleModal from "./AddRoleModal";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 export default function RoleDashboardScreen({
   navigation,
   route,
 }: RoleDashboardScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
+  const dispatch = useAppDispatch();
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
   const [roleList, setRoleList] = useState<IRole[]>([]);
+  const [isEditMode, setIsEditMode] = useState<boolean>(false);
+  const [selectedRole, setSelectedRole] = useState<IRole | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  const getRoleList = async () => {
+    try {
+      const response = await clinicService.getUserGroupRole(clinic?.id);
+      if (response.status && response.data) {
+        setRoleList(response.data);
+        dispatch(changeRoles(response.data));
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
     // get a role list here
-    const getRoleList = async () => {
-      try {
-        const response = await clinicService.getUserGroupRole(clinic?.id);
-        if (response.status && response.data) {
-          setRoleList(response.data);
-        } else {
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
     getRoleList();
-  }, []);
+  }, [clinic?.id]);
   return (
     <Box
       bgColor="#fff"
@@ -57,10 +66,11 @@ export default function RoleDashboardScreen({
       p={5}
       borderRadius={20}
     >
+      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       <Button
         width="full"
         onPress={() => {
-          navigation.navigate("CreateNewRole");
+          setIsOpenModal(true);
         }}
       >
         Thêm vai trò
@@ -102,6 +112,17 @@ export default function RoleDashboardScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
+      <AddRoleModal
+        isOpen={isOpenModal}
+        isEditMode={isEditMode}
+        onClose={() => {
+          setIsLoading(true);
+          setIsOpenModal(false);
+          setIsLoading(false);
+        }}
+        selectedRole={selectedRole}
+        getRoleList={getRoleList}
+      />
     </Box>
   );
 }
