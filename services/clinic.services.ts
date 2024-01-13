@@ -56,4 +56,9 @@ export const clinicService = {
       userGroupRole
     );
   },
+  async deleteUserGroupRole(clinicId: any, userGroupRoleId: any) {
+    return axiosClient.delete(
+      `/clinics/${clinicId}/delete-user-group-role/${userGroupRoleId}`
+    );
+  },
 };

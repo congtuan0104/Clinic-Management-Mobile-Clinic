@@ -21,6 +21,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import DeleteRoleModal from "./DeleteRoleModal";
 export default function RoleDashboardScreen({
   navigation,
   route,
@@ -29,6 +30,7 @@ export default function RoleDashboardScreen({
   const clinic = useAppSelector(ClinicSelector);
   const dispatch = useAppDispatch();
   const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [isOpenDeleteModal, setIsOpenDeleteModal] = useState<boolean>(false);
   const [roleList, setRoleList] = useState<IRole[]>([]);
   const [isEditMode, setIsEditMode] = useState<boolean>(false);
   const [selectedRole, setSelectedRole] = useState<IRole | null>(null);
@@ -110,7 +112,12 @@ export default function RoleDashboardScreen({
                             color={appColor.primary}
                           />
                         </Pressable>
-                        <Pressable>
+                        <Pressable
+                          onPress={() => {
+                            setSelectedRole(role);
+                            setIsOpenDeleteModal(true);
+                          }}
+                        >
                           <MaterialIcons
                             name="delete"
                             size={24}
@@ -141,14 +148,20 @@ export default function RoleDashboardScreen({
       <AddRoleModal
         isOpen={isOpenModal}
         onClose={() => {
-          setIsLoading(true);
           setIsOpenModal(false);
-          setIsLoading(false);
         }}
         getRoleList={getRoleList}
         isEditMode={isEditMode}
         setIsEditMode={setIsEditMode}
         selectedRole={selectedRole}
+      />
+      <DeleteRoleModal
+        isOpen={isOpenDeleteModal}
+        onClose={() => {
+          setIsOpenDeleteModal(false);
+        }}
+        selectedRole={selectedRole}
+        getRoleList={getRoleList}
       />
     </Box>
   );
