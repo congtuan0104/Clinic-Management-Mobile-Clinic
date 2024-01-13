@@ -147,7 +147,7 @@ export default function RoleDashboardScreen({
           </ScrollView>
         </>
       ) : (
-        <Text>Danh sách rỗng</Text>
+        <Text>Đang tải, vui lòng đợi...</Text>
       )}
       <AddRoleModal
         isOpen={isOpenModal}

@@ -11,6 +11,7 @@ import { appColor } from "../../../theme";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IClinicMember } from "../../../types/staff.types";
+import AddStaffModal from "./AddStaffModal";
 
 export default function StaffDashboardScreen({
   navigation,
@@ -20,7 +21,8 @@ export default function StaffDashboardScreen({
 
   const [staffList, setStaffList] = useState<IClinicMember[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-
+  const [isOpenAddStaffModal, setIsOpenAddStaffModal] =
+    useState<boolean>(false);
   const getStaffList = async () => {
     try {
       const response = await clinicService.getClinicMember(clinic?.id);
@@ -58,7 +60,11 @@ export default function StaffDashboardScreen({
             <Text my="2" fontSize={17} alignSelf="flex-start">
               Danh sách nhân viên
             </Text>
-            <Pressable onPress={() => {}}>
+            <Pressable
+              onPress={() => {
+                setIsOpenAddStaffModal(true);
+              }}
+            >
               <Ionicons
                 name="add-circle-outline"
                 size={24}
@@ -123,6 +129,13 @@ export default function StaffDashboardScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
+      <AddStaffModal
+        isOpen={isOpenAddStaffModal}
+        onClose={() => {
+          setIsOpenAddStaffModal(false);
+        }}
+        getStaffList={getStaffList}
+      />
     </Box>
   );
 }

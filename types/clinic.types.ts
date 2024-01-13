@@ -62,3 +62,11 @@ export interface IUserInClinicInfo {
   firstName: string;
   lastName: string;
 }
+
+export interface IInviteClinicMemberRequest {
+  firstName: string;
+  lastName: string;
+  email: string;
+  roleId: number;
+  clinicId: string;
+}
