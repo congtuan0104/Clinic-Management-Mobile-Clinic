@@ -6,6 +6,7 @@ import {
   IClinicCreate,
 } from "../types/clinic.types";
 import { IRole } from "../types/role.types";
+import { IClinicMember } from "../types/staff.types";
 
 export const clinicService = {
   async getUsersInClinic(
@@ -60,5 +61,8 @@ export const clinicService = {
     return axiosClient.delete(
       `/clinics/${clinicId}/delete-user-group-role/${userGroupRoleId}`
     );
+  },
+  async getClinicMember(clinicId: any): Promise<IApiResponse<IClinicMember[]>> {
+    return axiosClient.get(`clinics/${clinicId}/users`);
   },
 };

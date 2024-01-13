@@ -81,7 +81,11 @@ export default function RoleDashboardScreen({
                 setIsOpenModal(true);
               }}
             >
-              <Ionicons name="add-circle-outline" size={24} color="black" />
+              <Ionicons
+                name="add-circle-outline"
+                size={24}
+                color={appColor.primary}
+              />
             </Pressable>
           </HStack>
           <ScrollView>
