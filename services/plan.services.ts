@@ -5,6 +5,6 @@ export const planService = {
     return axiosClient.get(`/plans`);
   },
   async getPlanById(planId: any) {
-    return axiosClient.get(`/plans/${planId}`, {});
+    return axiosClient.get(`/plans/${planId}`);
   },
 };

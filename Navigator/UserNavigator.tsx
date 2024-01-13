@@ -17,6 +17,8 @@ import { useToast } from "native-base";
 import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import ClinicInfoNavigator from "./ClinicInfoNavigator";
 import ClinicListNavigator from "../screens/UserScreen/ClinicList/ClinicList";
+import { IClinicInfo } from "../types/clinic.types";
+import RoleNavigator from "./RoleNavigator";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -24,12 +26,13 @@ export type UserNavigatorDrawerParamList = {
   ChattingNavigator: undefined;
   SubscriptionNavigator: undefined;
   NotificationNavigator: undefined;
-  ClinicInfoNavigator: { clinic: any };
+  ClinicInfoNavigator: { clinic: IClinicInfo };
   ClinicListNavigator: {
-    clinic: string;
-    clinicList: any;
-    setClinic: (clinic: string) => void;
+    clinic: IClinicInfo;
+    clinicList: IClinicInfo[];
+    setClinic: (clinic: IClinicInfo) => void;
   };
+  RoleNavigator: undefined;
 };
 
 export type ProfileNavigatorProps = NativeStackScreenProps<
@@ -59,13 +62,18 @@ export type ClinicInfoNavigatorProps = NativeStackScreenProps<
   "ClinicInfoNavigator"
 >;
 
+export type RoleNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "RoleNavigator"
+>;
+
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
 
 export default function UserScreen({ navigation, route }: UserNavigatorProps) {
   const { setLogout } = route.params?.params;
-  const [clinic, setClinic] = React.useState<any>(null);
-  const [clinicList, setClinicList] = React.useState<any>(null);
+  const [clinic, setClinic] = React.useState<IClinicInfo | any>(null);
+  const [clinicList, setClinicList] = React.useState<IClinicInfo | any>(null);
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
   const toast = useToast();
   React.useEffect(() => {
@@ -73,13 +81,15 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
     const getActiveClinic = async () => {
       try {
         const response = await clinicService.getAllClinic();
-        let activeClinic: any = [];
-        // Get all clinic with status = 3 (active)
-        response.data.map((clinicItem: any) => {
-          if (clinicItem.subscriptions[0].status === 3) {
-            activeClinic.push(clinicItem);
-          }
-        });
+        let activeClinic: IClinicInfo[] = [];
+        if (response.data) {
+          // Get all clinic with status = 3 (active)
+          response.data.map((clinicItem: IClinicInfo) => {
+            if (clinicItem.subscriptions[0].status === 3) {
+              activeClinic.push(clinicItem);
+            }
+          });
+        }
         setClinicList(activeClinic);
       } catch (error) {
         toast.show({
@@ -102,7 +112,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
   return (
     <>
       {showLoading && <LoadingSpinner showLoading={true} />}
-      {!showLoading && clinicList && (
+      {!showLoading && (
         <UserNavigatorDrawer.Navigator
           initialRouteName="ProfileNavigator"
           screenOptions={{
@@ -140,21 +150,6 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             component={ProfileNavigator}
           />
           <UserNavigatorDrawer.Screen
-            name="ClinicListNavigator"
-            options={{
-              title: "Danh sách phòng khám",
-              drawerIcon: ({ color }) => (
-                <Ionicons name="settings-outline" size={24} color={color} />
-              ),
-            }}
-            component={ClinicListNavigator}
-            initialParams={{
-              clinic,
-              setClinic,
-              clinicList,
-            }}
-          />
-          <UserNavigatorDrawer.Screen
             options={{
               title: "Quản lý gói",
               drawerIcon: ({ color }) => (
@@ -164,6 +159,24 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             name="SubscriptionNavigator"
             component={SubscriptionNavigator}
           />
+          {/**If clinic list exists: show clinic list menu to go to clinic */}
+          {clinicList !== null && (
+            <UserNavigatorDrawer.Screen
+              name="ClinicListNavigator"
+              options={{
+                title: "Danh sách phòng khám",
+                drawerIcon: ({ color }) => (
+                  <Ionicons name="settings-outline" size={24} color={color} />
+                ),
+              }}
+              component={ClinicListNavigator}
+              initialParams={{
+                clinic,
+                setClinic,
+                clinicList,
+              }}
+            />
+          )}
           {clinic && (
             <>
               <UserNavigatorDrawer.Screen
@@ -178,6 +191,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 initialParams={{
                   clinic,
                 }}
+              />
+              <UserNavigatorDrawer.Screen
+                name="RoleNavigator"
+                options={{
+                  title: "Quản lý nhân viên",
+                  drawerIcon: ({ color }) => (
+                    <Ionicons name="settings-outline" size={24} color={color} />
+                  ),
+                }}
+                component={RoleNavigator}
               />
               <UserNavigatorDrawer.Screen
                 name="ChattingNavigator"

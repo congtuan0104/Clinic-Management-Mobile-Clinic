@@ -2,7 +2,6 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from "@reduxjs/toolkit";
 import type { RootState } from "../store";
 import { ILoginResponse, IUserInfo } from "../../types";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 
 interface AuthState {
   user: IUserInfo | null;
@@ -14,37 +13,6 @@ const initialState: AuthState = {
   user: null,
   token: null,
 };
-
-// const fetchDataFromStorage = async (): Promise<AuthState> => {
-//   try {
-//     const user = await AsyncStorage.getItem("user");
-//     const token = await AsyncStorage.getItem("token");
-
-//     // Xử lý dữ liệu và trả về AuthState
-//     return {
-//       user: user ? JSON.parse(user) : null,
-//       token: token ? JSON.parse(token) : null,
-//     };
-//   } catch (error) {
-//     // Xử lý lỗi nếu có
-//     console.error("Error fetching data from AsyncStorage:", error);
-//     // Trả về initialState nếu không thể lấy dữ liệu từ AsyncStorage
-//     return initialState;
-//   }
-// };
-
-// Khởi tạo initialState bằng cách lấy dữ liệu từ AsyncStorage
-// export const initializeState = async () => {
-//   const dataFromStorage = await fetchDataFromStorage();
-//   // Sử dụng dữ liệu từ AsyncStorage nếu có, nếu không sử dụng initialState
-//   const finalInitialState: AuthState = dataFromStorage || initialState;
-
-//   // Sử dụng finalInitialState ở đây
-//   console.log("Final Initial State:", finalInitialState);
-// };
-
-// Gọi initializeState() để bắt đầu quá trình khởi tạo
-// initializeState();
 
 export const AuthSlice = createSlice({
   name: "auth",

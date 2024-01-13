@@ -32,8 +32,8 @@ export const StepOneScreen = (props: any) => {
       .email("Email không hợp lệ"),
     phone: yup.string().required("Số điện thoại không được để trống"),
     address: yup.string().required("Địa chỉ không được để trống"),
-    logo: yup.string().required("Logo không được để trống"),
-    description: yup.string().required("Mô tả không được để trống"),
+    logo: yup.string(),
+    description: yup.string(),
     planId: yup.string().required(),
   });
 
@@ -184,7 +184,7 @@ export const StepOneScreen = (props: any) => {
             </FormControl.ErrorMessage>
           </FormControl>
           {/**Logo */}
-          <FormControl isRequired isInvalid={errors.logo ? true : false}>
+          <FormControl isInvalid={errors.logo ? true : false}>
             <FormControl.Label
               _text={{
                 bold: true,
@@ -212,7 +212,7 @@ export const StepOneScreen = (props: any) => {
             </FormControl.ErrorMessage>
           </FormControl>
           {/**Description */}
-          <FormControl isRequired isInvalid={errors.description ? true : false}>
+          <FormControl isInvalid={errors.description ? true : false}>
             <FormControl.Label
               _text={{
                 bold: true,

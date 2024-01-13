@@ -13,16 +13,20 @@ import {
 import { appColor } from "../../../theme";
 import { FontAwesome } from "@expo/vector-icons";
 import dayjs from "dayjs";
+import { changeClinic, updateClinic } from "../../../store";
+import { useAppDispatch } from "../../../hooks";
+import { IClinicInfo } from "../../../types/clinic.types";
 export default function ClinicListNavigator({
   navigation,
   route,
 }: ClinicListNavigatorProps) {
-  const handleGoToClinic = (clinicItem: any) => {
+  const dispatch = useAppDispatch();
+  const handleGoToClinic = (clinicItem: IClinicInfo) => {
     setClinic(clinicItem);
+    dispatch(changeClinic(clinicItem));
     navigation.goBack();
   };
   const { clinic, setClinic, clinicList } = route.params;
-
   return (
     <VStack space={5} my={5}>
       <Box width="90%" alignSelf="center">

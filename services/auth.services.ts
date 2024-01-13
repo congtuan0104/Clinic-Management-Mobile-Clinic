@@ -10,6 +10,7 @@ import {
   ILoginResponseData,
   ILinkAccountRequest,
 } from "../types";
+import { IInviteClinicMemberRequest } from "../types/clinic.types";
 
 export const authApi = {
   async login(data: ILoginRequest): Promise<IApiResponse<ILoginResponse>> {
@@ -61,5 +62,8 @@ export const authApi = {
 
   addingAdditionalPassword(email: string, password: string): Promise<any> {
     return axiosClient.put(`/auth/add-new-password`, { email, password });
+  },
+  inviteMemberToClinic(userInfo: IInviteClinicMemberRequest): Promise<any> {
+    return axiosClient.post(`/auth/invite`, userInfo);
   },
 };

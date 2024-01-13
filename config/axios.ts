@@ -1,5 +1,8 @@
 import axios, { AxiosError, AxiosRequestConfig, AxiosResponse } from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { navigationRef } from "../Navigator/StackNavigator";
+import { logout } from "../store";
+import { useAppDispatch } from "../hooks";
 
 export const REQUEST_TIMEOUT = 30000;
 
@@ -44,6 +47,15 @@ const InterceptorsRequest = async (config: AxiosRequestConfig) => {
 };
 
 const InterceptorsError = (error: AxiosError) => {
+  const dispatch = useAppDispatch();
+  if (error.code === "ERR_BAD_REQUEST") {
+    const logOut = async () => {
+      await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("token");
+      dispatch(logout());
+    };
+    logOut();
+  }
   if (error.config) {
     // console.log("Request:", error.config);
   }
