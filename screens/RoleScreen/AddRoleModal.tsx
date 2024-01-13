@@ -20,7 +20,7 @@ import { useEffect, useState } from "react";
 import ToastAlert from "../../components/Toast/Toast";
 import { clinicService } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { IRole, IRoleCreate } from "../../types/role.types";
+import { IRole, IRoleCreate, IRolePermission } from "../../types/role.types";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -33,6 +33,7 @@ interface IProps {
   onClose: () => void;
   selectedRole: IRole | null;
   getRoleList: () => void;
+  setIsEditMode: any;
 }
 // Validate
 const schema: yup.ObjectSchema<IRoleCreate> = yup.object({
@@ -45,6 +46,8 @@ export default function AddRoleModal({
   isOpen,
   onClose,
   getRoleList,
+  setIsEditMode,
+  selectedRole,
 }: IProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
@@ -63,27 +66,51 @@ export default function AddRoleModal({
       description: "",
     },
   });
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  useEffect(() => {
-    const getPermissionList = async () => {
-      try {
-        const planId = clinic?.subscriptions[0].planId;
-        if (planId) {
-          const response = await planService.getPlanById(planId);
-          if (response.status && response.data) {
-            const newPermissionList = response.data.planOptions.map(
-              (item: any) => ({ ...item, checked: false })
-            );
-            setPermissionList(newPermissionList);
-          }
-        } else {
+  const getPermissionList = async () => {
+    try {
+      const planId = clinic?.subscriptions[0].planId;
+      if (planId) {
+        const response = await planService.getPlanById(planId);
+        if (response.status && response.data) {
+          const newPermissionList = response.data.planOptions.map(
+            (item: any) => ({ ...item, checked: false })
+          );
+          setPermissionList(newPermissionList);
         }
-      } catch (error) {
-        console.log(error);
+      } else {
       }
-    };
-    getPermissionList();
-  }, [clinic?.id]);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
+  // Chưa xử lý được: lấy lại các permission cũ
+  useEffect(() => {
+    // Handle default value when the mode is editing mode
+    if (isEditMode === true) {
+      reset({
+        name: selectedRole?.name,
+        description: selectedRole?.description,
+      });
+      //  Handle checkbox list
+      getPermissionList();
+      // const tempPermissions = permissionList;
+      // if (selectedRole?.rolePermissions) {
+      //   for (let i = 0; i < selectedRole.rolePermissions.length; i++) {
+      //     for (let j = 0; j < tempPermissions?.length; j++) {
+      //       if (selectedRole.rolePermissions[i].id === tempPermissions[j].id) {
+      //         tempPermissions[j].checked = true;
+      //         break;
+      //       }
+      //     }
+      //   }
+      // }
+      // setPermissionList(tempPermissions);
+    } else {
+      getPermissionList();
+    }
+  }, [selectedRole, clinic?.id]);
 
   const toggleCheckbox = (id: any, index: any) => {
     const checkboxData = [...permissionList];
@@ -102,61 +129,124 @@ export default function AddRoleModal({
         description: data.description,
         permissions: checkedCheckbox,
       };
-      try {
-        const response = await clinicService.createUserGroupRole(
-          clinic?.id,
-          requestObject
-        );
-        if (response.status) {
-          try {
-            const response = await clinicService.getUserGroupRole(clinic?.id);
-            if (response.status && response.data) {
-              dispatch(changeRoles(response.data));
-            } else {
+      // If editMode = true (update):
+      if (isEditMode) {
+        try {
+          const response = await clinicService.updateUserGroupRole(
+            clinic?.id,
+            selectedRole?.id,
+            requestObject
+          );
+          if (response.status) {
+            try {
+              const response = await clinicService.getUserGroupRole(clinic?.id);
+              if (response.status && response.data) {
+                dispatch(changeRoles(response.data));
+              } else {
+              }
+            } catch (error) {
+              console.log(error);
             }
-          } catch (error) {
-            console.log(error);
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thành công"
+                    description="Cập nhật lại vai trò thành công!"
+                    status="success"
+                  />
+                );
+              },
+            });
+            getRoleList();
+            resetForm();
+            onClose();
+          } else {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại"
+                    description="Cập nhật lại vai trò thất bại!"
+                    status="error"
+                  />
+                );
+              },
+            });
           }
+        } catch (error) {
           toast.show({
             render: () => {
               return (
                 <ToastAlert
-                  title="Thành công"
-                  description="Tạo vai trò mới thành công!"
-                  status="success"
+                  title="Thất bại"
+                  description="Cập nhật lại vai trò thất bại!"
+                  status="error"
                 />
               );
             },
           });
-          getRoleList();
-          resetForm();
-          onClose();
-        } else {
+        }
+        setIsEditMode(false);
+      } else {
+        // If editMode = false (create new role):
+        try {
+          const response = await clinicService.createUserGroupRole(
+            clinic?.id,
+            requestObject
+          );
+          if (response.status) {
+            try {
+              const response = await clinicService.getUserGroupRole(clinic?.id);
+              if (response.status && response.data) {
+                dispatch(changeRoles(response.data));
+              } else {
+              }
+            } catch (error) {
+              console.log(error);
+            }
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thành công"
+                    description="Tạo vai trò mới thành công!"
+                    status="success"
+                  />
+                );
+              },
+            });
+            getRoleList();
+            resetForm();
+            onClose();
+          } else {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại"
+                    description="Tạo vai trò mới thất bại!"
+                    status="error"
+                  />
+                );
+              },
+            });
+          }
+        } catch (error) {
           toast.show({
             render: () => {
               return (
                 <ToastAlert
                   title="Thất bại"
                   description="Tạo vai trò mới thất bại!"
-                  status="success"
+                  status="error"
                 />
               );
             },
           });
         }
-      } catch (error) {
-        toast.show({
-          render: () => {
-            return (
-              <ToastAlert
-                title="Thất bại"
-                description="Tạo vai trò mới thất bại!"
-                status="success"
-              />
-            );
-          },
-        });
       }
+
       setIsLoading(false);
     } else {
       setCheckboxError(true);
@@ -184,7 +274,15 @@ export default function AddRoleModal({
   };
 
   return (
-    <Modal isOpen={isOpen} onClose={() => onClose()}>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        onClose();
+        if (isEditMode) {
+          setIsEditMode(false);
+        }
+      }}
+    >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       <Modal.Content width="90%">
         <Modal.CloseButton />
@@ -295,6 +393,9 @@ export default function AddRoleModal({
             <Button
               onPress={() => {
                 onClose();
+                if (isEditMode) {
+                  setIsEditMode(false);
+                }
               }}
             >
               Hủy

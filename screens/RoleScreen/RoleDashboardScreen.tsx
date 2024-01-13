@@ -3,28 +3,24 @@ import {
   Box,
   Button,
   HStack,
-  Heading,
   ScrollView,
   Text,
   VStack,
-  View,
   useToast,
 } from "native-base";
-import { SubscriptionDashboardScreenProps } from "../../Navigator/SubscriptionNavigator";
 import { ClinicSelector, changeRoles, userInfoSelector } from "../../store";
 import { appColor } from "../../theme";
 import { useEffect, useState } from "react";
-import ToastAlert from "../../components/Toast/Toast";
 import { clinicService } from "../../services";
-import dynamicLinks from "@react-native-firebase/dynamic-links";
-import { openBrowserAsync } from "expo-web-browser";
-import { ClinicInfoDashboardScreenProps } from "../../Navigator/ClinicInfoNavigator";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import dayjs from "dayjs";
 import { RoleDashboardScreenProps } from "../../Navigator/RoleNavigator";
 import { IRole } from "../../types/role.types";
 import AddRoleModal from "./AddRoleModal";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
+import { Pressable } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
 export default function RoleDashboardScreen({
   navigation,
   route,
@@ -67,19 +63,25 @@ export default function RoleDashboardScreen({
       borderRadius={20}
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <Button
-        width="full"
-        onPress={() => {
-          setIsOpenModal(true);
-        }}
-      >
-        Thêm vai trò
-      </Button>
+
       {roleList?.length ? (
         <>
-          <Text my="2" fontSize={17} alignSelf="flex-start">
-            Danh sách vai trò
-          </Text>
+          <HStack
+            width="full"
+            justifyContent="space-between"
+            alignItems="center"
+          >
+            <Text my="2" fontSize={17} alignSelf="flex-start">
+              Danh sách vai trò
+            </Text>
+            <Pressable
+              onPress={() => {
+                setIsOpenModal(true);
+              }}
+            >
+              <Ionicons name="add-circle-outline" size={24} color="black" />
+            </Pressable>
+          </HStack>
           <ScrollView>
             <VStack space={5}>
               {roleList.map((role: IRole, index) => {
@@ -90,9 +92,33 @@ export default function RoleDashboardScreen({
                     key={index}
                     p={3}
                   >
-                    <Text color={appColor.textTitle} fontSize={16}>
-                      {role.name}
-                    </Text>
+                    <HStack justifyContent="space-between" alignItems="center">
+                      <Text color={appColor.textTitle} fontSize={16}>
+                        {role.name}
+                      </Text>
+                      <HStack space={2} alignItems="center">
+                        <Pressable
+                          onPress={() => {
+                            setSelectedRole(role);
+                            setIsOpenModal(true);
+                            setIsEditMode(true);
+                          }}
+                        >
+                          <FontAwesome5
+                            name="edit"
+                            size={18}
+                            color={appColor.primary}
+                          />
+                        </Pressable>
+                        <Pressable>
+                          <MaterialIcons
+                            name="delete"
+                            size={24}
+                            color={appColor.primary}
+                          />
+                        </Pressable>
+                      </HStack>
+                    </HStack>
 
                     <VStack>
                       {role.rolePermissions.map((permission, index) => {
@@ -114,14 +140,15 @@ export default function RoleDashboardScreen({
       )}
       <AddRoleModal
         isOpen={isOpenModal}
-        isEditMode={isEditMode}
         onClose={() => {
           setIsLoading(true);
           setIsOpenModal(false);
           setIsLoading(false);
         }}
-        selectedRole={selectedRole}
         getRoleList={getRoleList}
+        isEditMode={isEditMode}
+        setIsEditMode={setIsEditMode}
+        selectedRole={selectedRole}
       />
     </Box>
   );

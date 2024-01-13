@@ -46,4 +46,14 @@ export const clinicService = {
       userGroupRole
     );
   },
+  async updateUserGroupRole(
+    clinicId: any,
+    userGroupRoleId: any,
+    userGroupRole: any
+  ) {
+    return axiosClient.put(
+      `/clinics/${clinicId}/update-user-group-role/${userGroupRoleId}`,
+      userGroupRole
+    );
+  },
 };
