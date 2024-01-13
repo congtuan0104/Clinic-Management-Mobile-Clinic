@@ -8,15 +8,15 @@ import {
   VStack,
   useToast,
 } from "native-base";
-import { ClinicSelector, changeRoles, userInfoSelector } from "../../store";
-import { appColor } from "../../theme";
+import { ClinicSelector, changeRoles, userInfoSelector } from "../../../store";
+import { appColor } from "../../../theme";
 import { useEffect, useState } from "react";
-import { clinicService } from "../../services";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { RoleDashboardScreenProps } from "../../Navigator/RoleNavigator";
-import { IRole } from "../../types/role.types";
+import { clinicService } from "../../../services";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { RoleDashboardScreenProps } from "../../../Navigator/RoleNavigator";
+import { IRole } from "../../../types/role.types";
 import AddRoleModal from "./AddRoleModal";
-import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { Pressable } from "react-native";

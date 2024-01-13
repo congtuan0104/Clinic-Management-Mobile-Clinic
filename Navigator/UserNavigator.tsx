@@ -195,7 +195,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               <UserNavigatorDrawer.Screen
                 name="RoleNavigator"
                 options={{
-                  title: "Vai trò",
+                  title: "Quản lý nhân viên",
                   drawerIcon: ({ color }) => (
                     <Ionicons name="settings-outline" size={24} color={color} />
                   ),

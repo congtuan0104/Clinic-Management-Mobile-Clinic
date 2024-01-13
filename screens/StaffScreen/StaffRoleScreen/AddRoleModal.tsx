@@ -15,17 +15,17 @@ import {
   WarningOutlineIcon,
   useToast,
 } from "native-base";
-import { ClinicSelector, changeRoles } from "../../store";
+import { ClinicSelector, changeRoles } from "../../../store";
 import { useEffect, useState } from "react";
-import ToastAlert from "../../components/Toast/Toast";
-import { clinicService } from "../../services";
-import { useAppDispatch, useAppSelector } from "../../hooks";
-import { IRole, IRoleCreate, IRolePermission } from "../../types/role.types";
+import ToastAlert from "../../../components/Toast/Toast";
+import { clinicService } from "../../../services";
+import { useAppDispatch, useAppSelector } from "../../../hooks";
+import { IRole, IRoleCreate, IRolePermission } from "../../../types/role.types";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { planService } from "../../services/plan.services";
-import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { planService } from "../../../services/plan.services";
+import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 
 interface IProps {
   isEditMode?: boolean;
