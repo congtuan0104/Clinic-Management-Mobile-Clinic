@@ -4,6 +4,7 @@ import {
   Button,
   HStack,
   Heading,
+  ScrollView,
   Text,
   VStack,
   View,
@@ -21,23 +22,86 @@ import { ClinicInfoDashboardScreenProps } from "../../Navigator/ClinicInfoNaviga
 import { useAppSelector } from "../../hooks";
 import dayjs from "dayjs";
 import { RoleDashboardScreenProps } from "../../Navigator/RoleNavigator";
+import { IRole } from "../../types/role.types";
 export default function RoleDashboardScreen({
   navigation,
   route,
 }: RoleDashboardScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
+  const [roleList, setRoleList] = useState<IRole[]>([]);
+  useEffect(() => {
+    // get a role list here
+    const getRoleList = async () => {
+      try {
+        const response = await clinicService.getUserGroupRole(clinic?.id);
+        if (response.status && response.data) {
+          setRoleList(response.data);
+        } else {
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRoleList();
+  }, []);
   return (
     <Box
       bgColor="#fff"
       minWidth="90%"
       maxWidth="90%"
+      minH="95%"
+      maxH="95%"
       alignSelf="center"
       alignItems="center"
       p={5}
       borderRadius={20}
     >
-      RD screen
+      <Button
+        width="full"
+        onPress={() => {
+          navigation.navigate("CreateNewRole");
+        }}
+      >
+        Thêm vai trò
+      </Button>
+      {roleList?.length ? (
+        <>
+          <Text my="2" fontSize={17} alignSelf="flex-start">
+            Danh sách vai trò
+          </Text>
+          <ScrollView>
+            <VStack space={5}>
+              {roleList.map((role: IRole, index) => {
+                return (
+                  <Box
+                    borderRadius={20}
+                    backgroundColor={appColor.background}
+                    key={index}
+                    p={3}
+                  >
+                    <Text color={appColor.textTitle} fontSize={16}>
+                      {role.name}
+                    </Text>
+
+                    <VStack>
+                      {role.rolePermissions.map((permission, index) => {
+                        return (
+                          <Text color={appColor.textSecondary} key={index}>
+                            - {permission.optionName}
+                          </Text>
+                        );
+                      })}
+                    </VStack>
+                  </Box>
+                );
+              })}
+            </VStack>
+          </ScrollView>
+        </>
+      ) : (
+        <Text>Danh sách rỗng</Text>
+      )}
     </Box>
   );
 }

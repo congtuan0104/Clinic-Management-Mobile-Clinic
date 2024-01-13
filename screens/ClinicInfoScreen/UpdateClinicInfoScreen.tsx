@@ -16,14 +16,10 @@ import {
 import { SubscriptionDashboardScreenProps } from "../../Navigator/SubscriptionNavigator";
 import { ClinicSelector, updateClinic, userInfoSelector } from "../../store";
 import { appColor } from "../../theme";
-import { useEffect, useState } from "react";
 import ToastAlert from "../../components/Toast/Toast";
 import { clinicService } from "../../services";
-import dynamicLinks from "@react-native-firebase/dynamic-links";
-import { openBrowserAsync } from "expo-web-browser";
 import { UpdateClinicInfoScreenProps } from "../../Navigator/ClinicInfoNavigator";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import dayjs from "dayjs";
 import * as yup from "yup";
 import { IClinicCreate } from "../../types/clinic.types";
 import { Controller, useForm } from "react-hook-form";

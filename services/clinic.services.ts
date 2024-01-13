@@ -5,6 +5,7 @@ import {
   IUserInClinicInfo,
   IClinicCreate,
 } from "../types/clinic.types";
+import { IRole } from "../types/role.types";
 
 export const clinicService = {
   async getUsersInClinic(
@@ -35,5 +36,14 @@ export const clinicService = {
   },
   async createClinic(clinicInfo: IClinicCreate) {
     return axiosClient.post("/clinics", clinicInfo);
+  },
+  async getUserGroupRole(clinicId: any): Promise<IApiResponse<IRole[]>> {
+    return axiosClient.get(`/clinics/${clinicId}/user-group-role`);
+  },
+  async createUserGroupRole(clinicId: any, userGroupRole: any) {
+    return axiosClient.post(
+      `/clinics/${clinicId}/create-user-group-role`,
+      userGroupRole
+    );
   },
 };
