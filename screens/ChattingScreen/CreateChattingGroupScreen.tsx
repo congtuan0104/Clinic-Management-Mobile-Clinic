@@ -21,7 +21,7 @@ import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { appColor } from "../../theme";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { useAppSelector } from "../../hooks";
-import { userInfoSelector } from "../../store";
+import { ClinicSelector, userInfoSelector } from "../../store";
 import { chatService } from "../../services";
 import { clinicService } from "../../services/clinic.services";
 
@@ -51,50 +51,9 @@ export default function CreateChattingGroupScreen({
       type: "group",
     },
   });
+  const clinic = useAppSelector(ClinicSelector);
   const userInfo = useAppSelector(userInfoSelector);
   // Sample data
-  const data = [
-    {
-      key: "24d0a9fd-1555-483c-a390-3fa556302d6a",
-      value: "N Tuan",
-    },
-    {
-      key: "37386997-de3b-4b78-baf5-884bcf57f1ff",
-      value: "Nhat C",
-    },
-    {
-      key: "4200b0a2-11a7-4e2b-bcd0-3cc8649a124f",
-      value: "Ng Van B",
-    },
-    {
-      key: "42d0c01b-a319-4021-8fe8-26ddaad14072",
-      value: "Nguyen Tran Minh",
-    },
-    {
-      key: "4dcd8b08-78e0-46c6-9f98-f36a881a93f8",
-      value: "Nguyen Van A",
-    },
-    {
-      key: "54fd31b6-896c-4944-9fc1-594f0156b821",
-      value: "Nguyen Tran Minh Quang",
-    },
-    {
-      key: "8a89f1f5-73b3-48c6-adbf-10b024e34dc6",
-      value: "Nguyen Tran Minh",
-    },
-    {
-      key: "9fc5002b-b9f9-4192-85e8-f95dbcfe6f6f",
-      value: "Nguyen Tran Minh",
-    },
-    {
-      key: "efe91e19-c832-4d34-ae5c-956b23ad6b40",
-      value: "Nguyen Ha",
-    },
-    {
-      key: "e7865f1d-49b4-4102-aeb9-f644c9f22873",
-      value: "Nguyen Nhat Khang",
-    },
-  ];
 
   const [selected, setSelected] = useState([]);
   const [userInClinic, setUserInClinic] = useState([]);
@@ -104,27 +63,29 @@ export default function CreateChattingGroupScreen({
     const getUsersInClinic = async () => {
       // Call API to get users in clinic
       // (Using clinicId = 6d43806c-c86c-4e9e-ab12-ce9d4e0357f9 (testing))
-      const clinicId = "6d43806c-c86c-4e9e-ab12-ce9d4e0357f9";
-      const response = await clinicService.getUsersInClinic(clinicId);
-      let data: any = [];
-      if (response.status) {
-        const responseData = response.data;
-        if (responseData) {
-          responseData.map((user) => {
-            if (user.id !== userInfo?.id)
-              data.push({
-                key: user.id,
-                value: user.lastName + " " + user.firstName,
-              });
-          });
+      const clinicId = clinic?.id;
+      if (clinicId) {
+        const response = await clinicService.getUsersInClinic(clinicId);
+        let data: any = [];
+        if (response.status) {
+          const responseData = response.data;
+          if (responseData) {
+            responseData.map((user) => {
+              if (user.id !== userInfo?.id)
+                data.push({
+                  key: user.id,
+                  value: user.lastName + " " + user.firstName,
+                });
+            });
+          }
+          setUserInClinic(data);
+        } else {
+          console.log("Server error");
         }
-        setUserInClinic(data);
-      } else {
-        console.log("Server error");
       }
     };
     getUsersInClinic();
-  }, [userInClinic]);
+  }, [userInClinic, clinic]);
   // Xử lí việc gọi API tạo nhóm
   const onSubmit = async (data: ICreateGroupChatRequest) => {
     setIsLoading(true);

@@ -1,5 +1,4 @@
 import { Box, HStack, Pressable, ScrollView, Text, VStack } from "native-base";
-import { StaffDashboardScreenProps } from "../../../Navigator/RoleNavigator";
 import { useEffect, useState } from "react";
 import { clinicService } from "../../../services";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
@@ -12,6 +11,7 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IClinicMember } from "../../../types/staff.types";
 import AddStaffModal from "./AddStaffModal";
+import { StaffDashboardScreenProps } from "../../../Navigator/StaffInfoNavigator";
 
 export default function StaffDashboardScreen({
   navigation,
@@ -91,14 +91,22 @@ export default function StaffDashboardScreen({
                       <HStack space={2} alignItems="center">
                         {!staff.isOwner && (
                           <>
-                            <Pressable onPress={() => {}}>
+                            <Pressable
+                              onPress={() => {
+                                navigation.navigate("StaffInfo", { staff });
+                              }}
+                            >
                               <FontAwesome5
                                 name="edit"
                                 size={18}
                                 color={appColor.primary}
                               />
                             </Pressable>
-                            <Pressable onPress={() => {}}>
+                            <Pressable
+                              onPress={() => {
+                                navigation.navigate("StaffSchedule");
+                              }}
+                            >
                               <MaterialIcons
                                 name="delete"
                                 size={24}
