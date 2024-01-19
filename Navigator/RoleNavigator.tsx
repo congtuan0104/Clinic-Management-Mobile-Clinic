@@ -1,14 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoleNavigatorProps } from "./UserNavigator";
 import RoleDashboardScreen from "../screens/StaffScreen/StaffRoleScreen/RoleDashboardScreen";
-import StaffDashboardScreen from "../screens/StaffScreen/StaffScreen/StaffDashboardScreen";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
-import { appColor } from "../theme";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
+import StaffInfoNavigator from "./StaffInfoNavigator";
 export type StaffNavigatorStackParamList = {
   RoleDashboard: undefined;
-  StaffDashboard: undefined;
+  StaffInfoNavigator: undefined;
 };
 
 export type RoleDashboardScreenProps = NativeStackScreenProps<
@@ -16,9 +15,9 @@ export type RoleDashboardScreenProps = NativeStackScreenProps<
   "RoleDashboard"
 >;
 
-export type StaffDashboardScreenProps = NativeStackScreenProps<
+export type StaffInfoNavigatorScreenProps = NativeStackScreenProps<
   StaffNavigatorStackParamList,
-  "StaffDashboard"
+  "StaffInfoNavigator"
 >;
 
 const StaffTabNavigator =
@@ -29,10 +28,10 @@ export default function RoleNavigator({
   route,
 }: RoleNavigatorProps) {
   return (
-    <StaffTabNavigator.Navigator initialRouteName="StaffDashboard">
+    <StaffTabNavigator.Navigator initialRouteName="StaffInfoNavigator">
       <StaffTabNavigator.Screen
-        name="StaffDashboard"
-        component={StaffDashboardScreen}
+        name="StaffInfoNavigator"
+        component={StaffInfoNavigator}
         options={{
           headerShown: false,
           title: "Danh sách nhân viên",
