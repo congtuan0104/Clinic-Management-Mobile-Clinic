@@ -110,12 +110,6 @@ export const chatService = {
   async getListGroupChatByUserId(
     userId: string | undefined
   ): Promise<IApiResponse<GroupChatInfo[]>> {
-    // Tạm thời giả dữ liệu để trả về
-    // return {
-    //   data: listData,
-    //   message: "Thành công",
-    //   status: true,
-    // };
     return axiosClient.get("/chats", {
       params: {
         userId,

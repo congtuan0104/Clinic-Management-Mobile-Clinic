@@ -15,7 +15,6 @@ import {
   HStack,
   Pressable,
 } from "native-base";
-import CreateChattingGroupScreen from "../screens/ChattingScreen/CreateChattingGroupScreen";
 import ChattingDetailSettings from "../screens/ChattingScreen/ChattingDetailSettings";
 import { VideoCall } from "../screens/VideoCall";
 import { appColor } from "../theme";
@@ -25,10 +24,13 @@ export type ChatDetailStackParamList = {
   ChattingDetail: { groupId: number; groupName: string };
   CreateChattingGroup: undefined;
   ChattingDetailSettings: { groupId: number };
-  VideoCall: {groupId: number};
+  VideoCall: { groupId: number };
 };
 
-export type VideoCallProps = NativeStackScreenProps<ChatDetailStackParamList, "VideoCall">;
+export type VideoCallProps = NativeStackScreenProps<
+  ChatDetailStackParamList,
+  "VideoCall"
+>;
 
 export type ChattingGroupListScreenProps = NativeStackScreenProps<
   ChatDetailStackParamList,
@@ -40,10 +42,6 @@ export type ChattingDetailScreenProps = NativeStackScreenProps<
   "ChattingDetail"
 >;
 
-export type CreateChattingGroupScreenProps = NativeStackScreenProps<
-  ChatDetailStackParamList,
-  "CreateChattingGroup"
->;
 export type ChattingDetailSettingsScreenProps = NativeStackScreenProps<
   ChatDetailStackParamList,
   "ChattingDetailSettings"
@@ -63,11 +61,7 @@ export default function ChattingNavigator({
         component={ChattingGroupListScreen}
         options={{ headerShown: false }}
       />
-      <ChattingStackNavigator.Screen
-        name="CreateChattingGroup"
-        component={CreateChattingGroupScreen}
-        options={{ headerShown: false }}
-      />
+
       <ChattingStackNavigator.Screen
         name="ChattingDetailSettings"
         component={ChattingDetailSettings}
@@ -107,8 +101,8 @@ export default function ChattingNavigator({
           headerRight: () => (
             <>
               <Pressable
-                style={{                  
-                  marginRight: 12,                   
+                style={{
+                  marginRight: 12,
                 }}
                 onPress={() => {
                   navigation.navigate("VideoCall", {
@@ -116,7 +110,11 @@ export default function ChattingNavigator({
                   });
                 }}
               >
-                <FontAwesome5 name="video" size={24} color={appColor.backgroundPrimary} />
+                <FontAwesome5
+                  name="video"
+                  size={24}
+                  color={appColor.backgroundPrimary}
+                />
               </Pressable>
               <Pressable
                 backgroundColor={appColor.backgroundPrimary}
@@ -137,7 +135,6 @@ export default function ChattingNavigator({
                   color="#fff"
                 />
               </Pressable>
-              
             </>
           ),
         })}
