@@ -85,7 +85,7 @@ export default function CreateChattingGroupScreen({
       }
     };
     getUsersInClinic();
-  }, [userInClinic]);
+  }, [userInClinic, clinic]);
   // Xử lí việc gọi API tạo nhóm
   const onSubmit = async (data: ICreateGroupChatRequest) => {
     setIsLoading(true);
