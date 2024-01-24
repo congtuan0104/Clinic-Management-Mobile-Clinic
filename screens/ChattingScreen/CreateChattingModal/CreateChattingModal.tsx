@@ -1,4 +1,4 @@
-import { View, Text } from "react-native";
+import { View } from "react-native";
 import React, { useEffect, useState } from "react";
 import {
   Box,
@@ -13,6 +13,7 @@ import {
   VStack,
   WarningOutlineIcon,
   useToast,
+  Text,
 } from "native-base";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -160,9 +161,18 @@ export default function CreateChattingModal({
         onClose();
       }}
     >
-      <Modal.Content width="90%">
+      <Modal.Content width="90%" borderRadius={20}>
         <Modal.CloseButton />
-        <Modal.Header>Tạo nhóm Chat mới</Modal.Header>
+        <Modal.Header backgroundColor="secondary.200">
+          <Text
+            color={appColor.white}
+            fontFamily="body"
+            fontWeight="bold"
+            fontSize={20}
+          >
+            Tạo nhóm
+          </Text>
+        </Modal.Header>
         <Modal.Body>
           <VStack space={5}>
             <FormControl isRequired isInvalid={errors.groupName ? true : false}>
@@ -198,10 +208,14 @@ export default function CreateChattingModal({
               data={userInClinic}
               label="Danh sách thành viên"
               save="key"
-              notFoundText="Không có dữ liệu"
+              notFoundText="Hiện tại phòng khám chưa có thành viên."
               placeholder="Thêm thành viên"
               searchPlaceholder="Tìm kiếm thành viên"
               maxHeight={300}
+              boxStyles={{
+                borderRadius: 20,
+              }}
+              dropdownStyles={{ borderRadius: 20 }}
               labelStyles={{
                 fontWeight: "normal",
               }}
@@ -228,11 +242,14 @@ export default function CreateChattingModal({
           <Button.Group space={2}>
             <Button onPress={handleSubmit(onSubmit)}>Tạo nhóm</Button>
             <Button
+              backgroundColor={appColor.white}
+              borderWidth={1}
+              borderColor={appColor.primary}
               onPress={() => {
                 onClose();
               }}
             >
-              Quay lại
+              <Text color={appColor.primary}>Quay lại</Text>
             </Button>
           </Button.Group>
         </Modal.Footer>

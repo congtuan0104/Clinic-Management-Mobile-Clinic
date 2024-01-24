@@ -2,7 +2,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Avatar, Button, HStack, Image, Text, View } from "native-base";
+import { Avatar, Button, HStack, Image, Text, VStack, View } from "native-base";
 import { appColor } from "../../theme";
 import { ImageBackground } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
@@ -50,7 +50,7 @@ const CustomDrawer = (props: any) => {
       >
         <ImageBackground
           source={require("../../assets/images/menu-bg.jpeg")}
-          style={{ padding: 20 }}
+          style={{ padding: 20, marginBottom: 20 }}
         >
           <Image
             alignSelf="center"
@@ -63,12 +63,14 @@ const CustomDrawer = (props: any) => {
             mb={2}
             alt={userInfo?.email}
           />
-          <Text color="#fff" fontWeight="bold" fontSize="16">
-            {userInfo?.lastName + " " + userInfo?.firstName}
-          </Text>
-          <Text color="#fff" fontSize="13">
-            {userInfo?.email}
-          </Text>
+          <VStack alignItems="center">
+            <Text color="#fff" fontWeight="bold" fontSize="16">
+              {userInfo?.lastName + " " + userInfo?.firstName}
+            </Text>
+            <Text color="#fff" fontSize="13">
+              {userInfo?.email}
+            </Text>
+          </VStack>
         </ImageBackground>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>

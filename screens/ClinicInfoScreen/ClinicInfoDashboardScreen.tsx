@@ -31,6 +31,7 @@ export default function ClinicInfoDashboardScreen({
   };
   return (
     <Box
+      mt="5%"
       bgColor="#fff"
       minWidth="90%"
       maxWidth="90%"
@@ -66,25 +67,35 @@ export default function ClinicInfoDashboardScreen({
       <Box alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Địa chỉ</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Địa chỉ
+            </Text>
             <Text color={appColor.textSecondary}>{clinic?.address}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Email liên hệ</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Email liên hệ
+            </Text>
             <Text color={appColor.textSecondary}>{clinic?.email}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>SĐT liên hệ</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              SĐT liên hệ
+            </Text>
             <Text color={appColor.textSecondary}>{clinic?.phone}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Ngày mua</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Ngày mua
+            </Text>
             <Text color={appColor.textSecondary}>
               {dayjs(clinic?.createdAt).format("DD/MM/YYYY")}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Hạn dùng</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Hạn dùng
+            </Text>
             <Text color={appColor.textSecondary}>
               {dayjs(clinic?.subscriptions[0].expiredAt).format("DD/MM/YYYY")}
             </Text>

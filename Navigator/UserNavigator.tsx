@@ -86,6 +86,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
     const getActiveClinic = async () => {
       try {
         const response = await clinicService.getAllClinic();
+        // In here, if the response status code = 403, this means that your token was expired.
+        // So we need to call logout, to make people relogin.
+        // Implement here
         let activeClinic: IClinicInfo[] = [];
         if (response.data) {
           // Get all clinic with status = 3 (active)
@@ -122,19 +125,23 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           initialRouteName="ProfileNavigator"
           screenOptions={{
             headerStyle: {
-              backgroundColor: appColor.background,
+              backgroundColor: appColor.white,
             },
             headerTintColor: appColor.title,
             headerTitleStyle: {
               fontWeight: "bold",
+              fontFamily: "Montserrat-Bold",
+              fontSize: 25,
             },
             headerTitleAlign: "center",
             drawerStyle: {
               backgroundColor: appColor.background,
+              marginBottom: 0,
+              borderBottomRightRadius: 20,
             },
             drawerLabelStyle: {
-              marginLeft: -25,
-              fontSize: 15,
+              marginLeft: -18,
+              fontSize: 17,
             },
             drawerActiveTintColor: "#fff",
             drawerActiveBackgroundColor: appColor.primary,
@@ -173,7 +180,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             <UserNavigatorDrawer.Screen
               name="ClinicListNavigator"
               options={{
-                title: "Danh sách phòng khám",
+                title: "Phòng khám",
                 drawerIcon: ({ color }) => (
                   <FontAwesome5 name="th-list" size={24} color={color} />
                 ),

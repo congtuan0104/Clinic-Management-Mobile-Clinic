@@ -97,6 +97,7 @@ export default function SubscriptionDashboardScreen({
         maxW="90%"
         maxH="95%"
         minH="90%"
+        mt={5}
         alignSelf="center"
         alignItems="center"
         p={5}

@@ -81,36 +81,38 @@ export default function ChattingGroupListScreen({
   const renderGroupList = () => {
     return (
       <Box flex="1">
-        <Box alignItems="center">
+        <Box alignItems="center" mt="5%">
           {/** ***************************SEARCH BAR ****************************** */}
           <Input
             placeholder="Tìm kiếm nhóm trò chuyện"
             width="90%"
             borderRadius="50"
+            borderColor="gray.400"
             py="3"
             px="1"
             fontSize="14"
             onChangeText={(e) => {
               handleSearch(e);
             }}
+            backgroundColor="#fff"
             InputLeftElement={
               <Icon
                 m="2"
                 ml="3"
-                size="6"
+                size="8"
                 color="gray.400"
                 as={<MaterialIcons name="search" />}
               />
             }
-            InputRightElement={
-              <Icon
-                m="2"
-                mr="3"
-                size="6"
-                color="gray.400"
-                as={<MaterialIcons name="mic" />}
-              />
-            }
+            // InputRightElement={
+            //   <Icon
+            //     m="2"
+            //     mr="3"
+            //     size="6"
+            //     color="gray.400"
+            //     as={<MaterialIcons name="mic" />}
+            //   />
+            // }
           />
         </Box>
         {/** *************************** RENDER USER LIST ****************************** */}
@@ -143,9 +145,9 @@ export default function ChattingGroupListScreen({
                         color: "warmGray.50",
                       }}
                       color={appColor.textTitle}
-                      bold
                       style={{ flexWrap: "wrap" }}
-                      fontSize={19}
+                      fontWeight="light"
+                      fontSize={20}
                     >
                       {item.groupName.length > 30
                         ? `${item.groupName.slice(0, 30)}...`
@@ -188,8 +190,11 @@ export default function ChattingGroupListScreen({
       {groupMessageList.length ? (
         renderGroupList()
       ) : (
-        <Box flex="1">
-          <Text>Bạn chưa tham gia nhóm chat nào!</Text>
+        <Box flex="1" maxW="90%" minW="90%" mt="5%" alignSelf="center">
+          <Text fontFamily="body" fontSize={20} color="coolGray.500">
+            Bạn chưa tham gia nhóm chat nào! Hãy tạo nhóm chat mới cho riêng
+            bạn!
+          </Text>
           <Pressable
             style={styles.but}
             onPress={() => {

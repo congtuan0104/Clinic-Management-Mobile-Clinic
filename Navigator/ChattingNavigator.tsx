@@ -65,7 +65,9 @@ export default function ChattingNavigator({
       <ChattingStackNavigator.Screen
         name="ChattingDetailSettings"
         component={ChattingDetailSettings}
-        options={{ headerShown: false }}
+        options={{
+          headerShown: false,
+        }}
       />
       <ChattingStackNavigator.Screen
         name="VideoCall"
@@ -85,9 +87,9 @@ export default function ChattingNavigator({
                 alignItems="center"
               >
                 <Image
-                  src="https://picsum.photos/200"
+                  source={require("../assets/images/chat/groupchatdefault.png")}
                   borderRadius={100}
-                  size="10"
+                  size="12"
                   alt="ff"
                 />
                 <Text fontWeight="bold" fontSize="16">
@@ -101,9 +103,11 @@ export default function ChattingNavigator({
           headerRight: () => (
             <>
               <Pressable
-                style={{
-                  marginRight: 12,
-                }}
+                borderWidth={1}
+                mr={2}
+                borderColor={appColor.primary}
+                borderRadius={100}
+                p={2}
                 onPress={() => {
                   navigation.navigate("VideoCall", {
                     groupId: route.params.groupId,
@@ -117,10 +121,10 @@ export default function ChattingNavigator({
                 />
               </Pressable>
               <Pressable
-                backgroundColor={appColor.backgroundPrimary}
+                borderWidth={1}
+                borderColor={appColor.primary}
                 borderRadius={100}
-                width={35}
-                height={35}
+                p={2}
                 justifyContent="center"
                 alignItems="center"
                 onPress={() => {
@@ -132,11 +136,12 @@ export default function ChattingNavigator({
                 <Ionicons
                   name="ellipsis-vertical-outline"
                   size={24}
-                  color="#fff"
+                  color={appColor.primary}
                 />
               </Pressable>
             </>
           ),
+          headerShadowVisible: false,
         })}
       />
     </ChattingStackNavigator.Navigator>
