@@ -9,6 +9,7 @@ export const appColor = {
   white: "#fff",
   textSecondary: "#70708C",
   textTitle: "#393968",
+  inputLabel: "#3d3d66",
 };
 export const theme = extendTheme({
   fontConfig: {
@@ -119,10 +120,10 @@ export const theme = extendTheme({
     Button: {
       baseStyle: {},
       defaultProps: {
-        backgroundColor: "primary.300",
+        backgroundColor: "secondary.300",
         borderRadius: 20,
         _pressed: {
-          backgroundColor: "primary.400",
+          backgroundColor: "secondary.400",
         },
       },
     },

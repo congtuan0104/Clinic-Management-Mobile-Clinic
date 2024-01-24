@@ -162,8 +162,8 @@ export default function CreateChattingModal({
       }}
     >
       <Modal.Content width="90%" borderRadius={20}>
-        <Modal.CloseButton />
-        <Modal.Header backgroundColor="secondary.200">
+        <Modal.CloseButton _icon={{ color: "#fff" }} variant="outline" />
+        <Modal.Header backgroundColor="primary.300">
           <Text
             color={appColor.white}
             fontFamily="body"
@@ -179,6 +179,7 @@ export default function CreateChattingModal({
               <FormControl.Label
                 _text={{
                   bold: true,
+                  color: appColor.inputLabel,
                 }}
               >
                 Tên nhóm
@@ -203,6 +204,7 @@ export default function CreateChattingModal({
               </FormControl.ErrorMessage>
             </FormControl>
             <MultipleSelectList
+              fontFamily="Montserrat-SemiBold"
               setSelected={(val: any) => setSelected(val)}
               //   onSelect={() => console.log(selected)}
               data={userInClinic}
@@ -218,6 +220,7 @@ export default function CreateChattingModal({
               dropdownStyles={{ borderRadius: 20 }}
               labelStyles={{
                 fontWeight: "normal",
+                color: appColor.inputLabel,
               }}
               badgeStyles={{
                 backgroundColor: appColor.backgroundPrimary,
@@ -234,6 +237,10 @@ export default function CreateChattingModal({
               }}
               dropdownTextStyles={{
                 fontSize: 14,
+                color: appColor.inputLabel,
+              }}
+              inputStyles={{
+                color: appColor.inputLabel,
               }}
             />
           </VStack>
@@ -244,12 +251,15 @@ export default function CreateChattingModal({
             <Button
               backgroundColor={appColor.white}
               borderWidth={1}
-              borderColor={appColor.primary}
+              borderColor="secondary.300"
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
               onPress={() => {
                 onClose();
               }}
             >
-              <Text color={appColor.primary}>Quay lại</Text>
+              <Text color="secondary.300">Quay lại</Text>
             </Button>
           </Button.Group>
         </Modal.Footer>
