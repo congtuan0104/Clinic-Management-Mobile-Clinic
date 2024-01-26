@@ -4,6 +4,8 @@ import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import Function02 from "../screens/UserScreen/ClinicList/ClinicList";
 import { appColor } from "../theme";
+import CalendarScreen from "../screens/Calendar/CalendarScreen";
+import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen"
 // Import custom icons
 import { Ionicons } from "@expo/vector-icons";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
@@ -33,6 +35,8 @@ export type UserNavigatorDrawerParamList = {
     setClinic: (clinic: IClinicInfo) => void;
   };
   RoleNavigator: undefined;
+  CalendarNavigator: undefined;
+  CreateTaskNavigator: undefined;
 };
 
 export type ProfileNavigatorProps = NativeStackScreenProps<
@@ -67,6 +71,15 @@ export type RoleNavigatorProps = NativeStackScreenProps<
   "RoleNavigator"
 >;
 
+export type CalendarNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "CalendarNavigator"
+  >;
+
+export type CreateTaskNavigatorProps = NativeStackScreenProps<
+UserNavigatorDrawerParamList,
+"CreateTaskNavigator"
+>;
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
 
@@ -203,13 +216,23 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 component={RoleNavigator}
               />
               <UserNavigatorDrawer.Screen
+                name="CalendarNavigator"
+                options={{
+                  title: "Lịch làm việc",
+                  drawerIcon: ({ color }) => (
+                    <Ionicons name="settings-outline" size={24} color={color} />
+                  ),
+                }}
+                component={CalendarScreen}
+              />
+              <UserNavigatorDrawer.Screen
                 name="ChattingNavigator"
                 options={{
                   title: "Nhắn tin",
                   drawerIcon: ({ color }) => (
                     <Ionicons name="settings-outline" size={24} color={color} />
-                  ),
-                }}
+                    ),
+                  }}
                 component={ChattingNavigator}
               />
               <UserNavigatorDrawer.Screen
@@ -218,9 +241,18 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                   title: "Thông báo",
                   drawerIcon: ({ color }) => (
                     <Ionicons name="settings-outline" size={24} color={color} />
-                  ),
-                }}
+                    ),
+                  }}
                 component={NotificationNavigator}
+              />
+              <UserNavigatorDrawer.Screen
+                name="CreateTaskNavigator"
+                component={CreateTaskScreen}
+                options={{
+                  title: "Thêm lịch hẹn",
+                  drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
+                  drawerItemStyle: { height: 0 },
+                }}
               />
             </>
           )}
