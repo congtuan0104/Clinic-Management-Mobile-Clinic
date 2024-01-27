@@ -44,7 +44,9 @@ const MsgComponent = (props: any) => {
                 size={24}
                 color={sender ? "#fff" : "#000"}
               />
-              <Text color={sender ? "#fff" : "#000"}>{content}</Text>
+              <Text maxW="90%" color={sender ? "#fff" : "#000"}>
+                {content}
+              </Text>
             </HStack>
           </Link>
         )}

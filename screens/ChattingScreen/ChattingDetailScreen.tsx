@@ -1,10 +1,4 @@
-import {
-  View,
-  Text,
-  FlatList,
-  TextInput,
-  Animated,
-} from "react-native";
+import { View, Text, FlatList, TextInput, Animated } from "react-native";
 import React, { useEffect } from "react";
 import { ChattingDetailScreenProps } from "../../Navigator/ChattingNavigator";
 import { StyleSheet } from "react-native";
@@ -19,7 +13,6 @@ import dayjs from "dayjs";
 import UploadImageModal from "../../components/UploadImageModal/UploadImageModal";
 import * as ImagePicker from "expo-image-picker";
 import * as DocumentPicker from "expo-document-picker";
-import { v4 as uuidv4 } from "uuid";
 import storage from "@react-native-firebase/storage";
 import { helpers } from "../../utils/helper";
 import uuid from "react-native-uuid";

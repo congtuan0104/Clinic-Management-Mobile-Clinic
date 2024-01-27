@@ -2,7 +2,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Avatar, Button, HStack, Image, Text, View } from "native-base";
+import { Avatar, Button, HStack, Image, Text, VStack, View } from "native-base";
 import { appColor } from "../../theme";
 import { ImageBackground } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";
@@ -50,23 +50,27 @@ const CustomDrawer = (props: any) => {
       >
         <ImageBackground
           source={require("../../assets/images/menu-bg.jpeg")}
-          style={{ padding: 20 }}
+          style={{ padding: 20, marginBottom: 20 }}
         >
-          <Avatar
+          <Image
             alignSelf="center"
-            bg="green.500"
+            bg="#fff"
             source={{
-              uri: `https://ui-avatars.com/api/?name=${userInfo?.firstName}`,
+              uri: `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
             }}
-            size="xl"
+            size={100}
+            borderRadius={100}
             mb={2}
-          ></Avatar>
-          <Text color="#fff" fontWeight="bold" fontSize="16">
-            {userInfo?.lastName + " " + userInfo?.firstName}
-          </Text>
-          <Text color="#fff" fontSize="13">
-            {userInfo?.email}
-          </Text>
+            alt={userInfo?.email}
+          />
+          <VStack alignItems="center">
+            <Text color="#fff" fontWeight="bold" fontSize="16">
+              {userInfo?.lastName + " " + userInfo?.firstName}
+            </Text>
+            <Text color="#fff" fontSize="13">
+              {userInfo?.email}
+            </Text>
+          </VStack>
         </ImageBackground>
         <DrawerItemList {...props} />
       </DrawerContentScrollView>

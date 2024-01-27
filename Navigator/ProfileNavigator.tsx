@@ -37,7 +37,8 @@ export default function ProfileNavigator({
         tabBarPressColor: appColor.backgroundPrimary,
         tabBarActiveTintColor: appColor.primary,
         tabBarLabelStyle: {
-          fontSize: 14,
+          fontFamily: "Montserrat-SemiBold",
+          fontSize: 15,
           textTransform: "none",
         },
         tabBarStyle: {

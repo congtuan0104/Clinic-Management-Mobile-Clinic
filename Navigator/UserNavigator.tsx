@@ -1,13 +1,12 @@
+import ClinicInfoNavigator from "./ClinicInfoNavigator";
+import ClinicListNavigator from "../screens/UserScreen/ClinicList/ClinicList";
 import * as React from "react";
 import { UserNavigatorProps } from "./StackNavigator";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import Function02 from "../screens/UserScreen/ClinicList/ClinicList";
 import { appColor } from "../theme";
 import CalendarScreen from "../screens/Calendar/CalendarScreen";
-import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen"
-// Import custom icons
-import { Ionicons } from "@expo/vector-icons";
+import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -17,10 +16,16 @@ import { clinicService } from "../services";
 import ToastAlert from "../components/Toast/Toast";
 import { useToast } from "native-base";
 import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
-import ClinicInfoNavigator from "./ClinicInfoNavigator";
-import ClinicListNavigator from "../screens/UserScreen/ClinicList/ClinicList";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
+
+// Import custom icons
+import { Ionicons } from "@expo/vector-icons";
+import { Entypo } from "@expo/vector-icons";
+import { MaterialIcons } from "@expo/vector-icons";
+import { MaterialCommunityIcons } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -74,11 +79,11 @@ export type RoleNavigatorProps = NativeStackScreenProps<
 export type CalendarNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "CalendarNavigator"
-  >;
+>;
 
 export type CreateTaskNavigatorProps = NativeStackScreenProps<
-UserNavigatorDrawerParamList,
-"CreateTaskNavigator"
+  UserNavigatorDrawerParamList,
+  "CreateTaskNavigator"
 >;
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
@@ -94,6 +99,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
     const getActiveClinic = async () => {
       try {
         const response = await clinicService.getAllClinic();
+        // In here, if the response status code = 403, this means that your token was expired.
+        // So we need to call logout, to make people relogin.
+        // Implement here
         let activeClinic: IClinicInfo[] = [];
         if (response.data) {
           // Get all clinic with status = 3 (active)
@@ -130,19 +138,23 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           initialRouteName="ProfileNavigator"
           screenOptions={{
             headerStyle: {
-              backgroundColor: appColor.background,
+              backgroundColor: appColor.white,
             },
             headerTintColor: appColor.title,
             headerTitleStyle: {
               fontWeight: "bold",
+              fontFamily: "Montserrat-Bold",
+              fontSize: 25,
             },
             headerTitleAlign: "center",
             drawerStyle: {
               backgroundColor: appColor.background,
+              marginBottom: 0,
+              borderBottomRightRadius: 20,
             },
             drawerLabelStyle: {
-              marginLeft: -25,
-              fontSize: 15,
+              marginLeft: -18,
+              fontSize: 17,
             },
             drawerActiveTintColor: "#fff",
             drawerActiveBackgroundColor: appColor.primary,
@@ -156,7 +168,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             options={{
               title: "Tài khoản",
               drawerIcon: ({ color }) => (
-                <Ionicons name="settings-outline" size={24} color={color} />
+                <MaterialIcons name="account-circle" size={26} color={color} />
               ),
             }}
             name="ProfileNavigator"
@@ -166,7 +178,11 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             options={{
               title: "Quản lý gói",
               drawerIcon: ({ color }) => (
-                <Ionicons name="settings-outline" size={24} color={color} />
+                <MaterialCommunityIcons
+                  name="package"
+                  size={26}
+                  color={color}
+                />
               ),
             }}
             name="SubscriptionNavigator"
@@ -177,9 +193,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             <UserNavigatorDrawer.Screen
               name="ClinicListNavigator"
               options={{
-                title: "Danh sách phòng khám",
+                title: "Phòng khám",
                 drawerIcon: ({ color }) => (
-                  <Ionicons name="settings-outline" size={24} color={color} />
+                  <FontAwesome5 name="th-list" size={24} color={color} />
                 ),
               }}
               component={ClinicListNavigator}
@@ -197,7 +213,11 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 options={{
                   title: "Thông tin phòng khám",
                   drawerIcon: ({ color }) => (
-                    <Ionicons name="settings-outline" size={24} color={color} />
+                    <FontAwesome5
+                      name="clinic-medical"
+                      size={24}
+                      color={color}
+                    />
                   ),
                 }}
                 component={ClinicInfoNavigator}
@@ -210,7 +230,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 options={{
                   title: "Quản lý nhân viên",
                   drawerIcon: ({ color }) => (
-                    <Ionicons name="settings-outline" size={24} color={color} />
+                    <FontAwesome name="users" size={24} color={color} />
                   ),
                 }}
                 component={RoleNavigator}
@@ -230,9 +250,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 options={{
                   title: "Nhắn tin",
                   drawerIcon: ({ color }) => (
-                    <Ionicons name="settings-outline" size={24} color={color} />
-                    ),
-                  }}
+                    <Entypo name="chat" size={24} color={color} />
+                  ),
+                }}
                 component={ChattingNavigator}
               />
               <UserNavigatorDrawer.Screen
@@ -240,9 +260,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 options={{
                   title: "Thông báo",
                   drawerIcon: ({ color }) => (
-                    <Ionicons name="settings-outline" size={24} color={color} />
-                    ),
-                  }}
+                    <Ionicons name="notifications" size={24} color={color} />
+                  ),
+                }}
                 component={NotificationNavigator}
               />
               <UserNavigatorDrawer.Screen
