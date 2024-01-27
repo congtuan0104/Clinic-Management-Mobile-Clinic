@@ -15,6 +15,8 @@ import React, { useEffect, useState } from "react";
 import { Fontisto, FontAwesome } from "@expo/vector-icons";
 import { clinicService } from "../../services";
 import { planService } from "../../services/plan.services";
+const { format } = require("number-currency-format");
+
 export default function SubscriptionListScreen({
   navigation,
   route,
@@ -42,11 +44,10 @@ export default function SubscriptionListScreen({
     const planData = planList.find((plan: any) => plan.id === planId);
     navigation.navigate("SubscriptionRegistration", { planData: planData });
   };
-
   return (
     <VStack space={5} my={5}>
-      <Box width="90%" alignSelf="center">
-        <Heading>Danh sách gói hiện có</Heading>
+      <Box width="90%" alignSelf="center" alignItems="center">
+        <Heading fontFamily="heading">Danh sách gói hiện có</Heading>
       </Box>
       <ScrollView
         width="90%"
@@ -59,32 +60,47 @@ export default function SubscriptionListScreen({
         <VStack space={5} width="90%" alignSelf="center" my={5}>
           {planList.map((plan: any, index: any) => {
             return (
-              <Box
+              <Pressable
                 key={index}
-                backgroundColor="#DAD9FF"
-                borderRadius={10}
-                p={3}
+                onPress={() => {
+                  handleBuyingSubscription(plan.id);
+                }}
               >
-                <HStack alignItems="center" justifyContent="space-between">
-                  <VStack>
-                    <Text fontSize={20}>{plan.planName}</Text>
-                    <Text>Thời hạn: {plan.duration} ngày</Text>
-                    <Text>Giá tiền: {plan.currentPrice}đ</Text>
-                  </VStack>
-                </HStack>
-                <Pressable
-                  alignSelf="flex-end"
-                  onPress={() => {
-                    handleBuyingSubscription(plan.id);
-                  }}
-                >
-                  <FontAwesome
-                    name="arrow-circle-right"
-                    size={35}
-                    color={appColor.primary}
-                  />
-                </Pressable>
-              </Box>
+                <Box backgroundColor="#DAD9FF" borderRadius={16} p={3}>
+                  <HStack alignItems="center" justifyContent="space-between">
+                    <VStack>
+                      <Text
+                        fontWeight="bold"
+                        color={appColor.textTitle}
+                        fontSize={16}
+                      >
+                        {plan.planName}
+                      </Text>
+                      <Text fontSize={14} fontFamily="mono">
+                        - {plan.duration} ngày
+                      </Text>
+
+                      <HStack justifyContent="space-between">
+                        <Text fontSize={14} fontFamily="mono">
+                          - {plan.planOptions.length} chức năng
+                        </Text>
+                        <Text
+                          fontSize={15}
+                          color="#b92a00"
+                          fontWeight="bold"
+                          fontFamily="body"
+                        >
+                          {format(plan.currentPrice, {
+                            decimalsDigits: 0,
+                            decimalSeparator: "",
+                          })}
+                          đ
+                        </Text>
+                      </HStack>
+                    </VStack>
+                  </HStack>
+                </Box>
+              </Pressable>
             );
           })}
         </VStack>

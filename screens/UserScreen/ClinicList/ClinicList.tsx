@@ -29,8 +29,13 @@ export default function ClinicListNavigator({
   const { clinic, setClinic, clinicList } = route.params;
   return (
     <VStack space={5} my={5}>
-      <Box width="90%" alignSelf="center">
-        <Heading>Phòng khám của bạn</Heading>
+      <Box
+        width="90%"
+        alignSelf="center"
+        justifyContent="center"
+        alignItems="center"
+      >
+        <Heading>Danh sách phòng khám</Heading>
       </Box>
       {clinicList.length ? (
         <ScrollView
@@ -82,11 +87,11 @@ export default function ClinicListNavigator({
         </ScrollView>
       ) : (
         <VStack space={5} my={5}>
-          <Box width="90%" alignSelf="center">
-            <Heading>
-              Hien tai ban chua co phong kham nao. Vui long mua goi o muc Quan
-              ly goi
-            </Heading>
+          <Box width="90%" height="75%" alignSelf="center">
+            <Text>
+              Rất tiếc, hiện tại bạn chưa có bất kì phòng khám nào. Để tạo phòng
+              khám mới, bạn hãy vào Mua gói ở mục Quản lý gói.
+            </Text>
           </Box>
         </VStack>
       )}
