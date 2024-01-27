@@ -9,41 +9,37 @@ export const appColor = {
   white: "#fff",
   textSecondary: "#70708C",
   textTitle: "#393968",
+  inputLabel: "#3d3d66",
 };
 export const theme = extendTheme({
   fontConfig: {
-    Roboto: {
+    Montserrat: {
       100: {
-        normal: "Roboto",
-        italic: "Roboto",
+        normal: "Montserrat-Light",
+        italic: "Montserrat-LightItalic",
       },
       200: {
-        normal: "Roboto",
-        italic: "Roboto",
+        normal: "Montserrat-Medium",
+        italic: "Montserrat-MediumItalic",
       },
       300: {
-        normal: "Roboto",
-        italic: "Roboto",
+        normal: "Montserrat-SemiBold",
+        italic: "Montserrat-SemiBoldItalic",
       },
       400: {
-        normal: "Roboto",
-        italic: "Roboto",
+        normal: "Montserrat-Bold",
+        italic: "Montserrat-BoldItalic",
       },
       500: {
-        normal: "Roboto",
-      },
-      600: {
-        normal: "Roboto",
-        italic: "Roboto",
+        normal: "Montserrat-ExtraBold",
+        italic: "Montserrat-ExtraBoldItalic",
       },
     },
   },
-
-  // Make sure values below matches any of the keys in `fontConfig`
   fonts: {
-    heading: "Roboto",
-    body: "Roboto",
-    mono: "Roboto",
+    heading: "Montserrat-Bold",
+    body: "Montserrat-SemiBold",
+    mono: "Montserrat-SemiBold",
   },
   colors: {
     primary: {
@@ -111,6 +107,7 @@ export const theme = extendTheme({
     Input: {
       baseStyle: {
         backgroundColor: "primary.50",
+        borderRadius: "20",
       },
       defaultProps: {
         _focus: {
@@ -123,9 +120,10 @@ export const theme = extendTheme({
     Button: {
       baseStyle: {},
       defaultProps: {
-        backgroundColor: "primary.300",
+        backgroundColor: "secondary.300",
+        borderRadius: 20,
         _pressed: {
-          backgroundColor: "primary.400",
+          backgroundColor: "secondary.400",
         },
       },
     },
