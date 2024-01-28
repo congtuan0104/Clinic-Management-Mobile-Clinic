@@ -144,7 +144,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             headerTitleStyle: {
               fontWeight: "bold",
               fontFamily: "Montserrat-Bold",
-              fontSize: 25,
+              fontSize: 20,
             },
             headerTitleAlign: "center",
             drawerStyle: {
@@ -154,7 +154,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             },
             drawerLabelStyle: {
               marginLeft: -18,
-              fontSize: 17,
+              fontSize: 15,
             },
             drawerActiveTintColor: "#fff",
             drawerActiveBackgroundColor: appColor.primary,

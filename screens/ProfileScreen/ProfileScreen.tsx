@@ -72,29 +72,41 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       <Box alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Họ và tên</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Họ và tên
+            </Text>
             <Text color={appColor.textSecondary}>
               {userInfo?.lastName + " " + userInfo?.firstName}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Địa chỉ</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Địa chỉ
+            </Text>
             <Text color={appColor.textSecondary}>Thành phố Hồ Chí Minh</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Giới tính</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Giới tính
+            </Text>
             <Text color={appColor.textSecondary}>Nam</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Email</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Email
+            </Text>
             <Text color={appColor.textSecondary}>{userInfo?.email}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Ngày sinh</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Ngày sinh
+            </Text>
             <Text color={appColor.textSecondary}>24/11/2002</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Nghề nghiệp</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Nghề nghiệp
+            </Text>
             <Text color={appColor.textSecondary}>Kỹ sư phần mềm</Text>
           </HStack>
           <HStack width="full" mt={20}>

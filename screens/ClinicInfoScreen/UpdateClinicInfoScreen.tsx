@@ -136,6 +136,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Tên phòng khám
@@ -164,6 +165,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Email
@@ -192,6 +194,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Số điện thoại
@@ -220,6 +223,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Địa chỉ{" "}
@@ -248,6 +252,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Logo{" "}
@@ -276,6 +281,7 @@ export default function UpdateClinicInfoScreen({
                 <FormControl.Label
                   _text={{
                     bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Mô tả{" "}
@@ -313,6 +319,9 @@ export default function UpdateClinicInfoScreen({
           flex={1}
           onPress={() => {
             navigation.navigate("ClinicInfoDashboard");
+          }}
+          _pressed={{
+            backgroundColor: "primary.100",
           }}
         >
           <Text>Quay lại</Text>

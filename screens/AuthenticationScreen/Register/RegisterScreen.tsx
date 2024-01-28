@@ -18,7 +18,7 @@ import {
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
 import * as yup from "yup";
 import { yupResolver } from "@hookform/resolvers/yup";
-import { theme } from "../../../theme";
+import { appColor, theme } from "../../../theme";
 import { authApi } from "../../../services";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 
@@ -130,9 +130,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               >
                 <FormControl.Label
                   _text={{
-                    color: "muted.700",
-                    fontSize: "sm",
-                    fontWeight: 600,
+                    bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Họ
@@ -166,9 +165,8 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               >
                 <FormControl.Label
                   _text={{
-                    color: "muted.700",
-                    fontSize: "sm",
-                    fontWeight: 600,
+                    bold: true,
+                    color: appColor.inputLabel,
                   }}
                 >
                   Tên
@@ -198,7 +196,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             {/******************************Email ********************************/}
             <FormControl isRequired isInvalid={errors.email ? true : false}>
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  bold: true,
+                  color: appColor.inputLabel,
+                }}
               >
                 Địa chỉ Email
               </FormControl.Label>
@@ -226,7 +227,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
             {/******************************Password ********************************/}
             <FormControl isRequired isInvalid={errors.password ? true : false}>
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  bold: true,
+                  color: appColor.inputLabel,
+                }}
               >
                 Mật khẩu
               </FormControl.Label>
@@ -256,7 +260,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
               isInvalid={errors.confirmPassword ? true : false}
             >
               <FormControl.Label
-                _text={{ color: "muted.700", fontSize: "sm", fontWeight: 600 }}
+                _text={{
+                  bold: true,
+                  color: appColor.inputLabel,
+                }}
               >
                 Xác nhận mật khẩu
               </FormControl.Label>

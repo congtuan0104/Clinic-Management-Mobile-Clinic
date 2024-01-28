@@ -114,6 +114,7 @@ export const theme = extendTheme({
           backgroundColor: "primary.50",
           borderColor: "primary.300",
         },
+
         fontSize: "14px",
       },
     },

@@ -52,8 +52,8 @@ export default function SubscriptionListScreen({
       <ScrollView
         width="90%"
         alignSelf="center"
-        minH="80%"
-        maxH="80%"
+        minH="90%"
+        maxH="90%"
         backgroundColor={appColor.white}
         borderRadius={20}
       >
@@ -80,7 +80,7 @@ export default function SubscriptionListScreen({
                         - {plan.duration} ngày
                       </Text>
 
-                      <HStack justifyContent="space-between">
+                      <HStack justifyContent="space-between" width="90%">
                         <Text fontSize={14} fontFamily="mono">
                           - {plan.planOptions.length} chức năng
                         </Text>
@@ -105,16 +105,6 @@ export default function SubscriptionListScreen({
           })}
         </VStack>
       </ScrollView>
-      <Button
-        mt={6}
-        width="90%"
-        alignSelf="center"
-        onPress={() => {
-          navigation.navigate("SubscriptionDashboard");
-        }}
-      >
-        Quay lại
-      </Button>
     </VStack>
   );
 }

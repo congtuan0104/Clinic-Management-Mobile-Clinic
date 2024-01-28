@@ -367,6 +367,15 @@ const Login: React.FC<LoginScreenProps> = ({
 
           <VStack space={3} mt="5">
             <FormControl /* isInvalid={!!errors.email} */>
+              <FormControl.Label
+                _text={{
+                  bold: true,
+                  color: appColor.inputLabel,
+                }}
+                isRequired
+              >
+                Địa chỉ Email
+              </FormControl.Label>
               <Controller
                 control={control}
                 rules={
@@ -392,6 +401,15 @@ const Login: React.FC<LoginScreenProps> = ({
               ) : null}
             </FormControl>
             <FormControl>
+              <FormControl.Label
+                _text={{
+                  bold: true,
+                  color: appColor.inputLabel,
+                }}
+                isRequired
+              >
+                Mật khẩu
+              </FormControl.Label>
               <Controller
                 control={control}
                 rules={{
@@ -470,6 +488,7 @@ const Login: React.FC<LoginScreenProps> = ({
                     style={styles.logoIcon}
                     contentFit="cover"
                     source={require("../../../assets/google.png")}
+                    alt="google_icon"
                   />
                 </HStack>
               </Button>
@@ -489,6 +508,7 @@ const Login: React.FC<LoginScreenProps> = ({
                     style={styles.logoIcon}
                     contentFit="cover"
                     source={require("../../../assets/facebook.png")}
+                    alt="facebook_icon"
                   />
                 </HStack>
               </Button>
@@ -508,6 +528,7 @@ const Login: React.FC<LoginScreenProps> = ({
                     style={styles.logoIcon}
                     contentFit="cover"
                     source={require("../../../assets/microsoft.png")}
+                    alt="microsoft_icon"
                   />
                 </HStack>
               </Button>

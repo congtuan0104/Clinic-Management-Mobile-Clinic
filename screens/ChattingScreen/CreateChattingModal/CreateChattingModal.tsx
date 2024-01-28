@@ -207,6 +207,7 @@ export default function CreateChattingModal({
               fontFamily="Montserrat-SemiBold"
               setSelected={(val: any) => setSelected(val)}
               //   onSelect={() => console.log(selected)}
+
               data={userInClinic}
               label="Danh sách thành viên"
               save="key"

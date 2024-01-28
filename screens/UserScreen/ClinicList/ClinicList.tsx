@@ -41,8 +41,8 @@ export default function ClinicListNavigator({
         <ScrollView
           width="90%"
           alignSelf="center"
-          minH="80%"
-          maxH="80%"
+          minH="82%"
+          maxH="82%"
           backgroundColor={appColor.white}
           borderRadius={20}
         >
@@ -52,12 +52,18 @@ export default function ClinicListNavigator({
                 <Box
                   key={index}
                   backgroundColor="#DAD9FF"
-                  borderRadius={10}
+                  borderRadius={15}
                   p={3}
                 >
                   <HStack alignItems="center" justifyContent="space-between">
                     <VStack>
-                      <Text fontSize={20}>{clinicItem.name}</Text>
+                      <Text
+                        color={appColor.textTitle}
+                        fontWeight="bold"
+                        fontSize={20}
+                      >
+                        {clinicItem.name}
+                      </Text>
                       <Text fontSize={14}>SĐT: {clinicItem.phone}</Text>
                       <Text fontSize={14}>Đ/c: {clinicItem.address}</Text>
                       <Text>
@@ -96,7 +102,6 @@ export default function ClinicListNavigator({
         </VStack>
       )}
       <Button
-        mt={6}
         width="90%"
         alignSelf="center"
         onPress={() => {
