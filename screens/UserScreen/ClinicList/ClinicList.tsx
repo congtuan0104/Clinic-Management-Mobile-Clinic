@@ -29,24 +29,19 @@ export default function ClinicListNavigator({
   const { clinic, setClinic, clinicList } = route.params;
   return (
     <VStack space={5} my={5}>
-      <Box
-        width="90%"
-        alignSelf="center"
-        justifyContent="center"
-        alignItems="center"
-      >
-        <Heading>Danh sách phòng khám</Heading>
-      </Box>
       {clinicList.length ? (
         <ScrollView
           width="90%"
           alignSelf="center"
-          minH="82%"
-          maxH="82%"
+          minH="90%"
+          maxH="90%"
           backgroundColor={appColor.white}
           borderRadius={20}
         >
           <VStack space={5} width="90%" alignSelf="center" my={5}>
+            <Heading alignSelf="center" fontSize={20}>
+              Danh sách phòng khám
+            </Heading>
             {clinicList.map((clinicItem: any, index: any) => {
               return (
                 <Box
@@ -93,7 +88,13 @@ export default function ClinicListNavigator({
         </ScrollView>
       ) : (
         <VStack space={5} my={5}>
-          <Box width="90%" height="75%" alignSelf="center">
+          <Box
+            width="90%"
+            height="90%"
+            minH="90%"
+            maxH="90%"
+            alignSelf="center"
+          >
             <Text>
               Rất tiếc, hiện tại bạn chưa có bất kì phòng khám nào. Để tạo phòng
               khám mới, bạn hãy vào Mua gói ở mục Quản lý gói.

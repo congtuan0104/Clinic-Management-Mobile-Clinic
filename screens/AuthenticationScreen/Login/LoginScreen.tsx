@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from "react";
-import { Image } from "expo-image";
 import { StyleSheet } from "react-native";
 import { useAppDispatch } from "../../../hooks";
 import AsyncStorage from "@react-native-async-storage/async-storage";
@@ -18,6 +17,8 @@ import {
   Center,
   Modal,
   Icon,
+  Image,
+  useToast,
 } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -28,10 +29,7 @@ import * as yup from "yup";
 import { LoginScreenProps } from "../../../Navigator/StackNavigator";
 import { login } from "../../../store";
 import { authApi } from "../../../services/auth.services";
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import auth from "@react-native-firebase/auth";
 import { FirebaseAuthTypes } from "@react-native-firebase/auth";
 // Thư viện dùng để kết nối với Facebook
@@ -44,6 +42,7 @@ import {
 } from "firebase/auth";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { appColor } from "../../../theme";
+import ToastAlert from "../../../components/Toast/Toast";
 GoogleSignin.configure({
   webClientId:
     "698964272341 - u24tokvut5fd5heu7vqmh58c3qmd6kfv.apps.googleusercontent.com",
@@ -68,6 +67,7 @@ const Login: React.FC<LoginScreenProps> = ({
   route,
 }: LoginScreenProps) => {
   const [isChecked, setIsChecked] = React.useState(false);
+  const toast = useToast();
   // Set an initializing state whilst Firebase connects
   const [initializing, setInitializing] = useState(true);
   const [user, setUser] = useState<FirebaseAuthTypes.User | null>(null);
@@ -317,223 +317,294 @@ const Login: React.FC<LoginScreenProps> = ({
           await AsyncStorage.setItem("token", res.data.token);
           // Set lại token để vào trang homepage
           setLogin(res.data.user, res.data.token);
+          toast.show({
+            render: () => {
+              return (
+                <ToastAlert
+                  title="Thành công"
+                  description="Đăng nhập thành công!"
+                  status="success"
+                />
+              );
+            },
+          });
         }
       })
       .catch((error) => {
-        console.log(error.response);
+        toast.show({
+          render: () => {
+            return (
+              <ToastAlert
+                title="Thất bại!"
+                description="Đăng nhập thất bại! Vui lòng kiểm tra lại."
+                status="error"
+              />
+            );
+          },
+        });
+        console.log(error);
       });
     setIsLoading(false);
   };
 
   return (
-    <Center flex="1" px="3">
+    <Center flex="1">
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <Center w="100%">
-        <Box safeArea p="2" py="8" w="100%">
-          <Heading
-            size="xl"
-            fontWeight="bold"
-            color="coolGray.800"
-            _dark={{
-              color: "warmGray.50",
-            }}
+      <Center w="100%" h="100%">
+        <Box safeArea w="100%" h="100%">
+          <VStack
+            backgroundColor="primary.300"
+            justifyContent="center"
+            alignItems="center"
+            h="2/5"
+            space={4}
+            mt={-8}
           >
-            Đăng nhập
-          </Heading>
-          <Heading
-            mt="1"
-            _dark={{
-              color: "warmGray.200",
-            }}
-            color="coolGray.600"
-            fontWeight="medium"
-            size="xs"
+            <Image
+              source={require("../../../assets/images/common/logo.png")}
+              borderRadius={100}
+              size="20"
+              alt="logo_img"
+              mt={-4}
+            />
+            <Heading
+              fontSize={30}
+              fontFamily="heading"
+              fontWeight="bold"
+              color="#fff"
+            >
+              CLINUS
+            </Heading>
+          </VStack>
+          <Box
+            borderTopRadius={20}
+            mt="-20"
+            backgroundColor="#fff"
+            flex={1}
+            p="5"
+            pt="10"
           >
-            <HStack space={1} alignItems="center" justifyContent="center">
-              <Text>hoặc</Text>
-              <Link
-                isUnderlined={false}
-                _text={{
-                  _light: {
-                    color: "primary.300",
-                  },
-                }}
-                onPress={() => navigation.navigate("Register", { setLogin })}
-              >
-                Tạo tài khoản mới
-              </Link>
-            </HStack>
-          </Heading>
-
-          <VStack space={3} mt="5">
-            <FormControl /* isInvalid={!!errors.email} */>
-              <FormControl.Label
-                _text={{
-                  bold: true,
-                  color: appColor.inputLabel,
-                }}
-                isRequired
-              >
-                Địa chỉ Email
-              </FormControl.Label>
-              <Controller
-                control={control}
-                rules={
-                  {
-                    // required: true,
-                  }
-                }
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    placeholder="Nhập địa chỉ Email"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    InputLeftElement={
-                      <Icon as={<Entypo name="email" />} ml="3" />
-                    }
-                  />
-                )}
-                name="email"
-              />
-              {errors.email ? (
-                <Text color="error.400">{errors.email.message}</Text>
-              ) : null}
-            </FormControl>
-            <FormControl>
-              <FormControl.Label
-                _text={{
-                  bold: true,
-                  color: appColor.inputLabel,
-                }}
-                isRequired
-              >
-                Mật khẩu
-              </FormControl.Label>
-              <Controller
-                control={control}
-                rules={{
-                  maxLength: 100,
-                }}
-                render={({ field: { onChange, onBlur, value } }) => (
-                  <Input
-                    placeholder="Nhập mật khẩu"
-                    onBlur={onBlur}
-                    onChangeText={onChange}
-                    value={value}
-                    secureTextEntry
-                    InputLeftElement={
-                      <Icon as={<AntDesign name="lock" />} ml="3" />
-                    }
-                  />
-                )}
-                name="password"
-              />
-              {errors.password ? (
-                <Text color="error.400">{errors.password.message}</Text>
-              ) : null}
-            </FormControl>
-            <HStack justifyContent="space-between">
-              <Checkbox
-                value="one"
-                isChecked={isChecked}
-                onChange={() => setIsChecked(!isChecked)}
-                _text={{
-                  fontSize: "14px",
-                  ml: "0",
-                }}
-              >
-                Lưu thông tin đăng nhập
-              </Checkbox>
-              <Link
-                _text={{
-                  fontSize: "14",
-                  fontWeight: "500",
-                  color: "primary.300",
-                }}
-                alignSelf="center"
-              >
-                Quên mật khẩu?
-              </Link>
-            </HStack>
-            <Button mt="2" onPress={handleSubmit(onSubmit)}>
-              <Text ml={2} fontWeight="medium" style={{ color: "white" }}>
-                Đăng nhập
-              </Text>
-            </Button>
-            <Text
-              fontSize="14"
-              color="black"
-              alignSelf="center"
+            <Heading
+              size="xl"
+              fontWeight="bold"
+              color="coolGray.800"
+              _dark={{
+                color: "warmGray.50",
+              }}
+            >
+              Đăng nhập
+            </Heading>
+            <Heading
+              mt="1"
               _dark={{
                 color: "warmGray.200",
               }}
+              color="coolGray.600"
+              fontWeight="medium"
+              size="xs"
             >
-              Hoặc đăng nhập bằng tài khoản
-            </Text>
-            <HStack space={5} alignItems="center" justifyContent="center">
-              <Button
-                height={50}
-                width={50}
-                justifyContent="center"
-                alignItems="center"
-                bg="white" // Set the background color to white
-                borderWidth={1} // Set the border width
-                borderColor="primary.300" // Set the border color to gray
-                borderRadius="full" // Set the border radius
-                onPress={revokeGoogleAccess}
-              >
-                <HStack space={2} alignItems="center">
-                  <Image
-                    style={styles.logoIcon}
-                    contentFit="cover"
-                    source={require("../../../assets/google.png")}
-                    alt="google_icon"
-                  />
-                </HStack>
+              <HStack space={1} alignItems="center" justifyContent="center">
+                <Text fontSize={18}>hoặc</Text>
+                <Link
+                  isUnderlined={false}
+                  _text={{
+                    color: "primary.300",
+                    fontSize: 18,
+                  }}
+                  onPress={() => navigation.navigate("Register", { setLogin })}
+                >
+                  Tạo tài khoản mới
+                </Link>
+              </HStack>
+            </Heading>
+
+            <VStack space={3} mt="5">
+              <FormControl /* isInvalid={!!errors.email} */>
+                <FormControl.Label
+                  _text={{
+                    bold: true,
+                    color: appColor.inputLabel,
+                  }}
+                  isRequired
+                >
+                  Địa chỉ Email
+                </FormControl.Label>
+                <Controller
+                  control={control}
+                  rules={
+                    {
+                      // required: true,
+                    }
+                  }
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      placeholder="Nhập địa chỉ Email"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      InputLeftElement={
+                        <Icon
+                          as={<Entypo name="email" />}
+                          ml="2"
+                          color={appColor.primary}
+                          size={5}
+                        />
+                      }
+                    />
+                  )}
+                  name="email"
+                />
+                {errors.email ? (
+                  <Text color="error.400">{errors.email.message}</Text>
+                ) : null}
+              </FormControl>
+              <FormControl>
+                <FormControl.Label
+                  _text={{
+                    bold: true,
+                    color: appColor.inputLabel,
+                  }}
+                  isRequired
+                >
+                  Mật khẩu
+                </FormControl.Label>
+                <Controller
+                  control={control}
+                  rules={{
+                    maxLength: 100,
+                  }}
+                  render={({ field: { onChange, onBlur, value } }) => (
+                    <Input
+                      placeholder="Nhập mật khẩu"
+                      onBlur={onBlur}
+                      onChangeText={onChange}
+                      value={value}
+                      secureTextEntry
+                      InputLeftElement={
+                        <Icon
+                          as={<AntDesign name="lock" />}
+                          ml="2"
+                          color={appColor.primary}
+                          size={6}
+                        />
+                      }
+                    />
+                  )}
+                  name="password"
+                />
+                {errors.password ? (
+                  <Text color="error.400">{errors.password.message}</Text>
+                ) : null}
+              </FormControl>
+              <HStack justifyContent="space-between">
+                <Checkbox
+                  value="one"
+                  isChecked={isChecked}
+                  onChange={() => setIsChecked(!isChecked)}
+                  _text={{
+                    fontSize: "14px",
+                    ml: "0",
+                  }}
+                >
+                  Lưu thông tin đăng nhập
+                </Checkbox>
+                <Link
+                  _text={{
+                    fontSize: "14",
+                    fontWeight: "500",
+                    color: "primary.300",
+                  }}
+                  alignSelf="center"
+                >
+                  Quên mật khẩu?
+                </Link>
+              </HStack>
+              <Button mt="2" onPress={handleSubmit(onSubmit)}>
+                <Text ml={2} fontWeight="medium" style={{ color: "white" }}>
+                  Đăng nhập
+                </Text>
               </Button>
-              <Button
-                height={50}
-                width={50}
-                justifyContent="center"
-                alignItems="center"
-                bg="white" // Set the background color to white
-                borderWidth={1} // Set the border width
-                borderColor="primary.300" // Set the border color to gray
-                borderRadius="full" // Set the border radius
-                onPress={onFacebookButtonPress}
+              <Text
+                fontSize="14"
+                color="black"
+                alignSelf="center"
+                _dark={{
+                  color: "warmGray.200",
+                }}
+                mt="5"
               >
-                <HStack space={2} alignItems="center">
-                  <Image
-                    style={styles.logoIcon}
-                    contentFit="cover"
-                    source={require("../../../assets/facebook.png")}
-                    alt="facebook_icon"
-                  />
-                </HStack>
-              </Button>
-              <Button
-                height={50}
-                width={50}
-                justifyContent="center"
-                alignItems="center"
-                bg="white" // Set the background color to white
-                borderWidth={1} // Set the border width
-                borderColor="primary.300" // Set the border color to gray
-                borderRadius="full" // Set the border radius
-                onPress={revokeGoogleAccess}
-              >
-                <HStack alignItems="center" justifyContent="center">
-                  <Image
-                    style={styles.logoIcon}
-                    contentFit="cover"
-                    source={require("../../../assets/microsoft.png")}
-                    alt="microsoft_icon"
-                  />
-                </HStack>
-              </Button>
-            </HStack>
-          </VStack>
+                Hoặc đăng nhập bằng tài khoản
+              </Text>
+              <HStack space={5} alignItems="center" justifyContent="center">
+                <Button
+                  height={50}
+                  width={50}
+                  justifyContent="center"
+                  alignItems="center"
+                  bg="white" // Set the background color to white
+                  borderWidth={1} // Set the border width
+                  borderColor="primary.300" // Set the border color to gray
+                  borderRadius="full" // Set the border radius
+                  onPress={revokeGoogleAccess}
+                  _pressed={{
+                    backgroundColor: "primary.100",
+                  }}
+                >
+                  <HStack space={2} alignItems="center">
+                    <Image
+                      style={styles.logoIcon}
+                      source={require("../../../assets/google.png")}
+                      alt="google_icon"
+                    />
+                  </HStack>
+                </Button>
+                <Button
+                  height={50}
+                  width={50}
+                  justifyContent="center"
+                  alignItems="center"
+                  bg="white" // Set the background color to white
+                  borderWidth={1} // Set the border width
+                  borderColor="primary.300" // Set the border color to gray
+                  borderRadius="full" // Set the border radius
+                  onPress={onFacebookButtonPress}
+                  _pressed={{
+                    backgroundColor: "primary.100",
+                  }}
+                >
+                  <HStack space={2} alignItems="center">
+                    <Image
+                      style={styles.logoIcon}
+                      source={require("../../../assets/facebook.png")}
+                      alt="facebook_icon"
+                    />
+                  </HStack>
+                </Button>
+                {/* <Button
+                  height={50}
+                  width={50}
+                  justifyContent="center"
+                  alignItems="center"
+                  bg="white" // Set the background color to white
+                  borderWidth={1} // Set the border width
+                  borderColor="primary.300" // Set the border color to gray
+                  borderRadius="full" // Set the border radius
+                  onPress={revokeGoogleAccess}
+                  _pressed={{
+                    backgroundColor: "primary.100",
+                  }}
+                >
+                  <HStack alignItems="center" justifyContent="center">
+                    <Image
+                      style={styles.logoIcon}
+                      source={require("../../../assets/microsoft.png")}
+                      alt="microsoft_icon"
+                    />
+                  </HStack>
+                </Button> */}
+              </HStack>
+            </VStack>
+          </Box>
         </Box>
         {/** Modal handling enter email */}
         <Modal
@@ -621,13 +692,11 @@ const Login: React.FC<LoginScreenProps> = ({
             <Modal.Footer>
               <Button.Group space={2}>
                 <Button
-                  variant="ghost"
-                  colorScheme="blueGray"
                   onPress={() => {
                     setShowEnterAdditionalPasswordModal(false);
                   }}
                 >
-                  Thoát
+                  Bỏ qua
                 </Button>
                 <Button
                   onPress={() => {
