@@ -81,7 +81,10 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
       .then(async (response) => {
         if (response.data)
           // Redirect đến trang Validate
-          navigation.navigate("ValidateNotification", { setLogin });
+          navigation.navigate("ValidateNotification", {
+            setLogin,
+            email: data.email,
+          });
       })
       .catch((error) => {
         // Print error to the screen

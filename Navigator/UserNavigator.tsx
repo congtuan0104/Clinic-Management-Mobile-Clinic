@@ -1,5 +1,5 @@
 import ClinicInfoNavigator from "./ClinicInfoNavigator";
-import ClinicListNavigator from "../screens/UserScreen/ClinicList/ClinicList";
+import ClinicListNavigator from "../screens/ClinicListScreen/ClinicList";
 import * as React from "react";
 import { UserNavigatorProps } from "./StackNavigator";
 import { createDrawerNavigator } from "@react-navigation/drawer";

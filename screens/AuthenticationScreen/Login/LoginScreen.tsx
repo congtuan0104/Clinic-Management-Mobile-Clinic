@@ -271,11 +271,12 @@ const Login: React.FC<LoginScreenProps> = ({
       if (res.status) {
         navigation.navigate("ValidateNotification", {
           setLogin: setLogin,
+          email: email,
         });
         setShowEnterEmailModal(false);
       }
       setEmailChoose("");
-      navigation.navigate("ValidateNotification", { setLogin });
+      navigation.navigate("ValidateNotification", { setLogin, email: email });
     } catch (err) {
       console.error(err);
     }
@@ -331,18 +332,24 @@ const Login: React.FC<LoginScreenProps> = ({
         }
       })
       .catch((error) => {
-        toast.show({
-          render: () => {
-            return (
-              <ToastAlert
-                title="Thất bại!"
-                description="Đăng nhập thất bại! Vui lòng kiểm tra lại."
-                status="error"
-              />
-            );
-          },
-        });
-        console.log(error);
+        if (error.response.data.message === "Email chưa được xác thực") {
+          navigation.navigate("ValidateNotification", {
+            setLogin,
+            email: data.email,
+          });
+        } else {
+          toast.show({
+            render: () => {
+              return (
+                <ToastAlert
+                  title="Thất bại!"
+                  description={error.response.data.message}
+                  status="error"
+                />
+              );
+            },
+          });
+        }
       });
     setIsLoading(false);
   };
