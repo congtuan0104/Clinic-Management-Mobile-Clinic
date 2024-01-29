@@ -25,24 +25,14 @@ import { appColor, theme } from "../../theme";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 
 
-const schema = yup.object().shape({
-  firstName: yup.string().required("Bạn chưa nhập tên"),
-  lastName: yup.string().required("Bạn chưa nhập họ"),
+const schema = yup.object().shape({ 
   email: yup
     .string()
     .required("Thông tin email là bắt buộc")
-    .email("Email không hợp lệ"),
-  password: yup
-    .string()
-    .required("Bạn chưa nhập mật khẩu")
-    .min(8, "Mật khẩu phải có tối thiểu 8 ký tự"),
-  confirmPassword: yup
-    .string()
-    .required("Vui lòng xác nhận lại mật khẩu")
-    .oneOf([yup.ref("password"), ""], "Không trùng với mật khẩu đã nhập"),
+    .email("Email không hợp lệ"),  
 });
 
-const RegisterScreen: React.FC<ResetPasswordScreenProps> = ({
+const ResetPasswordScreen: React.FC<ResetPasswordScreenProps> = ({
   navigation,
   route,
 }) => {
@@ -206,4 +196,4 @@ const RegisterScreen: React.FC<ResetPasswordScreenProps> = ({
   );
 };
 
-export default RegisterScreen;
+export default ResetPasswordScreen;

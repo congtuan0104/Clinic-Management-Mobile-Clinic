@@ -7,7 +7,6 @@ import {
   Input,
   Button,
   NativeBaseProvider,
-  WarningOutlineIcon,
   Text,
   Icon,
   Link,
@@ -23,7 +22,7 @@ import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 
 
 
-const RegisterScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
+const ResetPasswordNotificationScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
   navigation,
   route,
 }) => {
@@ -41,13 +40,13 @@ const RegisterScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
       .then(async (response) => {
         console.log(response);
         if (response.status) {
-
+            
             toast.show({
                 render: () => {
                   return (
                     <ToastAlert
                       title="Thành công"
-                      description="Đăng nhập thành công!"
+                      description="Gửi email reset password thành công!"
                       status="success"
                     />
                   );
@@ -124,7 +123,6 @@ const RegisterScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
                   color: "primary.300",
                   fontSize: 18,
                 }}
-                onPress={() => navigation.navigate("Login", { setLogin })}
               >
                 {email}
               </Link>
@@ -135,7 +133,7 @@ const RegisterScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
               
               <VStack space={2} mt={5}>
                 <Button
-                  onPress={() => null}
+                  onPress={handleSubmit}
                   colorScheme="info"
                   _text={{
                     color: "white",
@@ -163,4 +161,4 @@ const RegisterScreen: React.FC<ResetPasswordNotificationScreenProps> = ({
   );
 };
 
-export default RegisterScreen;
+export default ResetPasswordNotificationScreen;
