@@ -48,6 +48,7 @@ export default function StaffDashboardScreen({
       alignItems="center"
       p={5}
       borderRadius={20}
+      mt="5%"
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       {staffList?.length ? (
@@ -56,8 +57,9 @@ export default function StaffDashboardScreen({
             width="full"
             justifyContent="space-between"
             alignItems="center"
+            mt={-3}
           >
-            <Text my="2" fontSize={17} alignSelf="flex-start">
+            <Text my="2" fontWeight="bold" fontSize={20} alignSelf="flex-start">
               Danh sách nhân viên
             </Text>
             <Pressable
@@ -67,7 +69,7 @@ export default function StaffDashboardScreen({
             >
               <Ionicons
                 name="add-circle-outline"
-                size={24}
+                size={25}
                 color={appColor.primary}
               />
             </Pressable>
@@ -85,7 +87,11 @@ export default function StaffDashboardScreen({
                     maxW="100%"
                   >
                     <HStack justifyContent="space-between" alignItems="center">
-                      <Text color={appColor.textTitle} fontSize={16}>
+                      <Text
+                        fontWeight="bold"
+                        color={appColor.textTitle}
+                        fontSize={16}
+                      >
                         {staff.lastName + " " + staff.firstName}
                       </Text>
                       <HStack space={2} alignItems="center">
@@ -117,15 +123,27 @@ export default function StaffDashboardScreen({
                         )}
                       </HStack>
                     </HStack>
-                    {staff.isOwner && <Text>Chủ phòng khám</Text>}
+                    {staff.isOwner && (
+                      <Text fontWeight="bold" color="#ca3c0c">
+                        Chủ phòng khám
+                      </Text>
+                    )}
                     <HStack space={4} mt={2}>
                       <VStack>
-                        <Text>Email:</Text>
-                        <Text>Vai trò:</Text>
+                        <Text fontWeight="bold" color={appColor.textSecondary}>
+                          Email:
+                        </Text>
+                        <Text fontWeight="bold" color={appColor.textSecondary}>
+                          Vai trò:
+                        </Text>
                       </VStack>
                       <VStack>
-                        <Text>{staff.email}</Text>
-                        <Text>{staff.role.name}</Text>
+                        <Text color={appColor.textSecondary}>
+                          {staff.email}
+                        </Text>
+                        <Text color={appColor.textSecondary}>
+                          {staff.role.name}
+                        </Text>
                       </VStack>
                     </HStack>
                   </Box>

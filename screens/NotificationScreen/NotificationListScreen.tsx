@@ -77,12 +77,14 @@ const NotificationListScreen = ({
       alignSelf="center"
       p={5}
       maxH="95%"
+      minH="95%"
+      mt="5%"
     >
       <HStack space={5} mb={5}>
-        <Button onPress={showAllNotification} borderRadius={20}>
+        <Button width={24} onPress={showAllNotification} borderRadius={20}>
           Tất cả
         </Button>
-        <Button onPress={showUnreadNotification} borderRadius={20}>
+        <Button width={24} onPress={showUnreadNotification} borderRadius={20}>
           Chưa đọc
         </Button>
       </HStack>
@@ -105,7 +107,9 @@ const NotificationListScreen = ({
               );
             })
           ) : (
-            <Text>Bạn chưa có thông báo nào</Text>
+            <Text fontFamily="body" fontSize={20} color="coolGray.500">
+              Bạn chưa có bất kì thông báo nào.
+            </Text>
           )}
         </VStack>
       </ScrollView>

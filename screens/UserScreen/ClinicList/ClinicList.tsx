@@ -29,30 +29,36 @@ export default function ClinicListNavigator({
   const { clinic, setClinic, clinicList } = route.params;
   return (
     <VStack space={5} my={5}>
-      <Box width="90%" alignSelf="center">
-        <Heading>Phòng khám của bạn</Heading>
-      </Box>
       {clinicList.length ? (
         <ScrollView
           width="90%"
           alignSelf="center"
-          minH="80%"
-          maxH="80%"
+          minH="90%"
+          maxH="90%"
           backgroundColor={appColor.white}
           borderRadius={20}
         >
           <VStack space={5} width="90%" alignSelf="center" my={5}>
+            <Heading alignSelf="center" fontSize={20}>
+              Danh sách phòng khám
+            </Heading>
             {clinicList.map((clinicItem: any, index: any) => {
               return (
                 <Box
                   key={index}
                   backgroundColor="#DAD9FF"
-                  borderRadius={10}
+                  borderRadius={15}
                   p={3}
                 >
                   <HStack alignItems="center" justifyContent="space-between">
                     <VStack>
-                      <Text fontSize={20}>{clinicItem.name}</Text>
+                      <Text
+                        color={appColor.textTitle}
+                        fontWeight="bold"
+                        fontSize={20}
+                      >
+                        {clinicItem.name}
+                      </Text>
                       <Text fontSize={14}>SĐT: {clinicItem.phone}</Text>
                       <Text fontSize={14}>Đ/c: {clinicItem.address}</Text>
                       <Text>
@@ -82,16 +88,21 @@ export default function ClinicListNavigator({
         </ScrollView>
       ) : (
         <VStack space={5} my={5}>
-          <Box width="90%" alignSelf="center">
-            <Heading>
-              Hien tai ban chua co phong kham nao. Vui long mua goi o muc Quan
-              ly goi
-            </Heading>
+          <Box
+            width="90%"
+            height="90%"
+            minH="90%"
+            maxH="90%"
+            alignSelf="center"
+          >
+            <Text>
+              Rất tiếc, hiện tại bạn chưa có bất kì phòng khám nào. Để tạo phòng
+              khám mới, bạn hãy vào Mua gói ở mục Quản lý gói.
+            </Text>
           </Box>
         </VStack>
       )}
       <Button
-        mt={6}
         width="90%"
         alignSelf="center"
         onPress={() => {

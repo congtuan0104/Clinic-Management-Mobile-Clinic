@@ -57,12 +57,12 @@ export default function SubscriptionNavigator({
   route,
 }: SubscriptionNavigatorProps) {
   return (
-    <SubscriptionStackNavigator.Navigator initialRouteName="SubscriptionDashboard">
-      <SubscriptionStackNavigator.Screen
+    <SubscriptionStackNavigator.Navigator initialRouteName="SubscriptionList">
+      {/* <SubscriptionStackNavigator.Screen
         name="SubscriptionDashboard"
         component={SubscriptionDashboardScreen}
         options={{ headerShown: false }}
-      />
+      /> */}
       <SubscriptionStackNavigator.Screen
         name="SubscriptionRegistration"
         component={SubscriptionRegistrationScreen}

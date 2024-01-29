@@ -35,6 +35,8 @@ export default function ClinicInfoDashboardScreen({
       bgColor="#fff"
       minWidth="90%"
       maxWidth="90%"
+      minH="95%"
+      maxH="95%"
       alignSelf="center"
       alignItems="center"
       p={5}

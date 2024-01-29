@@ -52,6 +52,7 @@ export default function RoleDashboardScreen({
     // get a role list here
     getRoleList();
   }, [clinic?.id]);
+
   return (
     <Box
       bgColor="#fff"
@@ -63,6 +64,7 @@ export default function RoleDashboardScreen({
       alignItems="center"
       p={5}
       borderRadius={20}
+      mt="5%"
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
 
@@ -72,8 +74,9 @@ export default function RoleDashboardScreen({
             width="full"
             justifyContent="space-between"
             alignItems="center"
+            mt={-3}
           >
-            <Text my="2" fontSize={17} alignSelf="flex-start">
+            <Text my="2" fontSize={20} fontWeight="bold" flex-start>
               Danh sách vai trò
             </Text>
             <Pressable
@@ -83,7 +86,7 @@ export default function RoleDashboardScreen({
             >
               <Ionicons
                 name="add-circle-outline"
-                size={24}
+                size={25}
                 color={appColor.primary}
               />
             </Pressable>
@@ -99,36 +102,42 @@ export default function RoleDashboardScreen({
                     p={3}
                   >
                     <HStack justifyContent="space-between" alignItems="center">
-                      <Text color={appColor.textTitle} fontSize={16}>
+                      <Text
+                        fontWeight="bold"
+                        color={appColor.textTitle}
+                        fontSize={16}
+                      >
                         {role.name}
                       </Text>
-                      <HStack space={2} alignItems="center">
-                        <Pressable
-                          onPress={() => {
-                            setSelectedRole(role);
-                            setIsOpenModal(true);
-                            setIsEditMode(true);
-                          }}
-                        >
-                          <FontAwesome5
-                            name="edit"
-                            size={18}
-                            color={appColor.primary}
-                          />
-                        </Pressable>
-                        <Pressable
-                          onPress={() => {
-                            setSelectedRole(role);
-                            setIsOpenDeleteModal(true);
-                          }}
-                        >
-                          <MaterialIcons
-                            name="delete"
-                            size={24}
-                            color={appColor.primary}
-                          />
-                        </Pressable>
-                      </HStack>
+                      {role.name !== "Admin" && (
+                        <HStack space={2} alignItems="center">
+                          <Pressable
+                            onPress={() => {
+                              setSelectedRole(role);
+                              setIsOpenModal(true);
+                              setIsEditMode(true);
+                            }}
+                          >
+                            <FontAwesome5
+                              name="edit"
+                              size={18}
+                              color={appColor.primary}
+                            />
+                          </Pressable>
+                          <Pressable
+                            onPress={() => {
+                              setSelectedRole(role);
+                              setIsOpenDeleteModal(true);
+                            }}
+                          >
+                            <MaterialIcons
+                              name="delete"
+                              size={24}
+                              color={appColor.primary}
+                            />
+                          </Pressable>
+                        </HStack>
+                      )}
                     </HStack>
 
                     <VStack>

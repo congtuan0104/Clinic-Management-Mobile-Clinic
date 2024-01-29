@@ -373,8 +373,9 @@ export default function AddRoleModal({
                         onChange={() => {
                           toggleCheckbox(permission.id, index);
                         }}
+                        mt={2}
                       >
-                        {permission.description}
+                        {permission.optionName}
                       </Checkbox>
                     );
                   })}

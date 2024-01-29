@@ -121,17 +121,23 @@ const ConnectingScreen = ({ navigation, route }: ConnectingScreenProps) => {
       <Box alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Email</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Email
+            </Text>
             <Text color={appColor.textSecondary}>{userInfo?.email}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Google</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Google
+            </Text>
             <Text color={appColor.textSecondary}>
               {isGoogleLink ? "Đã kết nối" : "Chưa kết nối"}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text color={appColor.textSecondary}>Facebook</Text>
+            <Text fontWeight="bold" color={appColor.textSecondary}>
+              Facebook
+            </Text>
             <Text color={appColor.textSecondary}>
               {isFacebookLink ? "Đã kết nối" : "Chưa kết nối"}
             </Text>

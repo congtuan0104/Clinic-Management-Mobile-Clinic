@@ -144,14 +144,18 @@ export default function SubscriptionRegistrationProcessScreen({
         </Pressable>
       </HStack> */}
       <Button
+        backgroundColor="primary.300"
+        _pressed={{
+          backgroundColor: "primary.400",
+        }}
         mt={8}
         width="90%"
         alignSelf="center"
         onPress={() => {
-          navigation.navigate("SubscriptionDashboard");
+          navigation.navigate("SubscriptionList");
         }}
       >
-        Thoát
+        Quay lại
       </Button>
     </Box>
   );
