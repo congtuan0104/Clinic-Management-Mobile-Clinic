@@ -1,5 +1,5 @@
 import React from "react";
-import { ClinicListNavigatorProps } from "../../../Navigator/UserNavigator";
+import { ClinicListNavigatorProps } from "../../Navigator/UserNavigator";
 import {
   Box,
   Button,
@@ -10,12 +10,12 @@ import {
   Text,
   Pressable,
 } from "native-base";
-import { appColor } from "../../../theme";
+import { appColor } from "../../theme";
 import { FontAwesome } from "@expo/vector-icons";
 import dayjs from "dayjs";
-import { changeClinic, updateClinic } from "../../../store";
-import { useAppDispatch } from "../../../hooks";
-import { IClinicInfo } from "../../../types/clinic.types";
+import { changeClinic, updateClinic } from "../../store";
+import { useAppDispatch } from "../../hooks";
+import { IClinicInfo } from "../../types/clinic.types";
 export default function ClinicListNavigator({
   navigation,
   route,

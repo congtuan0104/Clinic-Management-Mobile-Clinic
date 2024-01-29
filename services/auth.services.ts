@@ -66,4 +66,9 @@ export const authApi = {
   inviteMemberToClinic(userInfo: IInviteClinicMemberRequest): Promise<any> {
     return axiosClient.post(`/auth/invite`, userInfo);
   },
+  resendVerifyEmail(email: string): Promise<IApiResponse<any>> {
+    return axiosClient.post(`/auth/resend-verify-email`, {
+      email: email,
+    });
+  },
 };
