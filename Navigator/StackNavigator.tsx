@@ -4,6 +4,8 @@ import { NavigationContainer, useLinkTo } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/AuthenticationScreen/Login/LoginScreen";
 import RegisterScreen from "../screens/AuthenticationScreen/Register/RegisterScreen";
+import ResetPasswordScreen from '../screens/ResetPassword/ResetPasswordScreen'
+import ResetPasswordNotificationScreen from '../screens/ResetPassword/ResetPasswordNotification'
 import { ILoginResponse, IUserInfo } from "../types";
 import { NativeBaseProvider } from "native-base";
 import { theme } from "../theme";
@@ -32,6 +34,15 @@ export type RootNativeStackParamList = {
   Register: {
     setLogin: (user: IUserInfo | null, token: string | null) => void;
   };
+
+  ResetPassword: {
+    setLogin: (user: IUserInfo | null, token: string | null) => void | any;
+  };
+
+  ResetPasswordNotification: {
+    setLogin: (user: IUserInfo | null, token: string | null) => void | any;
+    email: string
+  }
 
   UserNavigator: {
     screen: string;
@@ -70,6 +81,16 @@ export type DoctorNavigatorProps = NativeStackScreenProps<
 export type ValidateNotificationProps = NativeStackScreenProps<
   RootNativeStackParamList,
   "ValidateNotification"
+>;
+
+export type ResetPasswordScreenProps = NativeStackScreenProps<
+  RootNativeStackParamList,
+  "ResetPassword"
+>;
+
+export type ResetPasswordNotificationScreenProps = NativeStackScreenProps<
+  RootNativeStackParamList,
+  "ResetPasswordNotification"
 >;
 
 const StackNavigator = () => {
@@ -214,6 +235,18 @@ const StackNavigator = () => {
               <RootStack.Screen
                 name="Register"
                 component={RegisterScreen}
+                options={{ headerShown: false }}
+                initialParams={{ setLogin: setLogin }}
+              />
+              <RootStack.Screen
+                name="ResetPassword"
+                component={ResetPasswordScreen}
+                options={{ headerShown: false }}
+                initialParams={{ setLogin: setLogin }}
+              />
+              <RootStack.Screen
+                name="ResetPasswordNotification"
+                component={ResetPasswordNotificationScreen}
                 options={{ headerShown: false }}
                 initialParams={{ setLogin: setLogin }}
               />

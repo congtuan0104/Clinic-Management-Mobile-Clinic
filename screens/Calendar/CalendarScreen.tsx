@@ -35,8 +35,8 @@ const appointments: Array<IAppointment> = [
     doctorName: "Doctor 1",
     patientId: "1",
     patientName: "Patient 1",
-    startTime: new Date("2024-01-21T13:45:00+07:00"),
-    endTime: new Date("2024-01-21T14:00:00+07:00"),
+    startTime: new Date("2024-01-31T13:45:00+07:00"),
+    endTime: new Date("2024-01-31T14:00:00+07:00"),
     note: "Note 1",
     status: APPOINTMENT_STATUS.BOOK,
   },
@@ -46,8 +46,8 @@ const appointments: Array<IAppointment> = [
     doctorName: "Doctor 2",
     patientId: "2",
     patientName: "Patient 2",
-    startTime: new Date("2024-01-28T15:45:00+07:00"),
-    endTime: new Date("2024-01-28T16:00:00+07:00"),
+    startTime: new Date("2024-01-31T15:45:00+07:00"),
+    endTime: new Date("2024-01-31T16:00:00+07:00"),
     note: "Note 2",
     status: APPOINTMENT_STATUS.CANCEL,
   },
@@ -57,8 +57,8 @@ const appointments: Array<IAppointment> = [
     doctorName: "Doctor 3",
     patientId: "3",
     patientName: "Patient 3",
-    startTime: new Date("2024-01-28T15:45:00+07:00"),
-    endTime: new Date("2024-01-28T16:15:00+07:00"),
+    startTime: new Date("2024-02-01T15:45:00+07:00"),
+    endTime: new Date("2024-02-01T16:15:00+07:00"),
     note: "Note 3",
     status: APPOINTMENT_STATUS.CHECK_IN,
   },
@@ -68,8 +68,8 @@ const appointments: Array<IAppointment> = [
     doctorName: "Doctor 4",
     patientId: "4",
     patientName: "Patient 4",
-    startTime: new Date("2024-01-28T16:45:00+07:00"),
-    endTime: new Date("2024-01-28T17:00:00+07:00"),
+    startTime: new Date("2024-01-31T16:45:00+07:00"),
+    endTime: new Date("2024-01-31T17:00:00+07:00"),
     note: "Note 4",
     status: APPOINTMENT_STATUS.CHECK_OUT,
   },
@@ -79,8 +79,8 @@ const appointments: Array<IAppointment> = [
     doctorName: "Doctor 5",
     patientId: "5",
     patientName: "Patient 5",
-    startTime: new Date("2024-01-28T17:45:00+07:00"),
-    endTime: new Date("2024-01-28T18:00:00+07:00"),
+    startTime: new Date("2024-02-01T17:45:00+07:00"),
+    endTime: new Date("2024-02-01T18:00:00+07:00"),
     note: "Note 5",
     status: APPOINTMENT_STATUS.BOOK,
   },
@@ -93,36 +93,7 @@ const datesWhitelist = [
   },
 ];
 
-const data = [
-  {
-    time: "09:00",
-    title: "Archery Training",
-    description:
-      "The Beginner Archery and Beginner Crossbow course does not require you to bring any equipment, since everything you need will be provided for the course. ",
-    circleColor: "#009688",
-    lineColor: "#009688",
-  },
-  {
-    time: "10:45",
-    title: "Play Badminton",
-    description:
-      "Badminton is a racquet sport played using racquets to hit a shuttlecock across a net.",
-  },
-  { time: "12:00", title: "Lunch" },
-  {
-    time: "14:00",
-    title: "Watch Soccer",
-    description:
-      "Team sport played between two teams of eleven players with a spherical ball. ",
-    lineColor: "#009688",
-  },
-  {
-    time: "16:30",
-    title: "Go to Fitness center",
-    description: "Look out for the Best Gym & Fitness Centers around me :)",
-    circleColor: "#009688",
-  },
-];
+
 
 type TimelineEventsState = {
   time: string;
@@ -146,8 +117,8 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
     TimelineEventsState[] | undefined
   >();
 
-  const vietnamMoment = moment().utcOffset("+07:00"); // Đặt múi giờ UTC+7 cho Việt Nam
-  const formattedDate = `${vietnamMoment.format("YYYY-MM-DD")}`;
+  // const vietnamMoment = moment().utcOffset("+07:00"); // Đặt múi giờ UTC+7 cho Việt Nam
+  // const formattedDate = `${vietnamMoment.format("YYYY-MM-DD")}`;
 
   const todoList: Array<IAppointment> = useMemo(() => {
     const currentDateObj = new Date(currentDate);
@@ -514,14 +485,14 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
             height: Dimensions.get("window").height - 170,
             // height: 2000
           }}
-        >
-          <ScrollView
-            contentContainerStyle={{
-              paddingBottom: 100,
-            }}
-            nestedScrollEnabled={true}
-          >
-            <Timeline
+        > 
+          <View
+          style={{
+            width: "100%",
+            height: 200,
+            // height: 2000
+          }}>
+          <Timeline
               style={{ flex: 1 }}
               data={timelineEvents}
               separator={true}
@@ -535,13 +506,17 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                 color: "white",
                 padding: 5,
                 borderRadius: 13,
-                overflow: "hidden",
+                overflow: "hidden"
               }}
               descriptionStyle={{ color: "gray" }}
-              // options={{
-              //   style:{paddingTop:5}
-              // }}
             />
+          </View>         
+          <ScrollView
+            contentContainerStyle={{
+              paddingBottom: 100,
+            }}
+            nestedScrollEnabled={true}
+          >
             {todoList?.map((item) => (
               <TouchableOpacity
                 onPress={() => {
