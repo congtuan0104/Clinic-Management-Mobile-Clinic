@@ -186,10 +186,10 @@ const StackNavigator = () => {
 
   const HandleDeepLinking = () => {
     const handleLink = async (link: any) => {
-      // console.log("Handle deep link");
-      // console.log("Link: ", link);
+      console.log("Handle deep link");
+      console.log("Link: ", link);
       // assume the data in url is the object like this
-      if (link.url === "https://clinus.page.link/payment") {
+      if (link.url === "https://clinus.netlify.app/clinic/quan-ly-goi") {
         const navigation = navigationRef.current;
         if (navigation) {
           // Sửa ở đây

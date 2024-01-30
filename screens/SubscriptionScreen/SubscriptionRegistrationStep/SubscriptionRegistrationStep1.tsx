@@ -9,6 +9,7 @@ import {
   Input,
   WarningOutlineIcon,
   ScrollView,
+  useToast,
 } from "native-base";
 import { PlanDataCard } from "../../../components/PlanDataCard/PlanDataCard";
 import { Controller, Form } from "react-hook-form";
@@ -19,10 +20,13 @@ import { IClinicCreate } from "../../../types/clinic.types";
 import { useAppSelector } from "../../../hooks";
 import { userInfoSelector } from "../../../store";
 import { clinicService } from "../../../services";
+import ToastAlert from "../../../components/Toast/Toast";
 
 export const StepOneScreen = (props: any) => {
+  const toast = useToast();
   const userInfo = useAppSelector(userInfoSelector);
-  const { planData, changePosition, setSubscriptionPlanId } = props;
+  const { planData, changePosition, setSubscriptionPlanId, handleNavigation } =
+    props;
   // Validate
   const schema: yup.ObjectSchema<IClinicCreate> = yup.object({
     name: yup.string().required("Tên không được để trống"),
@@ -63,12 +67,22 @@ export const StepOneScreen = (props: any) => {
         changePosition(true);
       }
     } catch (error) {
-      console.log(error);
+      toast.show({
+        render: () => {
+          return (
+            <ToastAlert
+              title="Thất bại!"
+              description="Không thể tạo phòng khám. Vui lòng kiểm tra thông tin và thử lại."
+              status="error"
+            />
+          );
+        },
+      });
     }
   };
   return (
     <VStack space={5} maxH="100%" minH="50%">
-      <Heading>Bước 1: Thông tin của bạn</Heading>
+      <Heading>Bước 1: Điền thông tin</Heading>
       <ScrollView>
         <PlanDataCard planData={planData} />
         <VStack space={5}>
@@ -78,7 +92,7 @@ export const StepOneScreen = (props: any) => {
                 bold: true,
               }}
             >
-              Tên người mua
+              Tên phòng khám
             </FormControl.Label>
             <Controller
               control={control}
@@ -239,25 +253,21 @@ export const StepOneScreen = (props: any) => {
               {errors.description && <Text>{errors.description.message}</Text>}
             </FormControl.ErrorMessage>
           </FormControl>
-          <HStack
-            width="full"
-            justifyContent="space-between"
-            alignSelf="center"
-          >
-            <Button
-              borderRadius={20}
-              onPress={() => {
-                changePosition(false);
-              }}
-            >
-              Quay lại
-            </Button>
-            <Button borderRadius={20} onPress={handleSubmit(onSubmit)}>
-              Tiếp tục
-            </Button>
-          </HStack>
         </VStack>
       </ScrollView>
+      <HStack width="full" justifyContent="space-between" alignSelf="center">
+        <Button
+          borderRadius={20}
+          onPress={() => {
+            handleNavigation();
+          }}
+        >
+          Quay lại
+        </Button>
+        <Button borderRadius={20} onPress={handleSubmit(onSubmit)}>
+          Tiếp tục
+        </Button>
+      </HStack>
     </VStack>
   );
 };

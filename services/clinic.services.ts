@@ -35,7 +35,7 @@ export const clinicService = {
       },
     });
   },
-  async createClinic(clinicInfo: IClinicCreate) {
+  async createClinic(clinicInfo: IClinicCreate): Promise<IApiResponse<any>> {
     return axiosClient.post("/clinics", clinicInfo);
   },
   async getUserGroupRole(clinicId: any): Promise<IApiResponse<IRole[]>> {

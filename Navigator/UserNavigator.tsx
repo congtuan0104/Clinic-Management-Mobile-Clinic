@@ -26,6 +26,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { NavigationContainerRef } from "@react-navigation/native";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -43,6 +44,9 @@ export type UserNavigatorDrawerParamList = {
   CalendarNavigator: undefined;
   CreateTaskNavigator: undefined;
 };
+
+export const userNavigationRef =
+  React.createRef<NavigationContainerRef<UserNavigatorDrawerParamList>>();
 
 export type ProfileNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
@@ -175,8 +179,21 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             component={ProfileNavigator}
           />
           <UserNavigatorDrawer.Screen
+            name="ClinicInfoNavigator"
             options={{
-              title: "Quản lý gói",
+              title: "Thông tin phòng khám",
+              drawerIcon: ({ color }) => (
+                <FontAwesome5 name="clinic-medical" size={24} color={color} />
+              ),
+            }}
+            component={ClinicInfoNavigator}
+            initialParams={{
+              clinic,
+            }}
+          />
+          <UserNavigatorDrawer.Screen
+            options={{
+              title: "Tạo phòng khám mới",
               drawerIcon: ({ color }) => (
                 <MaterialCommunityIcons
                   name="package"
@@ -184,6 +201,9 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                   color={color}
                 />
               ),
+              drawerItemStyle: {
+                display: "none",
+              },
             }}
             name="SubscriptionNavigator"
             component={SubscriptionNavigator}
@@ -208,23 +228,6 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           )}
           {clinic && (
             <>
-              <UserNavigatorDrawer.Screen
-                name="ClinicInfoNavigator"
-                options={{
-                  title: "Thông tin phòng khám",
-                  drawerIcon: ({ color }) => (
-                    <FontAwesome5
-                      name="clinic-medical"
-                      size={24}
-                      color={color}
-                    />
-                  ),
-                }}
-                component={ClinicInfoNavigator}
-                initialParams={{
-                  clinic,
-                }}
-              />
               <UserNavigatorDrawer.Screen
                 name="RoleNavigator"
                 options={{

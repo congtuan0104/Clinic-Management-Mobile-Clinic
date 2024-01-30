@@ -13,7 +13,7 @@ export const StepThreeScreen = (props: any) => {
 
   return (
     <VStack space={5} minH="100%" maxH="100%">
-      <Heading>Bước 3: Chọn hình thức thanh toán</Heading>
+      <Heading>Bước 3: Chọn thanh toán</Heading>
       <PlanDataCard planData={planData} />
 
       <Radio.Group
@@ -23,6 +23,7 @@ export const StepThreeScreen = (props: any) => {
         onChange={(nextValue) => {
           setPaymentMethod(nextValue);
         }}
+        flex={1}
       >
         <VStack space={5}>
           <Radio value="Zalopay">
@@ -39,12 +40,7 @@ export const StepThreeScreen = (props: any) => {
           </Radio>
         </VStack>
       </Radio.Group>
-      <HStack
-        mt="20%"
-        width="full"
-        justifyContent="space-between"
-        alignSelf="center"
-      >
+      <HStack width="full" justifyContent="space-between" alignSelf="center">
         <Button
           borderRadius={20}
           onPress={() => {

@@ -8,7 +8,9 @@ export default function SplashScreen() {
       backgroundColor={appColor.background}
       style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
     >
-      <Text color="gray.600">Ứng dụng đang tải, vui lòng đợi...</Text>
+      <Text fontSize={18} color="gray.600">
+        Ứng dụng đang tải, vui lòng đợi...
+      </Text>
       <ActivityIndicator size="large" />
     </View>
   );

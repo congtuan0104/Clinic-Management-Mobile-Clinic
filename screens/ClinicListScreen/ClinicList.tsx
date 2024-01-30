@@ -16,6 +16,8 @@ import dayjs from "dayjs";
 import { changeClinic, updateClinic } from "../../store";
 import { useAppDispatch } from "../../hooks";
 import { IClinicInfo } from "../../types/clinic.types";
+import { Ionicons } from "@expo/vector-icons";
+
 export default function ClinicListNavigator({
   navigation,
   route,
@@ -46,9 +48,22 @@ export default function ClinicListNavigator({
           height="full"
           p={5}
         >
-          <Heading alignSelf="center" fontSize={20} mb={3}>
-            Danh sách phòng khám
-          </Heading>
+          <HStack justifyContent="space-between" alignItems="center">
+            <Heading fontSize={20} mb={3}>
+              Danh sách phòng khám
+            </Heading>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("SubscriptionNavigator");
+              }}
+            >
+              <Ionicons
+                name="add-circle-outline"
+                size={25}
+                color={appColor.primary}
+              />
+            </Pressable>
+          </HStack>
           <ScrollView>
             <VStack space={5}>
               {clinicList.map((clinicItem: any, index: any) => {

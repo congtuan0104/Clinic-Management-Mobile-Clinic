@@ -43,26 +43,28 @@ export default function ClinicInfoNavigator({
     // Call API to get clinic detail
     const getClinicDetail = async () => {
       try {
-        const response = await clinicService.getClinicByClinicId(clinic.id);
+        const response = await clinicService.getClinicByClinicId(clinic?.id);
         if (response.data) {
           dispatch(updateClinic(response.data));
         }
       } catch (error) {
-        toast.show({
-          render: () => {
-            return (
-              <ToastAlert
-                title="Lỗi"
-                description="Không lấy được dữ liệu. Vui lòng thử lại sau."
-                status="error"
-              />
-            );
-          },
-        });
+        if (clinic?.id) {
+          toast.show({
+            render: () => {
+              return (
+                <ToastAlert
+                  title="Lỗi"
+                  description="Không lấy được dữ liệu. Vui lòng thử lại sau."
+                  status="error"
+                />
+              );
+            },
+          });
+        }
       }
     };
     getClinicDetail();
-  }, [clinic.id]);
+  }, [clinic?.id]);
   return (
     <ClinicInfoStackNavigator.Navigator initialRouteName="ClinicInfoDashboard">
       <ClinicInfoStackNavigator.Screen

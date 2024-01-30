@@ -53,10 +53,10 @@ export default function SubscriptionListScreen({
         borderRadius={20}
         alignSelf="center"
         p={5}
-        h="full"
+        h="90%"
       >
         <Heading alignSelf="center" fontSize={20}>
-          Danh sách gói hiện có
+          Chọn gói quản lý phòng khám
         </Heading>
         <ScrollView>
           <VStack space={5} my={5} alignItems="center">
@@ -115,6 +115,15 @@ export default function SubscriptionListScreen({
             })}
           </VStack>
         </ScrollView>
+      </Box>
+      <Box maxW="90%" minW="90%" alignSelf="center">
+        <Button
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          Quay lại
+        </Button>
       </Box>
     </VStack>
   );

@@ -131,7 +131,7 @@ export default function SubscriptionRegistrationScreen({
           flex={1}
         >
           <Text fontFamily="body" color={appColor.white}>
-            Mua ngay
+            Tiếp tục
           </Text>
         </Button>
       </HStack>
