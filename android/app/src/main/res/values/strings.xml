@@ -1,9 +1,9 @@
 <resources>
-  <string name="app_name">Mobile-app-patient</string>
+  <string name="app_name">Clinus Doctor</string>
   <string name="expo_splash_screen_resize_mode" translatable="false">contain</string>
   <string name="expo_splash_screen_status_bar_translucent" translatable="false">false</string>
+  <string name="expo_runtime_version">1.0.0</string>
   <string name="facebook_app_id">246416061448702</string>
   <string name="facebook_client_token">6b9ac107583746e675bbba995b377e66</string>
   <string name="fb_login_protocol_scheme">fb246416061448702</string>
-  <string name="expo_runtime_version">1.0.0</string>
 </resources>
