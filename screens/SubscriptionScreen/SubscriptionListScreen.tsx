@@ -46,65 +46,85 @@ export default function SubscriptionListScreen({
   };
   return (
     <VStack space={5} my={5}>
-      <Box width="90%" alignSelf="center" alignItems="center">
-        <Heading fontFamily="heading">Danh sách gói hiện có</Heading>
-      </Box>
-      <ScrollView
-        width="90%"
-        alignSelf="center"
-        minH="90%"
-        maxH="90%"
+      <Box
+        maxW="90%"
+        minW="90%"
         backgroundColor={appColor.white}
         borderRadius={20}
+        alignSelf="center"
+        p={5}
+        h="90%"
       >
-        <VStack space={5} width="90%" alignSelf="center" my={5}>
-          {planList.map((plan: any, index: any) => {
-            return (
-              <Pressable
-                key={index}
-                onPress={() => {
-                  handleBuyingSubscription(plan.id);
-                }}
-              >
-                <Box backgroundColor="#DAD9FF" borderRadius={16} p={3}>
-                  <HStack alignItems="center" justifyContent="space-between">
-                    <VStack>
-                      <Text
-                        fontWeight="bold"
-                        color={appColor.textTitle}
-                        fontSize={16}
-                      >
-                        {plan.planName}
-                      </Text>
-                      <Text fontSize={14} fontFamily="mono">
-                        - {plan.duration} ngày
-                      </Text>
-
-                      <HStack justifyContent="space-between" width="90%">
-                        <Text fontSize={14} fontFamily="mono">
-                          - {plan.planOptions.length} chức năng
-                        </Text>
+        <Heading alignSelf="center" fontSize={20}>
+          Chọn gói quản lý phòng khám
+        </Heading>
+        <ScrollView>
+          <VStack space={5} my={5} alignItems="center">
+            {planList.map((plan: any, index: any) => {
+              return (
+                <Pressable
+                  backgroundColor="#DAD9FF"
+                  maxW="100%"
+                  minW="100%"
+                  borderRadius={20}
+                  p={3}
+                  key={index}
+                  onPress={() => {
+                    handleBuyingSubscription(plan.id);
+                  }}
+                  _pressed={{
+                    backgroundColor: "primary.100",
+                  }}
+                >
+                  <Box>
+                    <HStack alignItems="center" justifyContent="space-between">
+                      <VStack>
                         <Text
-                          fontSize={15}
-                          color="#b92a00"
                           fontWeight="bold"
-                          fontFamily="body"
+                          color={appColor.textTitle}
+                          fontSize={16}
                         >
-                          {format(plan.currentPrice, {
-                            decimalsDigits: 0,
-                            decimalSeparator: "",
-                          })}
-                          đ
+                          {plan.planName}
                         </Text>
-                      </HStack>
-                    </VStack>
-                  </HStack>
-                </Box>
-              </Pressable>
-            );
-          })}
-        </VStack>
-      </ScrollView>
+                        <Text fontSize={14} fontFamily="mono">
+                          - {plan.duration} ngày
+                        </Text>
+
+                        <HStack justifyContent="space-between" width="90%">
+                          <Text fontSize={14} fontFamily="mono">
+                            - {plan.planOptions.length} chức năng
+                          </Text>
+                          <Text
+                            fontSize={15}
+                            color="#b92a00"
+                            fontWeight="bold"
+                            fontFamily="body"
+                          >
+                            {format(plan.currentPrice, {
+                              decimalsDigits: 0,
+                              decimalSeparator: "",
+                            })}
+                            đ
+                          </Text>
+                        </HStack>
+                      </VStack>
+                    </HStack>
+                  </Box>
+                </Pressable>
+              );
+            })}
+          </VStack>
+        </ScrollView>
+      </Box>
+      <Box maxW="90%" minW="90%" alignSelf="center">
+        <Button
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          Quay lại
+        </Button>
+      </Box>
     </VStack>
   );
 }

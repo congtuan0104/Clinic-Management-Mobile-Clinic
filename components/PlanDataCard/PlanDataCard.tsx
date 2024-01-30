@@ -12,7 +12,7 @@ export const PlanDataCard = (props: any) => {
             {planData.planName}
           </Text>
           <Text fontSize={14}>- {planData.duration} ngày</Text>
-          <HStack justifyContent="space-between" width="90%">
+          <HStack justifyContent="space-between" width="92%">
             <Text fontSize={14}>- {planData.planOptions.length} chức năng</Text>
             <Text
               fontSize={15}

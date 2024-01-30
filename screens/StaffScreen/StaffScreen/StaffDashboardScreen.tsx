@@ -59,7 +59,7 @@ export default function StaffDashboardScreen({
             alignItems="center"
             mt={-3}
           >
-            <Text my="2" fontWeight="bold" fontSize={20} alignSelf="flex-start">
+            <Text my="2" fontWeight="bold" fontSize={20}>
               Danh sách nhân viên
             </Text>
             <Pressable
