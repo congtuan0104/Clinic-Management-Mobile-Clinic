@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 export const REQUEST_TIMEOUT = 30000;
 
 // generate with ngrok
-const baseUrl = "https://api.clinus.live/api/";
+const baseUrl = "https://staging.api.clinus.live/api/";
 export const axiosClient = axios.create({
   baseURL: baseUrl, // Set the base URL for all requests
   timeout: 30000, // Set the default timeout for requests

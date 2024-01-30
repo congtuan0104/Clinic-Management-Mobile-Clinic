@@ -75,3 +75,8 @@ export interface ILinkAccountRequest {
   picture: string | null;
   provider: string | null;
 }
+
+export interface IResetPasswordResponse {
+  message: string;
+  status: boolean;
+}

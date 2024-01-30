@@ -522,6 +522,7 @@ const Login: React.FC<LoginScreenProps> = ({
                     color: "primary.300",
                   }}
                   alignSelf="center"
+                  onPress={() => navigation.navigate("ResetPassword", { setLogin })}
                 >
                   Quên mật khẩu?
                 </Link>
