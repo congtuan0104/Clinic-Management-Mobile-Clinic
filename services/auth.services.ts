@@ -71,4 +71,11 @@ export const authApi = {
   resetPassword(email: string): Promise<IResetPasswordResponse> {
     return axiosClient.post('/auth/reset-password', { email });
   }
+
+  resendVerifyEmail(email: string): Promise<IApiResponse<any>> {
+    return axiosClient.post(`/auth/resend-verify-email`, {
+      email: email,
+    });
+  },
+
 };

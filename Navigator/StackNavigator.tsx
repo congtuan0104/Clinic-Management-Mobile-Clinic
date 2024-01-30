@@ -52,6 +52,7 @@ export type RootNativeStackParamList = {
   DoctorNavigator: { setLogout: () => void };
   ValidateNotification: {
     setLogin: (user: IUserInfo | null, token: string | null) => void;
+    email: string;
   };
 };
 
@@ -106,12 +107,7 @@ const StackNavigator = () => {
 
   // Ignore unessessary notifications
   React.useEffect(() => {
-    LogBox.ignoreLogs([
-      "In React 18, SSRProvider is not necessary and is a noop. You can remove it from your app.",
-    ]);
-    LogBox.ignoreLogs([
-      "Non-serializable values were found in the navigation state",
-    ]);
+    LogBox.ignoreAllLogs(); //Ignore all log notifications
   }, []);
 
   // Define two function to handle login and logout
@@ -194,6 +190,13 @@ const StackNavigator = () => {
             screen: "ClinicListNavigator",
             params: { setLogout },
           });
+        }
+      }
+      if (link.url === "https://clinus.page.link/verify-account") {
+        const navigation = navigationRef.current;
+        if (navigation) {
+          // Sửa ở đây
+          navigation.navigate("Login", { setLogin });
         }
       }
     };
