@@ -135,7 +135,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
       {showLoading && <LoadingSpinner showLoading={true} />}
       {!showLoading && (
         <UserNavigatorDrawer.Navigator
-          initialRouteName="ProfileNavigator"
+          initialRouteName="ClinicInfoNavigator"
           screenOptions={{
             headerStyle: {
               backgroundColor: appColor.white,

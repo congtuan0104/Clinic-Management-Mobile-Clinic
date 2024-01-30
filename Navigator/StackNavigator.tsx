@@ -5,23 +5,25 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/AuthenticationScreen/Login/LoginScreen";
 import RegisterScreen from "../screens/AuthenticationScreen/Register/RegisterScreen";
 import { ILoginResponse, IUserInfo } from "../types";
-import { NativeBaseProvider } from "native-base";
+import { NativeBaseProvider, useToast } from "native-base";
 import { theme } from "../theme";
 import UserNavigator from "./UserNavigator";
 import ValidateNotification from "../screens/AuthenticationScreen/ValidateNotification/ValidateNotification";
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { restoreUserInfo } from "../store";
+import { logout, restoreUserInfo } from "../store";
 import SplashScreen from "../screens/AuthenticationScreen/SplashScreen/SplashScreen";
 import { ReactNavigationTheme } from "../config/react-navigation.theme";
 import DoctorNavigator from "./DoctorNavigator";
 import { useAppDispatch } from "../hooks";
 import messaging from "@react-native-firebase/messaging";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
-import { firebase, FirebaseAuthTypes } from "@react-native-firebase/auth";
+import { firebase } from "@react-native-firebase/auth";
 import { firebaseConfig } from "../config/firebase";
-import { FCMConfig } from "../config/firebaseCloudMessage";
 import dynamicLinks from "@react-native-firebase/dynamic-links";
 import { NavigationContainerRef } from "@react-navigation/native";
+import { jwtDecode } from "jwt-decode";
+import "core-js/stable/atob";
+import ToastAlert from "../components/Toast/Toast";
 
 // Create an object type with mappings for route name to the params of the route
 export type RootNativeStackParamList = {
@@ -74,6 +76,7 @@ export type ValidateNotificationProps = NativeStackScreenProps<
 >;
 
 const StackNavigator = () => {
+  const toast = useToast();
   // define userToken for validation
   const [token, setToken] = React.useState<string | null>(null);
   const [user, setUser] = React.useState<IUserInfo | null>(null);
@@ -116,10 +119,23 @@ const StackNavigator = () => {
 
       // await AsyncStorage.removeItem("user");
       // await AsyncStorage.removeItem("token");
+
       // Restore userInfo and dispatch to the store
       const testData = await AsyncStorage.getItem("user");
       const tokenString = await AsyncStorage.getItem("token");
       if (tokenString && testData) {
+        // Check token expired
+        const decodeToken = jwtDecode(tokenString);
+        const exp = decodeToken.exp ? decodeToken.exp * 1000 : 0;
+        const expDate = new Date(exp);
+        const currentDate = new Date();
+        if (expDate < currentDate) {
+          // Token is expired
+          await AsyncStorage.removeItem("user");
+          await AsyncStorage.removeItem("token");
+          logout();
+          setLogout();
+        }
         const testDataObject = JSON.parse(testData);
         setLogin(testDataObject, tokenString);
         const UserResponseObject: ILoginResponse = {
@@ -132,6 +148,18 @@ const StackNavigator = () => {
       }
     } catch (e) {
       // Restoring token failed
+      console.log(e);
+      toast.show({
+        render: () => {
+          return (
+            <ToastAlert
+              title="Lỗi"
+              description="Phiên hoạt động của bạn đã hết. Vui lòng đăng xuất ra khỏi ứng dụng và đăng nhập lại."
+              status="error"
+            />
+          );
+        },
+      });
     } finally {
       setIsLoading(false);
     }
@@ -153,13 +181,13 @@ const StackNavigator = () => {
     // We haven't finished checking for the token yet
     return <SplashScreen />;
   }
-  console.log("USER", user);
-  console.log("TOKEN", token);
+  // console.log("USER", user);
+  // console.log("TOKEN", token);
 
   const HandleDeepLinking = () => {
     const handleLink = async (link: any) => {
-      console.log("Handle deep link");
-      console.log("Link: ", link);
+      // console.log("Handle deep link");
+      // console.log("Link: ", link);
       // assume the data in url is the object like this
       if (link.url === "https://clinus.page.link/payment") {
         const navigation = navigationRef.current;
@@ -187,7 +215,7 @@ const StackNavigator = () => {
       dynamicLinks()
         .getInitialLink()
         .then((link: any) => {
-          console.log("Initial link: ", link);
+          // console.log("Initial link: ", link);
         });
     }, []);
     return null;

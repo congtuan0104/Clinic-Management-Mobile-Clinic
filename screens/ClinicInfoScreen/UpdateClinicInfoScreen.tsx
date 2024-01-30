@@ -116,19 +116,22 @@ export default function UpdateClinicInfoScreen({
   };
 
   return (
-    <>
+    <Box>
       <Box
         bgColor="#fff"
         minWidth="90%"
         maxWidth="90%"
-        minHeight="85%"
-        maxHeight="85%"
+        minHeight="86%"
+        maxHeight="86%"
         alignSelf="center"
         alignItems="center"
         p={5}
         borderRadius={20}
+        mt="5%"
       >
-        <Heading mb={2}>Cập nhật phòng khám</Heading>
+        <Heading mb={2} fontSize={20}>
+          Cập nhật phòng khám
+        </Heading>
         <ScrollView minWidth="100%" maxWidth="100%">
           <VStack space={5}>
             <VStack space={5}>
@@ -313,7 +316,7 @@ export default function UpdateClinicInfoScreen({
       </Box>
       <HStack mt={5} space={5} minW="90%" maxW="90%" alignSelf="center">
         <Button
-          borderColor={appColor.backgroundPrimary}
+          borderColor="secondary.300"
           borderWidth={1}
           backgroundColor={appColor.white}
           flex={1}
@@ -321,15 +324,18 @@ export default function UpdateClinicInfoScreen({
             navigation.navigate("ClinicInfoDashboard");
           }}
           _pressed={{
-            backgroundColor: "primary.100",
+            backgroundColor: "secondary.50",
+          }}
+          _text={{
+            color: "secondary.300",
           }}
         >
-          <Text>Quay lại</Text>
+          Quay lại
         </Button>
         <Button flex={1} onPress={handleSubmit(onSubmit)}>
           Thay đổi thông tin
         </Button>
       </HStack>
-    </>
+    </Box>
   );
 }

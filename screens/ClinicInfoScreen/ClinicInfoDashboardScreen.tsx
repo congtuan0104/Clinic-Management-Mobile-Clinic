@@ -49,6 +49,7 @@ export default function ClinicInfoDashboardScreen({
         mb={3}
         borderBottomWidth={1}
         borderBottomColor="#EDEDF2"
+        flex={4}
       >
         <Avatar
           alignSelf="center"
@@ -66,7 +67,7 @@ export default function ClinicInfoDashboardScreen({
         </Text>
         <Text color={appColor.textSecondary}>{clinic?.description}</Text>
       </Box>
-      <Box alignItems="flex-start" width="100%">
+      <Box flex={8} alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
@@ -102,12 +103,14 @@ export default function ClinicInfoDashboardScreen({
               {dayjs(clinic?.subscriptions[0].expiredAt).format("DD/MM/YYYY")}
             </Text>
           </HStack>
-          <HStack width="full" mt={20}>
-            <Button width="full" onPress={handleChangeClinicInfo}>
-              Thay đổi thông tin
-            </Button>
-          </HStack>
         </VStack>
+      </Box>
+      <Box flex={1}>
+        <HStack width="full">
+          <Button width="full" onPress={handleChangeClinicInfo}>
+            Thay đổi thông tin
+          </Button>
+        </HStack>
       </Box>
     </Box>
   );
