@@ -155,7 +155,12 @@ const Login: React.FC<LoginScreenProps> = ({
               isInputPassword: res.data.user.isInputPassword,
               firstName: res.data.user.firstName,
               lastName: res.data.user.lastName,
+              gender: res.data.user.gender,
+              birthday: res.data.user.birthday,
+              phone: res.data.user.phone,
+              address: res.data.user.address,
               moduleId: res.data.user.moduleId,
+              avatar: res.data.user.avatar
             };
             // If isInputPassword = false: require user enter the password
             if (userToStorage.isInputPassword === false) {
@@ -224,7 +229,12 @@ const Login: React.FC<LoginScreenProps> = ({
             isInputPassword: res.data.user.isInputPassword,
             firstName: res.data.user.firstName,
             lastName: res.data.user.lastName,
+            gender: res.data.user.gender,
+            birthday: res.data.user.birthday,
+            phone: res.data.user.phone,
+            address: res.data.user.address,
             moduleId: res.data.user.moduleId,
+            avatar: res.data.user.avatar
             // dữ liệu tạm thời
             // Check isInputPassword: lấy từ API về
             // nếu là False: Hiện modal Nhập mật khẩu

@@ -7,6 +7,7 @@ import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { appColor } from "../theme";
 import CalendarScreen from "../screens/Calendar/CalendarScreen";
 import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen";
+import UpdateUserInfoScreen from '../screens/UpdateUserInfo/UpdateUserInfoScreen'
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -31,6 +32,7 @@ import { NavigationContainerRef } from "@react-navigation/native";
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
   ProfileNavigator: undefined;
+  UpdateUserInfo: undefined;
   ChattingNavigator: undefined;
   SubscriptionNavigator: undefined;
   NotificationNavigator: undefined;
@@ -51,6 +53,10 @@ export const userNavigationRef =
 export type ProfileNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "ProfileNavigator"
+>;
+export type UpdateProfileNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "UpdateUserInfo"
 >;
 export type ChattingNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
@@ -193,6 +199,15 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           />
           <UserNavigatorDrawer.Screen
             options={{
+              title: "Cập nhật thông tin tài khoản",
+              drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
+              drawerItemStyle: { height: 0 },
+            }}
+            name="UpdateUserInfo"
+            component={UpdateUserInfoScreen}
+          />
+          <UserNavigatorDrawer.Screen
+            options={{
               title: "Tạo phòng khám mới",
               drawerIcon: ({ color }) => (
                 <MaterialCommunityIcons
@@ -241,7 +256,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               <UserNavigatorDrawer.Screen
                 name="CalendarNavigator"
                 options={{
-                  title: "Lịch làm việc",
+                  title: "Lịch hẹn khám",
                   drawerIcon: ({ color }) => (
                     <Ionicons name="settings-outline" size={24} color={color} />
                   ),

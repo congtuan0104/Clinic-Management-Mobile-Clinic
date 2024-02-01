@@ -3,6 +3,7 @@ import ProfileScreen from "../screens/ProfileScreen/ProfileScreen";
 import { ProfileNavigatorProps } from "./UserNavigator";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import ConnectingScreen from "../screens/ProfileScreen/ConnectingScreen";
+import UpdateUserInfoScreen from "../screens/UpdateUserInfo/UpdateUserInfoScreen";
 import { Dimensions } from "react-native";
 import { appColor } from "../theme";
 
@@ -10,11 +11,17 @@ export type ProfileNavigatorTopTabParamList = {
   // undefined: the route doesn't have params
   UserProfile: undefined;
   Connecting: undefined;
+  UpdateUserInfo: undefined;
 };
 
 export type UserProfileScreenProps = NativeStackScreenProps<
   ProfileNavigatorTopTabParamList,
   "UserProfile"
+>;
+
+export type UpdateUserInfoScreenProps = NativeStackScreenProps<
+  ProfileNavigatorTopTabParamList,
+  "UpdateUserInfo"
 >;
 
 export type ConnectingScreenProps = NativeStackScreenProps<
@@ -65,6 +72,7 @@ export default function ProfileNavigator({
         component={ConnectingScreen}
         options={{ tabBarLabel: "Thông tin tài khoản" }}
       />
+      
     </ProfileTopTabNavigator.Navigator>
   );
 }
