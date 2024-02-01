@@ -4,8 +4,8 @@ import { NavigationContainer, useLinkTo } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import LoginScreen from "../screens/AuthenticationScreen/Login/LoginScreen";
 import RegisterScreen from "../screens/AuthenticationScreen/Register/RegisterScreen";
-import ResetPasswordScreen from '../screens/ResetPassword/ResetPasswordScreen'
-import ResetPasswordNotificationScreen from '../screens/ResetPassword/ResetPasswordNotification'
+import ResetPasswordScreen from "../screens/ResetPassword/ResetPasswordScreen";
+import ResetPasswordNotificationScreen from "../screens/ResetPassword/ResetPasswordNotification";
 import { ILoginResponse, IUserInfo } from "../types";
 import { NativeBaseProvider, useToast } from "native-base";
 import { theme } from "../theme";
@@ -43,8 +43,8 @@ export type RootNativeStackParamList = {
 
   ResetPasswordNotification: {
     setLogin: (user: IUserInfo | null, token: string | null) => void | any;
-    email: string
-  }
+    email: string;
+  };
 
   UserNavigator: {
     screen: string;
@@ -150,6 +150,7 @@ const StackNavigator = () => {
         const exp = decodeToken.exp ? decodeToken.exp * 1000 : 0;
         const expDate = new Date(exp);
         const currentDate = new Date();
+        console.log(expDate, currentDate);
         if (expDate < currentDate) {
           // Token is expired
           await AsyncStorage.removeItem("user");

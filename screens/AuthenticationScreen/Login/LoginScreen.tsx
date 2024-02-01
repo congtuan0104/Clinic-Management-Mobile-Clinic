@@ -311,24 +311,38 @@ const Login: React.FC<LoginScreenProps> = ({
       .login(data)
       .then(async (res) => {
         if (res.status && res.data) {
-          // Dispatch data to reducer
-          dispatch(login(res.data));
-          // save data in async storage
-          await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-          await AsyncStorage.setItem("token", res.data.token);
-          // Set lại token để vào trang homepage
-          setLogin(res.data.user, res.data.token);
-          toast.show({
-            render: () => {
-              return (
-                <ToastAlert
-                  title="Thành công"
-                  description="Đăng nhập thành công!"
-                  status="success"
-                />
-              );
-            },
-          });
+          if (res.data.user.moduleId == 2 || res.data.user.moduleId == 4) {
+            // Dispatch data to reducer
+            dispatch(login(res.data));
+            // save data in async storage
+            await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+            await AsyncStorage.setItem("token", res.data.token);
+            // Set lại token để vào trang homepage
+            setLogin(res.data.user, res.data.token);
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thành công"
+                    description="Đăng nhập thành công!"
+                    status="success"
+                  />
+                );
+              },
+            });
+          } else {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại!"
+                    description="Đăng nhập thất bại! Vai trò của bạn không đúng!"
+                    status="error"
+                  />
+                );
+              },
+            });
+          }
         }
       })
       .catch((error) => {
@@ -522,7 +536,9 @@ const Login: React.FC<LoginScreenProps> = ({
                     color: "primary.300",
                   }}
                   alignSelf="center"
-                  onPress={() => navigation.navigate("ResetPassword", { setLogin })}
+                  onPress={() =>
+                    navigation.navigate("ResetPassword", { setLogin })
+                  }
                 >
                   Quên mật khẩu?
                 </Link>

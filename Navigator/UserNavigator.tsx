@@ -95,192 +95,143 @@ const UserNavigatorDrawer =
 export default function UserScreen({ navigation, route }: UserNavigatorProps) {
   const { setLogout } = route.params?.params;
   const [clinic, setClinic] = React.useState<IClinicInfo | any>(null);
-  const [clinicList, setClinicList] = React.useState<IClinicInfo | any>(null);
-  const [showLoading, setShowLoading] = React.useState<boolean>(false);
-  const toast = useToast();
-  React.useEffect(() => {
-    // Call API to get active clinic
-    const getActiveClinic = async () => {
-      try {
-        const response = await clinicService.getAllClinic();
-        // In here, if the response status code = 403, this means that your token was expired.
-        // So we need to call logout, to make people relogin.
-        // Implement here
-        let activeClinic: IClinicInfo[] = [];
-        if (response.data) {
-          // Get all clinic with status = 3 (active)
-          response.data.map((clinicItem: IClinicInfo) => {
-            if (clinicItem.subscriptions[0].status === 3) {
-              activeClinic.push(clinicItem);
-            }
-          });
-        }
-        setClinicList(activeClinic);
-      } catch (error) {
-        toast.show({
-          render: () => {
-            return (
-              <ToastAlert
-                title="Lỗi"
-                description="Không có phòng khám. Vui lòng thử lại sau."
-                status="error"
-              />
-            );
-          },
-        });
-      }
-    };
-    setShowLoading(true);
-    getActiveClinic();
-    setShowLoading(false);
-  }, []);
   return (
     <>
-      {showLoading && <LoadingSpinner showLoading={true} />}
-      {!showLoading && (
-        <UserNavigatorDrawer.Navigator
-          initialRouteName="ClinicInfoNavigator"
-          screenOptions={{
-            headerStyle: {
-              backgroundColor: appColor.white,
-            },
-            headerTintColor: appColor.title,
-            headerTitleStyle: {
-              fontWeight: "bold",
-              fontFamily: "Montserrat-Bold",
-              fontSize: 20,
-            },
-            headerTitleAlign: "center",
-            drawerStyle: {
-              backgroundColor: appColor.background,
-              marginBottom: 0,
-              borderBottomRightRadius: 20,
-            },
-            drawerLabelStyle: {
-              marginLeft: -18,
-              fontSize: 15,
-            },
-            drawerActiveTintColor: "#fff",
-            drawerActiveBackgroundColor: appColor.primary,
-            drawerInactiveTintColor: appColor.primary,
+      <UserNavigatorDrawer.Navigator
+        initialRouteName="ClinicListNavigator"
+        screenOptions={{
+          headerStyle: {
+            backgroundColor: appColor.white,
+          },
+          headerTintColor: appColor.title,
+          headerTitleStyle: {
+            fontWeight: "bold",
+            fontFamily: "Montserrat-Bold",
+            fontSize: 20,
+          },
+          headerTitleAlign: "center",
+          drawerStyle: {
+            backgroundColor: appColor.background,
+            marginBottom: 0,
+            borderBottomRightRadius: 20,
+          },
+          drawerLabelStyle: {
+            marginLeft: -18,
+            fontSize: 15,
+          },
+          drawerActiveTintColor: "#fff",
+          drawerActiveBackgroundColor: appColor.primary,
+          drawerInactiveTintColor: appColor.primary,
+        }}
+        drawerContent={(props) => (
+          <CustomDrawer {...props} logOut={setLogout} />
+        )}
+      >
+        <UserNavigatorDrawer.Screen
+          options={{
+            title: "Tài khoản",
+            drawerIcon: ({ color }) => (
+              <MaterialIcons name="account-circle" size={26} color={color} />
+            ),
           }}
-          drawerContent={(props) => (
-            <CustomDrawer {...props} logOut={setLogout} />
-          )}
-        >
-          <UserNavigatorDrawer.Screen
-            options={{
-              title: "Tài khoản",
-              drawerIcon: ({ color }) => (
-                <MaterialIcons name="account-circle" size={26} color={color} />
-              ),
-            }}
-            name="ProfileNavigator"
-            component={ProfileNavigator}
-          />
-          <UserNavigatorDrawer.Screen
-            name="ClinicInfoNavigator"
-            options={{
-              title: "Thông tin phòng khám",
-              drawerIcon: ({ color }) => (
-                <FontAwesome5 name="clinic-medical" size={24} color={color} />
-              ),
-            }}
-            component={ClinicInfoNavigator}
-            initialParams={{
-              clinic,
-            }}
-          />
-          <UserNavigatorDrawer.Screen
-            options={{
-              title: "Tạo phòng khám mới",
-              drawerIcon: ({ color }) => (
-                <MaterialCommunityIcons
-                  name="package"
-                  size={26}
-                  color={color}
-                />
-              ),
-              drawerItemStyle: {
-                display: "none",
-              },
-            }}
-            name="SubscriptionNavigator"
-            component={SubscriptionNavigator}
-          />
-          {/**If clinic list exists: show clinic list menu to go to clinic */}
-          {clinicList !== null && (
+          name="ProfileNavigator"
+          component={ProfileNavigator}
+        />
+        <UserNavigatorDrawer.Screen
+          name="ClinicInfoNavigator"
+          options={{
+            title: "Thông tin phòng khám",
+            drawerIcon: ({ color }) => (
+              <FontAwesome5 name="clinic-medical" size={24} color={color} />
+            ),
+          }}
+          component={ClinicInfoNavigator}
+          initialParams={{
+            clinic,
+          }}
+        />
+        <UserNavigatorDrawer.Screen
+          options={{
+            title: "Tạo phòng khám mới",
+            drawerIcon: ({ color }) => (
+              <MaterialCommunityIcons name="package" size={26} color={color} />
+            ),
+            drawerItemStyle: {
+              display: "none",
+            },
+          }}
+          name="SubscriptionNavigator"
+          component={SubscriptionNavigator}
+        />
+        <UserNavigatorDrawer.Screen
+          name="ClinicListNavigator"
+          options={{
+            title: "Phòng khám",
+            drawerIcon: ({ color }) => (
+              <FontAwesome5 name="th-list" size={24} color={color} />
+            ),
+          }}
+          component={ClinicListNavigator}
+          initialParams={{
+            clinic,
+            setClinic,
+          }}
+        />
+
+        {clinic && (
+          <>
             <UserNavigatorDrawer.Screen
-              name="ClinicListNavigator"
+              name="RoleNavigator"
               options={{
-                title: "Phòng khám",
+                title: "Quản lý nhân viên",
                 drawerIcon: ({ color }) => (
-                  <FontAwesome5 name="th-list" size={24} color={color} />
+                  <FontAwesome name="users" size={24} color={color} />
                 ),
               }}
-              component={ClinicListNavigator}
-              initialParams={{
-                clinic,
-                setClinic,
-                clinicList,
+              component={RoleNavigator}
+            />
+            <UserNavigatorDrawer.Screen
+              name="CalendarNavigator"
+              options={{
+                title: "Lịch làm việc",
+                drawerIcon: ({ color }) => (
+                  <Ionicons name="settings-outline" size={24} color={color} />
+                ),
+              }}
+              component={CalendarScreen}
+            />
+            <UserNavigatorDrawer.Screen
+              name="ChattingNavigator"
+              options={{
+                title: "Nhắn tin",
+                drawerIcon: ({ color }) => (
+                  <Entypo name="chat" size={24} color={color} />
+                ),
+              }}
+              component={ChattingNavigator}
+            />
+            <UserNavigatorDrawer.Screen
+              name="NotificationNavigator"
+              options={{
+                title: "Thông báo",
+                drawerIcon: ({ color }) => (
+                  <Ionicons name="notifications" size={24} color={color} />
+                ),
+              }}
+              component={NotificationNavigator}
+            />
+            <UserNavigatorDrawer.Screen
+              name="CreateTaskNavigator"
+              component={CreateTaskScreen}
+              options={{
+                title: "Thêm lịch hẹn",
+                drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
+                drawerItemStyle: { height: 0 },
               }}
             />
-          )}
-          {clinic && (
-            <>
-              <UserNavigatorDrawer.Screen
-                name="RoleNavigator"
-                options={{
-                  title: "Quản lý nhân viên",
-                  drawerIcon: ({ color }) => (
-                    <FontAwesome name="users" size={24} color={color} />
-                  ),
-                }}
-                component={RoleNavigator}
-              />
-              <UserNavigatorDrawer.Screen
-                name="CalendarNavigator"
-                options={{
-                  title: "Lịch làm việc",
-                  drawerIcon: ({ color }) => (
-                    <Ionicons name="settings-outline" size={24} color={color} />
-                  ),
-                }}
-                component={CalendarScreen}
-              />
-              <UserNavigatorDrawer.Screen
-                name="ChattingNavigator"
-                options={{
-                  title: "Nhắn tin",
-                  drawerIcon: ({ color }) => (
-                    <Entypo name="chat" size={24} color={color} />
-                  ),
-                }}
-                component={ChattingNavigator}
-              />
-              <UserNavigatorDrawer.Screen
-                name="NotificationNavigator"
-                options={{
-                  title: "Thông báo",
-                  drawerIcon: ({ color }) => (
-                    <Ionicons name="notifications" size={24} color={color} />
-                  ),
-                }}
-                component={NotificationNavigator}
-              />
-              <UserNavigatorDrawer.Screen
-                name="CreateTaskNavigator"
-                component={CreateTaskScreen}
-                options={{
-                  title: "Thêm lịch hẹn",
-                  drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
-                  drawerItemStyle: { height: 0 },
-                }}
-              />
-            </>
-          )}
-        </UserNavigatorDrawer.Navigator>
-      )}
+          </>
+        )}
+      </UserNavigatorDrawer.Navigator>
     </>
   );
 }
