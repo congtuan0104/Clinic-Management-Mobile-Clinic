@@ -155,12 +155,12 @@ const Login: React.FC<LoginScreenProps> = ({
               isInputPassword: res.data.user.isInputPassword,
               firstName: res.data.user.firstName,
               lastName: res.data.user.lastName,
-              gender: res.data.user.gender,
-              birthday: res.data.user.birthday,
-              phone: res.data.user.phone,
-              address: res.data.user.address,
+              gender: res.data.user.gender? res.data.user.gender : undefined,
+              birthday: res.data.user.birthday? res.data.user.birthday : undefined,
+              phone: res.data.user.phone? res.data.user.phone : undefined,
+              address: res.data.user.address? res.data.user.address : undefined,
               moduleId: res.data.user.moduleId,
-              avatar: res.data.user.avatar
+              avatar: res.data.user.avatar? res.data.user.avatar : undefined,
             };
             // If isInputPassword = false: require user enter the password
             if (userToStorage.isInputPassword === false) {

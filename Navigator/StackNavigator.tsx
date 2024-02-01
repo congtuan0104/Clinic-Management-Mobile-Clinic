@@ -138,8 +138,8 @@ const StackNavigator = () => {
       // await AsyncStorage.setItem("user", JSON.stringify(userToStorage));
       // await AsyncStorage.setItem("token", token);
 
-      // await AsyncStorage.removeItem("user");
-      // await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("token");
 
       // Restore userInfo and dispatch to the store
       const testData = await AsyncStorage.getItem("user");

@@ -10,11 +10,11 @@ export interface IUserInfo {
   id: string;
   email: string;
   isInputPassword: boolean;
-  gender: number;
-  birthday: string;
-  address: string;
-  phone: string;
-  avatar: string;
+  gender?: number;
+  birthday?: string;
+  address?: string;
+  phone?: string;
+  avatar?: string;
   firstName: string;
   lastName: string;
   moduleId: number;

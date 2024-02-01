@@ -30,7 +30,7 @@ GoogleSignin.configure({
 
 const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   const userInfo = useAppSelector(userInfoSelector);
-  const dateString = userInfo?.birthday.slice(0, 10);
+  const dateString = userInfo?.birthday?.slice(0, 10);
   const handleChangeUserInfo = () => {
     navigation.navigate("UpdateUserInfo")
   };

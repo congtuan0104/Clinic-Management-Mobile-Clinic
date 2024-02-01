@@ -57,7 +57,7 @@ import {
     route,
   }: UpdateProfileNavigatorProps) {
     const userInfo = useAppSelector(userInfoSelector);
-    const dateString = userInfo?.birthday.slice(0, 10);
+    const dateString = userInfo?.birthday?.slice(0, 10);
     const [selectedDate, setSelectedDate] = useState<Date | undefined>(
         dateString ? new Date(dateString) : undefined
       );
