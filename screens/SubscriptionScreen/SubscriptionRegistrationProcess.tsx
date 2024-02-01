@@ -1,5 +1,5 @@
 import { SubscriptionRegistrationProcessScreenProps } from "../../Navigator/SubscriptionNavigator";
-import { Box, Button, HStack, Pressable } from "native-base";
+import { Box, Button, HStack, Pressable, Text } from "native-base";
 import StepIndicator from "@fcxlabs/react-native-step-indicator";
 import { useEffect, useState } from "react";
 import { appColor } from "../../theme";
@@ -12,11 +12,13 @@ import { StepFiveScreen } from "./SubscriptionRegistrationStep/SubscriptionRegis
 import { customStyles } from "../../config/stepIndicator";
 import { paymentService } from "../../services/payment.services";
 import { openBrowserAsync } from "expo-web-browser";
+import { navigationRef } from "../../Navigator/StackNavigator";
+import { userNavigationRef } from "../../Navigator/UserNavigator";
 export default function SubscriptionRegistrationProcessScreen({
   navigation,
   route,
 }: SubscriptionRegistrationProcessScreenProps) {
-  const labels = ["Thông tin", "Thành tiền", "Thanh toán"];
+  const labels = ["Điền thông tin", "Xác nhận gói", "Thanh toán"];
   const [currentPosition, setCurrentPosition] = useState<number>(0);
   const [paymentMethod, setPaymentMethod] = useState<string>("Zalopay");
   const [subscriptionPlanId, setSubscriptionPlanId] = useState<any>(null);
@@ -33,6 +35,9 @@ export default function SubscriptionRegistrationProcessScreen({
     }
   }, [currentPosition]);
 
+  const handleNavigation = () => {
+    navigation.navigate("SubscriptionList");
+  };
   const renderStepScreen = () => {
     switch (currentPosition) {
       case 0:
@@ -41,6 +46,7 @@ export default function SubscriptionRegistrationProcessScreen({
             planData={planData}
             changePosition={changePosition}
             setSubscriptionPlanId={setSubscriptionPlanId}
+            handleNavigation={handleNavigation}
           />
         );
       case 1:
@@ -101,62 +107,30 @@ export default function SubscriptionRegistrationProcessScreen({
     } catch (error) {
       console.log(error);
     }
+    navigation.goBack();
   };
   return (
     <Box>
+      <Box mt="3"></Box>
       <StepIndicator
         customStyles={customStyles}
         currentPosition={currentPosition}
         labels={labels}
         stepCount={3}
       />
+
       {/** Step card */}
       <Box
         alignSelf="center"
         width="90%"
         borderRadius={20}
         backgroundColor="#fff"
-        minH="3/5"
-        maxH="80%"
+        minH="88%"
+        maxH="88%"
         p={5}
       >
         {renderStepScreen()}
       </Box>
-      {/* <HStack
-        mt={10}
-        width="90%"
-        justifyContent="space-between"
-        alignSelf="center"
-      >
-        <Pressable
-          onPress={() => {
-            changePosition(false);
-          }}
-        >
-          <AntDesign name="arrowleft" size={40} color={appColor.primary} />
-        </Pressable>
-        <Pressable
-          onPress={() => {
-            changePosition(true);
-          }}
-        >
-          <AntDesign name="arrowright" size={40} color={appColor.primary} />
-        </Pressable>
-      </HStack> */}
-      <Button
-        backgroundColor="primary.300"
-        _pressed={{
-          backgroundColor: "primary.400",
-        }}
-        mt={8}
-        width="90%"
-        alignSelf="center"
-        onPress={() => {
-          navigation.navigate("SubscriptionList");
-        }}
-      >
-        Quay lại
-      </Button>
     </Box>
   );
 }

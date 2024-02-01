@@ -20,43 +20,51 @@ export default function SubscriptionRegistrationScreen({
 }: SubscriptionRegistrationScreenProps) {
   const { planData } = route.params;
   return (
-    <Box>
-      <ScrollView>
+    <Box h="full">
+      <Box
+        width="90%"
+        alignSelf="center"
+        alignItems="center"
+        borderRadius={20}
+        backgroundColor={appColor.white}
+        minH="85%"
+        maxH="85%"
+        mt={5}
+      >
         <Box
-          width="90%"
-          alignSelf="center"
+          width="full"
           alignItems="center"
+          justifyContent="center"
+          backgroundColor={appColor.backgroundPrimary}
+          p={5}
           borderRadius={20}
-          backgroundColor={appColor.white}
-          // p={5}
-          mt={5}
+          flex={1}
         >
-          <Box
-            width="full"
-            alignItems="center"
-            justifyContent="center"
-            height="1/6"
-            backgroundColor={appColor.backgroundPrimary}
-            p={5}
-            borderRadius={20}
-          >
-            <VStack space={3} alignItems="center" justifyContent="center">
-              <Heading
-                alignSelf="center"
-                fontFamily="heading"
-                fontSize={20}
-                color="#fff"
-                textAlign="center"
-              >
-                {planData.planName.toUpperCase()}
-              </Heading>
+          <VStack space={3} alignItems="center" justifyContent="center">
+            <Heading
+              alignSelf="center"
+              fontFamily="heading"
+              fontSize={20}
+              color="#fff"
+              textAlign="center"
+            >
+              {planData.planName.toUpperCase()}
+            </Heading>
+            <Heading fontSize={18} color="#fff" size="md">
+              {planData.description}
+            </Heading>
+          </VStack>
+        </Box>
 
-              <Heading fontSize={18} color="#fff" size="md">
-                {planData.description}
-              </Heading>
-            </VStack>
-          </Box>
-          <Box alignItems="flex-start" width="100%" minH="80" p={5}>
+        <Box
+          flexDirection="column"
+          justifyContent="space-between"
+          alignItems="flex-start"
+          width="full"
+          p={5}
+          flex={3}
+        >
+          <ScrollView width="full">
             <VStack space="5">
               {planData.planOptions.map((option: any, index: any) => {
                 return (
@@ -80,9 +88,9 @@ export default function SubscriptionRegistrationScreen({
                 );
               })}
             </VStack>
-          </Box>
-          <VStack alignItems="center">
-            <Heading fontSize={50} color={appColor.primary}>
+          </ScrollView>
+          <VStack alignSelf="center" alignItems="center">
+            <Heading fontSize={40} color={appColor.primary}>
               {format(planData.currentPrice, {
                 decimalsDigits: 0,
                 decimalSeparator: "",
@@ -93,44 +101,40 @@ export default function SubscriptionRegistrationScreen({
               {planData.duration} ngày
             </Heading>
           </VStack>
-          <Box width="full" alignItems="center" py={3}>
-            <Button
-              onPress={() => {
-                navigation.navigate("SubscriptionRegistrationProcess", {
-                  planData,
-                  paymentResult: null,
-                });
-              }}
-              backgroundColor="secondary.300"
-              width="90%"
-            >
-              <Text
-                fontFamily="body"
-                fontWeight="bold"
-                fontSize={15}
-                color={appColor.white}
-              >
-                MUA NGAY
-              </Text>
-            </Button>
-          </Box>
         </Box>
+      </Box>
+      <HStack maxW="90%" minW="90%" alignSelf="center" space={5} mt={5}>
         <Button
-          backgroundColor="primary.300"
-          _pressed={{
-            backgroundColor: "primary.400",
-          }}
-          mt={5}
-          mb={10}
-          width="90%"
-          alignSelf="center"
+          flex={1}
           onPress={() => {
             navigation.goBack();
+          }}
+          backgroundColor="#fff"
+          borderColor="secondary.300"
+          borderWidth={1}
+          _text={{
+            color: "secondary.300",
+          }}
+          _pressed={{
+            backgroundColor: "secondary.100",
           }}
         >
           Quay lại
         </Button>
-      </ScrollView>
+        <Button
+          onPress={() => {
+            navigation.navigate("SubscriptionRegistrationProcess", {
+              planData,
+              paymentResult: null,
+            });
+          }}
+          flex={1}
+        >
+          <Text fontFamily="body" color={appColor.white}>
+            Tiếp tục
+          </Text>
+        </Button>
+      </HStack>
     </Box>
   );
 }

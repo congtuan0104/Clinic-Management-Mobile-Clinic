@@ -16,6 +16,8 @@ import dayjs from "dayjs";
 import { changeClinic, updateClinic } from "../../store";
 import { useAppDispatch } from "../../hooks";
 import { IClinicInfo } from "../../types/clinic.types";
+import { Ionicons } from "@expo/vector-icons";
+
 export default function ClinicListNavigator({
   navigation,
   route,
@@ -24,68 +26,91 @@ export default function ClinicListNavigator({
   const handleGoToClinic = (clinicItem: IClinicInfo) => {
     setClinic(clinicItem);
     dispatch(changeClinic(clinicItem));
-    navigation.goBack();
+    navigation.navigate("ClinicInfoNavigator", { clinic: clinicItem });
   };
   const { clinic, setClinic, clinicList } = route.params;
   return (
-    <VStack space={5} my={5}>
+    <VStack
+      space={5}
+      maxW="90%"
+      minW="90%"
+      mt="5%"
+      maxH="95%"
+      minH="95%"
+      alignSelf="center"
+    >
       {clinicList.length ? (
-        <ScrollView
-          width="90%"
+        <Box
           alignSelf="center"
-          minH="90%"
-          maxH="90%"
           backgroundColor={appColor.white}
           borderRadius={20}
+          width="full"
+          height="full"
+          p={5}
         >
-          <VStack space={5} width="90%" alignSelf="center" my={5}>
-            <Heading alignSelf="center" fontSize={20}>
+          <HStack justifyContent="space-between" alignItems="center">
+            <Heading fontSize={20} mb={3}>
               Danh sách phòng khám
             </Heading>
-            {clinicList.map((clinicItem: any, index: any) => {
-              return (
-                <Box
-                  key={index}
-                  backgroundColor="#DAD9FF"
-                  borderRadius={15}
-                  p={3}
-                >
-                  <HStack alignItems="center" justifyContent="space-between">
-                    <VStack>
-                      <Text
-                        color={appColor.textTitle}
-                        fontWeight="bold"
-                        fontSize={20}
-                      >
-                        {clinicItem.name}
-                      </Text>
-                      <Text fontSize={14}>SĐT: {clinicItem.phone}</Text>
-                      <Text fontSize={14}>Đ/c: {clinicItem.address}</Text>
-                      <Text>
-                        Ngày hết hạn:{" "}
-                        {dayjs(clinicItem.subscriptions[0].expiredAt).format(
-                          "DD/MM/YYYY"
-                        )}
-                      </Text>
-                    </VStack>
-                  </HStack>
-                  <Pressable
-                    alignSelf="flex-end"
-                    onPress={() => {
-                      handleGoToClinic(clinicItem);
-                    }}
+            <Pressable
+              onPress={() => {
+                navigation.navigate("SubscriptionNavigator");
+              }}
+            >
+              <Ionicons
+                name="add-circle-outline"
+                size={25}
+                color={appColor.primary}
+              />
+            </Pressable>
+          </HStack>
+          <ScrollView>
+            <VStack space={5}>
+              {clinicList.map((clinicItem: any, index: any) => {
+                return (
+                  <Box
+                    key={index}
+                    backgroundColor="#DAD9FF"
+                    borderRadius={15}
+                    p={3}
                   >
-                    <FontAwesome
-                      name="arrow-circle-right"
-                      size={35}
-                      color={appColor.primary}
-                    />
-                  </Pressable>
-                </Box>
-              );
-            })}
-          </VStack>
-        </ScrollView>
+                    <HStack alignItems="center" justifyContent="space-between">
+                      <VStack>
+                        <Text
+                          color={appColor.textTitle}
+                          fontWeight="bold"
+                          fontSize={20}
+                        >
+                          {clinicItem.name}
+                        </Text>
+                        <Text fontSize={14}>SĐT: {clinicItem.phone}</Text>
+                        <Text fontSize={14}>Đ/c: {clinicItem.address}</Text>
+                        <Text>
+                          Ngày hết hạn:{" "}
+                          {dayjs(clinicItem.subscriptions[0].expiredAt).format(
+                            "DD/MM/YYYY"
+                          )}
+                        </Text>
+                      </VStack>
+                    </HStack>
+                    <Pressable
+                      alignSelf="flex-end"
+                      onPress={() => {
+                        handleGoToClinic(clinicItem);
+                      }}
+                    >
+                      <FontAwesome
+                        name="arrow-circle-right"
+                        size={35}
+                        color={appColor.primary}
+                      />
+                    </Pressable>
+                  </Box>
+                );
+              })}
+            </VStack>
+          </ScrollView>
+        </Box>
       ) : (
         <VStack space={5} my={5}>
           <Box
@@ -102,15 +127,6 @@ export default function ClinicListNavigator({
           </Box>
         </VStack>
       )}
-      <Button
-        width="90%"
-        alignSelf="center"
-        onPress={() => {
-          navigation.goBack();
-        }}
-      >
-        Quay lại
-      </Button>
     </VStack>
   );
 }
