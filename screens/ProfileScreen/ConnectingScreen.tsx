@@ -16,6 +16,7 @@ import {
   HStack,
   VStack,
 } from "native-base";
+import ChangePasswordModal from "../../components/ChangePasswordModal/ChangePasswordModal";
 import { showMessage } from "react-native-flash-message";
 import { authApi } from "../../services/auth.services";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
@@ -38,6 +39,7 @@ const ConnectingScreen = ({ navigation, route }: ConnectingScreenProps) => {
   const [isGoogleLink, setisGoogleLink] = useState(false);
 
   const [isFacebookLink, setisFacebookLink] = useState(false);
+  const [showModal, setShowModal] = useState<boolean>(false);
 
   // Kiểm tra và lấy danh sách tài khoản  liên kết
   useEffect(() => {
@@ -64,7 +66,7 @@ const ConnectingScreen = ({ navigation, route }: ConnectingScreenProps) => {
   }, [isGoogleLink, isFacebookLink]);
 
   const handleChangePassword = () => {
-    // Logic for changing password
+    setShowModal(true);
   };
 
   const connectFacebook = async () => {
@@ -118,6 +120,10 @@ const ConnectingScreen = ({ navigation, route }: ConnectingScreenProps) => {
       p={5}
       borderBottomRadius={20}
     >
+      <ChangePasswordModal
+        showModal={showModal}
+        setShowModal={setShowModal}
+      />
       <Box alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
