@@ -2,7 +2,7 @@ import { View } from "react-native";
 import { useState } from "react";
 import { Button, FormControl, Input, Modal, WarningOutlineIcon, Text, VStack, useToast } from "native-base";
 import { authApi } from "../../services/auth.services";
-import { IChangePasswordRequest } from '../../types'
+import { IAddNewPasswordRequest } from '../../types'
 import { appColor } from "../../theme";
 import { useForm, Controller } from 'react-hook-form';
 import * as yup from 'yup';
@@ -13,17 +13,12 @@ import ToastAlert from "../../components/Toast/Toast";
 
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 
-interface ChangePasswordFormData {
-    currentPassword: string;
+interface AddNewPasswordFormData {
     newPassword: string;
     confirmNewPassword: string;
 }
 
 const schema = yup.object().shape({
-    currentPassword: yup
-      .string()
-      .required('Bạn chưa nhập mật khẩu hiện tại')
-      .min(8, 'Mật khẩu phải có tối thiểu 8 ký tự'),
     newPassword: yup
       .string()
       .required('Bạn chưa nhập mật khẩu mới')
@@ -34,34 +29,33 @@ const schema = yup.object().shape({
       .oneOf([yup.ref('newPassword'), ''], 'Không trùng với mật khẩu đã nhập'),
 });
 
-const ChangePasswordModal = (props: any) => {
+const AddNewPasswordModal = (props: any) => {
   const { showModal, setShowModal } = props;
   const userInfo = useAppSelector(userInfoSelector);
   const toast = useToast();
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const { control, handleSubmit, formState: { errors }, } = useForm<ChangePasswordFormData>({
+  const { control, handleSubmit, formState: { errors }, } = useForm<AddNewPasswordFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      currentPassword: '',
       newPassword: '',
       confirmNewPassword: '',
     },
   });
 
-  const onSubmit = async (data: ChangePasswordFormData) => {
+  const onSubmit = async (data: AddNewPasswordFormData) => {
     setIsLoading(true);
-    console.log('data change password: ', data);
-    const dataRequest : IChangePasswordRequest = {
-        currentPassword: data.currentPassword,
-        newPassword: data.newPassword,
-        isReset: "true"
-    }
-    //console.log('data request: ', dataRequest);
+    //console.log('data change password: ', data);
+    
     try {
-        if (userInfo?.id) {
-            console.log('here');
-          const response = await authApi.changePassword(
-            dataRequest, userInfo?.id
+        if (userInfo?.email) {
+            //console.log('here');
+            const dataRequest : IAddNewPasswordRequest = {
+                email: userInfo?.email,
+                password: data.newPassword
+            }
+            //console.log('data request: ', dataRequest);
+          const response = await authApi.addNewPassword(
+            dataRequest
           );
           //console.log('response: ', response)
             if (response.status === true)
@@ -72,7 +66,7 @@ const ChangePasswordModal = (props: any) => {
                     return (
                     <ToastAlert
                         title="Thành công"
-                        description="Đổi mật khẩu thành công!"
+                        description="Đặt mật khẩu thành công!"
                         status="success"
                     />
                     );
@@ -85,7 +79,7 @@ const ChangePasswordModal = (props: any) => {
                     return (
                         <ToastAlert
                         title="Lỗi"
-                        description="Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin."
+                        description="Đặt mật khẩu thất bại. Vui lòng kiểm tra lại thông tin."
                         status="error"
                         />
                     );
@@ -100,7 +94,7 @@ const ChangePasswordModal = (props: any) => {
             return (
               <ToastAlert
                 title="Lỗi"
-                description="Đổi mật khẩu thất bại. Vui lòng kiểm tra lại thông tin."
+                description="Đặt mật khẩu thất bại. Vui lòng kiểm tra lại thông tin."
                 status="error"
               />
             );
@@ -111,46 +105,11 @@ const ChangePasswordModal = (props: any) => {
     setShowModal(false);
   }
   return (
-    <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
+    <Modal isOpen={showModal} onClose={() => setShowModal(false)} closeOnOverlayClick={false}>
       <Modal.Content>
-        <Modal.CloseButton />
-        <Modal.Header backgroundColor="secondary.200"><Text fontWeight="bold">Đổi mật khẩu</Text></Modal.Header>
+        <Modal.Header backgroundColor="secondary.200"><Text fontWeight="bold">Bạn chưa đặt mật khẩu</Text></Modal.Header>
         <Modal.Body>
         <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-        {/******************************Current Password ********************************/}
-            <FormControl
-                isRequired
-                isInvalid={errors.currentPassword ? true : false}
-              >
-                <FormControl.Label
-                  _text={{
-                    bold: true,
-                    color: appColor.inputLabel,
-                  }}
-                >
-                  Mật khẩu hiện tại
-                </FormControl.Label>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      type="password"
-                      placeholder="Mật khẩu hiện tại"
-                      onChangeText={onChange}
-                      value={value}
-                      onBlur={onBlur}
-                      bg="light.50"
-                    />
-                  )}
-                  name="currentPassword"
-                  defaultValue=""
-                />
-                <FormControl.ErrorMessage
-                  leftIcon={<WarningOutlineIcon size="xs" />}
-                >
-                  {errors.currentPassword && <Text>{errors.currentPassword.message}</Text>}
-                </FormControl.ErrorMessage>
-              </FormControl>
           {/******************************Password ********************************/}
               <FormControl
                 isRequired
@@ -237,4 +196,4 @@ const ChangePasswordModal = (props: any) => {
   );
 };
 
-export default ChangePasswordModal;
+export default AddNewPasswordModal;

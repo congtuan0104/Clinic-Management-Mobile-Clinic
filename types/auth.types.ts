@@ -99,15 +99,20 @@ export interface IUserInfoUpdateForm {
 export interface IUserInfoUpdateRequest {
   firstName: string;
   lastName: string;
-  gender?: number;
-  birthday?: string;
-  address?: string;
-  phone?: string;
-  avatar?: string;
+  gender?: number | null;
+  birthday?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  avatar?: string | null;
 }
 
 export interface IChangePasswordRequest {
   currentPassword: string;
   newPassword: string;
   isReset: string;
+}
+
+export interface IAddNewPasswordRequest {
+  email: string;
+  password: string;
 }

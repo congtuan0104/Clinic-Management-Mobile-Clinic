@@ -3,6 +3,7 @@ import { useAppSelector } from "../../hooks";
 import { userInfoSelector } from "../../store";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/auth";
+import AddNewPasswordModal from "./AddNewPasswordModal";
 import {
   Button,
   View,
@@ -30,6 +31,8 @@ GoogleSignin.configure({
 const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   const userInfo = useAppSelector(userInfoSelector);
   const dateString = userInfo?.birthday?.slice(0, 10);
+  //console.log('profile page: ', userInfo);
+  const [showModal, setShowModal] = useState<boolean>(true);
   const handleChangeUserInfo = () => {
     navigation.navigate("UpdateUserInfo")
   };
@@ -46,6 +49,15 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       p={5}
       borderBottomRadius={20}
     >
+      { userInfo?.isInputPassword? (
+          <></>
+        ) : (
+          <AddNewPasswordModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          />
+        )
+      }
       <Box
         width="full"
         alignItems="center"
@@ -54,13 +66,13 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
         borderBottomWidth={1}
         borderBottomColor="#EDEDF2"
       >
-        <Image
+        <Avatar
           alignSelf="center"
-          bg="white"
-          source={ userInfo?.avatar ? {uri: userInfo.avatar} : 
-          { uri: `https://ui-avatars.com/api/?name=${userInfo?.firstName}` }
+          bg="grey"
+          source={ userInfo?.avatar ? {uri: userInfo.avatar} : require('../../assets/user.png')
+          
           }
-          size="xl"
+          size="2xl"
           mb={2}
         />
 
