@@ -16,7 +16,6 @@ import {
   HStack,
   VStack,
 } from "native-base";
-import { showMessage } from "react-native-flash-message";
 import { authApi } from "../../services/auth.services";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { UserProfileScreenProps } from "../../Navigator/ProfileNavigator";

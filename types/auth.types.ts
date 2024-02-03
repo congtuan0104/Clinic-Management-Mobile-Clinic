@@ -105,3 +105,9 @@ export interface IUserInfoUpdateRequest {
   phone?: string;
   avatar?: string;
 }
+
+export interface IChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  isReset: string;
+}
