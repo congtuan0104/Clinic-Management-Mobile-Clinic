@@ -66,7 +66,7 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
         />
 
         <Text color={appColor.textTitle} fontWeight="extrabold" fontSize="17">
-          {userInfo?.lastName + " " + userInfo?.firstName}
+          {userInfo?.firstName + " " + userInfo?.lastName}
         </Text>
         <Text color={appColor.textSecondary}>{userInfo?.email}</Text>
       </Box>
