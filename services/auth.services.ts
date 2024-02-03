@@ -11,7 +11,8 @@ import {
   ILinkAccountRequest,
   IResetPasswordResponse,
   IUserInfoUpdateRequest,
-  IChangePasswordRequest
+  IChangePasswordRequest,
+  IAddNewPasswordRequest
 } from "../types";
 import { IInviteClinicMemberRequest } from "../types/clinic.types";
 
@@ -86,5 +87,9 @@ export const authApi = {
 
   changePassword(data: IChangePasswordRequest, userId: string): Promise<any> {
     return axiosClient.post(`/auth/${userId}/change-password`, data);
+  },
+
+  addNewPassword(data: IAddNewPasswordRequest): Promise<any> {
+    return axiosClient.put('/auth/add-new-password', data);
   }
 };
