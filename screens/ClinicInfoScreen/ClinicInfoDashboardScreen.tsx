@@ -58,15 +58,11 @@ export default function ClinicInfoDashboardScreen({
           >
             <Avatar
               alignSelf="center"
-              bg="green.500"
-              source={{
-                uri: clinic.logo,
-              }}
-              size="xl"
+              bg="grey"
+              source={clinic.logo? { uri: clinic.logo} : require('../../assets/images/clinics/default_image_clinic.png')}
+              size="2xl"
               mb={2}
-            >
-              ABC
-            </Avatar>
+            />
             <Text
               color={appColor.textTitle}
               fontWeight="extrabold"
