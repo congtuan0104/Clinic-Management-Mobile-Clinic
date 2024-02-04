@@ -155,12 +155,16 @@ const Login: React.FC<LoginScreenProps> = ({
               isInputPassword: res.data.user.isInputPassword,
               firstName: res.data.user.firstName,
               lastName: res.data.user.lastName,
-              gender: res.data.user.gender? res.data.user.gender : undefined,
-              birthday: res.data.user.birthday? res.data.user.birthday : undefined,
-              phone: res.data.user.phone? res.data.user.phone : undefined,
-              address: res.data.user.address? res.data.user.address : undefined,
+              gender: res.data.user.gender ? res.data.user.gender : undefined,
+              birthday: res.data.user.birthday
+                ? res.data.user.birthday
+                : undefined,
+              phone: res.data.user.phone ? res.data.user.phone : undefined,
+              address: res.data.user.address
+                ? res.data.user.address
+                : undefined,
               moduleId: res.data.user.moduleId,
-              avatar: res.data.user.avatar? res.data.user.avatar : undefined,
+              avatar: res.data.user.avatar ? res.data.user.avatar : undefined,
             };
             // If isInputPassword = false: require user enter the password
             if (userToStorage.isInputPassword === false) {
@@ -234,7 +238,7 @@ const Login: React.FC<LoginScreenProps> = ({
             phone: res.data.user.phone,
             address: res.data.user.address,
             moduleId: res.data.user.moduleId,
-            avatar: res.data.user.avatar
+            avatar: res.data.user.avatar,
             // dữ liệu tạm thời
             // Check isInputPassword: lấy từ API về
             // nếu là False: Hiện modal Nhập mật khẩu
@@ -321,24 +325,38 @@ const Login: React.FC<LoginScreenProps> = ({
       .login(data)
       .then(async (res) => {
         if (res.status && res.data) {
-          // Dispatch data to reducer
-          dispatch(login(res.data));
-          // save data in async storage
-          await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
-          await AsyncStorage.setItem("token", res.data.token);
-          // Set lại token để vào trang homepage
-          setLogin(res.data.user, res.data.token);
-          toast.show({
-            render: () => {
-              return (
-                <ToastAlert
-                  title="Thành công"
-                  description="Đăng nhập thành công!"
-                  status="success"
-                />
-              );
-            },
-          });
+          if (res.data.user.moduleId == 2 || res.data.user.moduleId == 5) {
+            // Dispatch data to reducer
+            dispatch(login(res.data));
+            // save data in async storage
+            await AsyncStorage.setItem("user", JSON.stringify(res.data.user));
+            await AsyncStorage.setItem("token", res.data.token);
+            // Set lại token để vào trang homepage
+            setLogin(res.data.user, res.data.token);
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thành công"
+                    description="Đăng nhập thành công!"
+                    status="success"
+                  />
+                );
+              },
+            });
+          } else {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại!"
+                    description="Đăng nhập thất bại! Vai trò của bạn không đúng!"
+                    status="error"
+                  />
+                );
+              },
+            });
+          }
         }
       })
       .catch((error) => {
@@ -532,7 +550,9 @@ const Login: React.FC<LoginScreenProps> = ({
                     color: "primary.300",
                   }}
                   alignSelf="center"
-                  onPress={() => navigation.navigate("ResetPassword", { setLogin })}
+                  onPress={() =>
+                    navigation.navigate("ResetPassword", { setLogin })
+                  }
                 >
                   Quên mật khẩu?
                 </Link>

@@ -87,12 +87,6 @@ export default function SubscriptionRegistrationProcessScreen({
   };
   const handlePayment = async () => {
     try {
-      // console.log(
-      //   "info",
-      //   paymentMethod,
-      //   subscriptionPlanId,
-      //   planData.currentPrice
-      // );
       // call API to create link
       const response = await paymentService.createPayment({
         totalCost: planData.currentPrice,
