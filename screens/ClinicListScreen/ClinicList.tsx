@@ -111,6 +111,7 @@ export default function ClinicListNavigator({
               onPress={() => {
                 navigation.navigate("SubscriptionNavigator");
               }}
+              mb={3}
             >
               <Ionicons
                 name="add-circle-outline"
