@@ -21,6 +21,8 @@ import { IClinicInfo } from "../../types/clinic.types";
 import { Ionicons } from "@expo/vector-icons";
 import { clinicService } from "../../services";
 import ToastAlert from "../../components/Toast/Toast";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import PaymentModal from "./PaymentModal";
 
 export default function ClinicListNavigator({
   navigation,
@@ -31,6 +33,9 @@ export default function ClinicListNavigator({
   const [clinicList, setClinicList] = React.useState<IClinicInfo | any>(null);
   const [showLoading, setShowLoading] = React.useState<boolean>(false);
   const toast = useToast();
+  const [openPaymentModal, setOpenPaymentModal] =
+    React.useState<boolean>(false);
+  const [chosenClinic, setChosenClinic] = React.useState<IClinicInfo>();
   React.useEffect(() => {
     // Call API to get active clinic
     const getActiveClinic = async () => {
@@ -68,6 +73,13 @@ export default function ClinicListNavigator({
     navigation.navigate("ClinicInfoNavigator", { clinic: clinicItem });
   };
 
+  const handleRenewSubscription = (clinicItem: IClinicInfo) => {
+    alert("Gia hạn gói!");
+  };
+  const handleActiveClinic = (clinicItem: IClinicInfo) => {
+    setChosenClinic(clinicItem);
+    setOpenPaymentModal(true);
+  };
   const { clinic, setClinic } = route.params;
   return (
     <VStack
@@ -115,35 +127,49 @@ export default function ClinicListNavigator({
                     p={3}
                   >
                     {/** Clinic info and image */}
-                    <HStack>
+                    <HStack justifyContent="space-between" alignItems="center">
                       <VStack flex={3}>
                         <Text
                           color={appColor.textTitle}
                           fontWeight="bold"
                           fontSize={20}
+                          textAlign="left"
                         >
                           {clinicItem.name}
                         </Text>
-                        <Text color={appColor.textSecondary} fontSize={14}>
+                        <Text color={appColor.textTitle} fontSize={14}>
                           <Text
                             color={appColor.textTitle}
                             fontSize={14}
                             fontWeight="bold"
                           >
-                            SĐT:{" "}
-                          </Text>
-                          {clinicItem.phone}
-                        </Text>
-                        <Text color={appColor.textSecondary} fontSize={14}>
-                          <Text
-                            color={appColor.textTitle}
-                            fontSize={14}
-                            fontWeight="bold"
-                          >
-                            Đ/c:{" "}
+                            Địa chỉ:{" "}
                           </Text>
                           {clinicItem.address}
                         </Text>
+                        {clinicItem.subscriptions[0].status === 3 && (
+                          <>
+                            <Text color={appColor.textTitle} fontSize={14}>
+                              <Text
+                                color={appColor.textTitle}
+                                fontSize={14}
+                                fontWeight="bold"
+                              >
+                                Thời hạn:{" "}
+                              </Text>
+                              {dayjs(
+                                clinicItem.subscriptions[0].expiredAt
+                              ).format("DD/MM/YYYY")}{" "}
+                            </Text>
+                            <Text color={appColor.textTitle} fontSize={14}>
+                              <Text>(Còn lại </Text>
+                              {dayjs(
+                                clinicItem.subscriptions[0].expiredAt
+                              ).diff(dayjs(), "day")}
+                              <Text> ngày)</Text>
+                            </Text>
+                          </>
+                        )}
                       </VStack>
                       <VStack flex={1} justifyContent="flex-start">
                         <Image
@@ -171,8 +197,9 @@ export default function ClinicListNavigator({
                               handleGoToClinic(clinicItem);
                             }}
                             flex={1}
+                            p={1}
                           >
-                            Đi đến
+                            Xem
                           </Button>
                         </>
                       )}
@@ -181,7 +208,15 @@ export default function ClinicListNavigator({
                           <Text flex={3} fontWeight="bold" color="red.600">
                             Đã hết hạn
                           </Text>
-                          <Button flex={1}>Gia hạn</Button>
+                          <Button
+                            flex={1}
+                            p={1}
+                            onPress={() => {
+                              handleRenewSubscription(clinicItem);
+                            }}
+                          >
+                            Gia hạn
+                          </Button>
                         </>
                       )}
                       {clinicItem.subscriptions[0].status === 1 && (
@@ -189,15 +224,25 @@ export default function ClinicListNavigator({
                           <Text flex={3} fontWeight="bold" color="red.600">
                             Đang thanh toán
                           </Text>
-                          <Button flex={1}>Thanh toán</Button>
+                          <Button flex={1} p={1}>
+                            Thanh toán
+                          </Button>
                         </>
                       )}
                       {clinicItem.subscriptions[0].status === 4 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="amber.600">
-                            Cancel
+                            Chưa kích hoạt
                           </Text>
-                          <Button flex={1}>status = 4</Button>
+                          <Button
+                            onPress={() => {
+                              handleActiveClinic(clinicItem);
+                            }}
+                            flex={1}
+                            p={1}
+                          >
+                            Kích hoạt
+                          </Button>
                         </>
                       )}
                       {clinicItem.subscriptions[0].status === 5 && (
@@ -205,52 +250,26 @@ export default function ClinicListNavigator({
                           <Text flex={3} fontWeight="bold" color="amber.600">
                             Pending
                           </Text>
-                          <Button flex={1}>status = 5</Button>
+                          <Button flex={1} p={1}>
+                            status = 5
+                          </Button>
                         </>
                       )}
                     </HStack>
                   </VStack>
                 );
-
-                return (
-                  <HStack
-                    key={index}
-                    backgroundColor="#DAD9FF"
-                    borderRadius={15}
-                    p={3}
-                  >
-                    <HStack
-                      flex={3}
-                      alignItems="center"
-                      justifyContent="space-between"
-                    >
-                      <VStack>
-                        <Text
-                          color={appColor.textTitle}
-                          fontWeight="bold"
-                          fontSize={20}
-                        >
-                          {clinicItem.name}
-                        </Text>
-                        <Text fontSize={14}>SĐT: {clinicItem.phone}</Text>
-                        <Text fontSize={14}>Đ/c: {clinicItem.address}</Text>
-                      </VStack>
-                    </HStack>
-                    <VStack flex={1}>
-                      <Image
-                        source={require("../../assets/images/clinics/default_image_clinic.png")}
-                        borderRadius={100}
-                        alt={clinicItem.name}
-                        size={16}
-                      />
-                    </VStack>
-                  </HStack>
-                );
               })}
             </VStack>
           </ScrollView>
+          <PaymentModal
+            isOpen={openPaymentModal}
+            onClose={() => {
+              setOpenPaymentModal(false);
+            }}
+            chosenClinic={chosenClinic}
+          />
         </Box>
-      ) : (
+      ) : !showLoading && !clinicList?.length ? (
         <VStack space={5} my={5}>
           <Box
             width="90%"
@@ -259,12 +278,17 @@ export default function ClinicListNavigator({
             maxH="90%"
             alignSelf="center"
           >
-            <Text>
-              Rất tiếc, hiện tại bạn chưa có bất kì phòng khám nào. Để tạo phòng
-              khám mới, bạn hãy vào Mua gói ở mục Quản lý gói.
+            <Text fontSize={20} color="gray.500">
+              Hiện tại bạn chưa có bất kì phòng khám nào. Hãy tạo phòng khám
+              mới.
             </Text>
           </Box>
         </VStack>
+      ) : (
+        <LoadingSpinner
+          showLoading={showLoading}
+          setShowLoading={setShowLoading}
+        />
       )}
     </VStack>
   );

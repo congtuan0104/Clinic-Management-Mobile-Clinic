@@ -150,8 +150,8 @@ const StackNavigator = () => {
         const exp = decodeToken.exp ? decodeToken.exp * 1000 : 0;
         const expDate = new Date(exp);
         const currentDate = new Date();
-        console.log(expDate, currentDate);
         if (expDate < currentDate) {
+          console.log("token het han");
           // Token is expired
           await AsyncStorage.removeItem("user");
           await AsyncStorage.removeItem("token");
