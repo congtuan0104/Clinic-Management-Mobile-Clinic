@@ -9,7 +9,10 @@ import {
   ILoginWithGoogleResponse,
   ILoginResponseData,
   ILinkAccountRequest,
-  IResetPasswordResponse
+  IResetPasswordResponse,
+  IUserInfoUpdateRequest,
+  IChangePasswordRequest,
+  IAddNewPasswordRequest
 } from "../types";
 import { IInviteClinicMemberRequest } from "../types/clinic.types";
 
@@ -78,4 +81,15 @@ export const authApi = {
     });
   },
 
+  updateUserInfo(data : IUserInfoUpdateRequest, userId: string): Promise<any> {
+    return axiosClient.put(`/auth/user/${userId}`, data);
+  },
+
+  changePassword(data: IChangePasswordRequest, userId: string): Promise<any> {
+    return axiosClient.post(`/auth/${userId}/change-password`, data);
+  },
+
+  addNewPassword(data: IAddNewPasswordRequest): Promise<any> {
+    return axiosClient.put('/auth/add-new-password', data);
+  }
 };

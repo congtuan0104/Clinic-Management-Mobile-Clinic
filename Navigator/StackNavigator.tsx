@@ -138,8 +138,8 @@ const StackNavigator = () => {
       // await AsyncStorage.setItem("user", JSON.stringify(userToStorage));
       // await AsyncStorage.setItem("token", token);
 
-      // await AsyncStorage.removeItem("user");
-      // await AsyncStorage.removeItem("token");
+      await AsyncStorage.removeItem("user");
+      await AsyncStorage.removeItem("token");
 
       // Restore userInfo and dispatch to the store
       const testData = await AsyncStorage.getItem("user");
@@ -151,7 +151,6 @@ const StackNavigator = () => {
         const expDate = new Date(exp);
         const currentDate = new Date();
         if (expDate < currentDate) {
-          console.log("token het han");
           // Token is expired
           await AsyncStorage.removeItem("user");
           await AsyncStorage.removeItem("token");
@@ -166,6 +165,7 @@ const StackNavigator = () => {
         };
         dispatch(restoreUserInfo(UserResponseObject));
       } else {
+        console.log("Loi o navigator dong 168!");
         setLogout();
       }
     } catch (e) {

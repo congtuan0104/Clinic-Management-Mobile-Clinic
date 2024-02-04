@@ -3,20 +3,20 @@ import { useAppSelector } from "../../hooks";
 import { userInfoSelector } from "../../store";
 import { useState, useEffect } from "react";
 import { useAuth } from "../../hooks/auth";
+import AddNewPasswordModal from "./AddNewPasswordModal";
 import {
   Button,
   View,
   Text,
   Box,
   Avatar,
-  Input,
+  Image,
   Stack,
   Icon,
   FormControl,
   HStack,
   VStack,
 } from "native-base";
-import { showMessage } from "react-native-flash-message";
 import { authApi } from "../../services/auth.services";
 import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import { UserProfileScreenProps } from "../../Navigator/ProfileNavigator";
@@ -30,8 +30,12 @@ GoogleSignin.configure({
 
 const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   const userInfo = useAppSelector(userInfoSelector);
-
-  const handleChangeUserInfo = () => {};
+  const dateString = userInfo?.birthday?.slice(0, 10);
+  //console.log('profile page: ', userInfo);
+  const [showModal, setShowModal] = useState<boolean>(true);
+  const handleChangeUserInfo = () => {
+    navigation.navigate("UpdateUserInfo")
+  };
 
   useEffect(() => {
     FCMConfig(userInfo?.id);
@@ -45,6 +49,15 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       p={5}
       borderBottomRadius={20}
     >
+      { userInfo?.isInputPassword? (
+          <></>
+        ) : (
+          <AddNewPasswordModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          />
+        )
+      }
       <Box
         width="full"
         alignItems="center"
@@ -55,17 +68,16 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       >
         <Avatar
           alignSelf="center"
-          bg="green.500"
-          source={{
-            uri: `https://ui-avatars.com/api/?name=${userInfo?.firstName}`,
-          }}
-          size="xl"
+          bg="grey"
+          source={ userInfo?.avatar ? {uri: userInfo.avatar} : require('../../assets/user.png')
+          
+          }
+          size="2xl"
           mb={2}
-        >
-          ABC
-        </Avatar>
+        />
+
         <Text color={appColor.textTitle} fontWeight="extrabold" fontSize="17">
-          {userInfo?.lastName + " " + userInfo?.firstName}
+          {userInfo?.firstName + " " + userInfo?.lastName}
         </Text>
         <Text color={appColor.textSecondary}>{userInfo?.email}</Text>
       </Box>
@@ -76,20 +88,20 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
               Họ và tên
             </Text>
             <Text color={appColor.textSecondary}>
-              {userInfo?.lastName + " " + userInfo?.firstName}
+              {userInfo?.firstName + " " + userInfo?.lastName}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
               Địa chỉ
             </Text>
-            <Text color={appColor.textSecondary}>Thành phố Hồ Chí Minh</Text>
+            <Text color={appColor.textSecondary}>{userInfo?.address}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
               Giới tính
             </Text>
-            <Text color={appColor.textSecondary}>Nam</Text>
+            <Text color={appColor.textSecondary}>{userInfo?.gender ===1 ? "Nam" : (userInfo?.gender ===0 ? "Nữ" : "")}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
@@ -101,15 +113,15 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
             <Text fontWeight="bold" color={appColor.textSecondary}>
               Ngày sinh
             </Text>
-            <Text color={appColor.textSecondary}>24/11/2002</Text>
+            <Text color={appColor.textSecondary}>{dateString?.split("-").reverse().join("-")}</Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
-              Nghề nghiệp
+              Số điện thoại
             </Text>
-            <Text color={appColor.textSecondary}>Kỹ sư phần mềm</Text>
+            <Text color={appColor.textSecondary}>{userInfo?.phone}</Text>
           </HStack>
-          <HStack width="full" mt={20}>
+          <HStack width="full" mt={10}>
             <Button width="full" onPress={handleChangeUserInfo}>
               Thay đổi thông tin cá nhân
             </Button>

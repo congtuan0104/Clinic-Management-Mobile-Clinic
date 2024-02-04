@@ -14,8 +14,15 @@ export const clinicService = {
   ): Promise<IApiResponse<IUserInClinicInfo[]>> {
     return axiosClient.get(`/clinics/${clinicId}/users`);
   },
-  async getAllClinic(): Promise<IApiResponse<IClinicInfo[]>> {
-    return axiosClient.get(`/clinics`);
+  async getAllClinic(
+    id: any,
+    moduleId: any
+  ): Promise<IApiResponse<IClinicInfo[]>> {
+    if (moduleId === 2) {
+      return axiosClient.get(`/clinics?ownerId=${id}`);
+    } else {
+      return axiosClient.get(`/clinics?staffId=${id}`);
+    }
   },
   async updateClinicInfo(
     clinicId: string,

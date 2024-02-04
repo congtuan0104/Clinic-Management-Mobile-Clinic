@@ -4,6 +4,7 @@ import {
   Button,
   HStack,
   Heading,
+  ScrollView,
   Text,
   VStack,
   View,
@@ -20,6 +21,9 @@ import { openBrowserAsync } from "expo-web-browser";
 import { ClinicInfoDashboardScreenProps } from "../../Navigator/ClinicInfoNavigator";
 import { useAppSelector } from "../../hooks";
 import dayjs from "dayjs";
+import HTMLView from "react-native-htmlview";
+import { StyleSheet } from "react-native";
+
 export default function ClinicInfoDashboardScreen({
   navigation,
   route,
@@ -43,7 +47,7 @@ export default function ClinicInfoDashboardScreen({
       borderRadius={20}
     >
       {clinic ? (
-        <>
+        <ScrollView maxW="100%">
           <Box
             width="full"
             alignItems="center"
@@ -51,13 +55,12 @@ export default function ClinicInfoDashboardScreen({
             mb={3}
             borderBottomWidth={1}
             borderBottomColor="#EDEDF2"
-            flex={4}
           >
             <Avatar
               alignSelf="center"
               bg="green.500"
               source={{
-                uri: `https://ui-avatars.com/api/?name=${clinic?.name}`,
+                uri: clinic.logo,
               }}
               size="xl"
               mb={2}
@@ -71,41 +74,48 @@ export default function ClinicInfoDashboardScreen({
             >
               {clinic?.name}
             </Text>
-            <Text color={appColor.textSecondary}>{clinic?.description}</Text>
+            {/* <Text color={appColor.textSecondary}>{clinic?.description}</Text> */}
+            <HTMLView value={clinic.description} stylesheet={styles} />
           </Box>
-          <Box flex={8} alignItems="flex-start" width="100%">
+          <Box alignItems="flex-start" width="100%">
             <VStack space="5">
               <HStack justifyContent="space-between" width="full">
-                <Text fontWeight="bold" color={appColor.textSecondary}>
+                <Text flex={2} fontWeight="bold" color={appColor.textSecondary}>
                   Địa chỉ
                 </Text>
-                <Text color={appColor.textSecondary}>{clinic?.address}</Text>
+                <Text textAlign="right" flex={4} color={appColor.textSecondary}>
+                  {clinic?.address}
+                </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
-                <Text fontWeight="bold" color={appColor.textSecondary}>
+                <Text flex={2} fontWeight="bold" color={appColor.textSecondary}>
                   Email liên hệ
                 </Text>
-                <Text color={appColor.textSecondary}>{clinic?.email}</Text>
+                <Text textAlign="right" flex={4} color={appColor.textSecondary}>
+                  {clinic?.email}
+                </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
-                <Text fontWeight="bold" color={appColor.textSecondary}>
+                <Text flex={2} fontWeight="bold" color={appColor.textSecondary}>
                   SĐT liên hệ
                 </Text>
-                <Text color={appColor.textSecondary}>{clinic?.phone}</Text>
+                <Text textAlign="right" flex={4} color={appColor.textSecondary}>
+                  {clinic?.phone}
+                </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
-                <Text fontWeight="bold" color={appColor.textSecondary}>
+                <Text flex={2} fontWeight="bold" color={appColor.textSecondary}>
                   Ngày mua
                 </Text>
-                <Text color={appColor.textSecondary}>
+                <Text textAlign="right" flex={4} color={appColor.textSecondary}>
                   {dayjs(clinic?.createdAt).format("DD/MM/YYYY")}
                 </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
-                <Text fontWeight="bold" color={appColor.textSecondary}>
+                <Text flex={2} fontWeight="bold" color={appColor.textSecondary}>
                   Hạn dùng
                 </Text>
-                <Text color={appColor.textSecondary}>
+                <Text textAlign="right" flex={4} color={appColor.textSecondary}>
                   {dayjs(clinic?.subscriptions[0].expiredAt).format(
                     "DD/MM/YYYY"
                   )}
@@ -113,14 +123,14 @@ export default function ClinicInfoDashboardScreen({
               </HStack>
             </VStack>
           </Box>
-          <Box flex={1}>
+          <Box mt={2}>
             <HStack width="full">
               <Button width="full" onPress={handleChangeClinicInfo}>
                 Thay đổi thông tin
               </Button>
             </HStack>
           </Box>
-        </>
+        </ScrollView>
       ) : (
         <Box>
           <Text>
@@ -134,3 +144,10 @@ export default function ClinicInfoDashboardScreen({
     </Box>
   );
 }
+
+const styles = StyleSheet.create({
+  a: {
+    fontWeight: "300",
+    color: "#FF3366", // make links coloured pink
+  },
+});

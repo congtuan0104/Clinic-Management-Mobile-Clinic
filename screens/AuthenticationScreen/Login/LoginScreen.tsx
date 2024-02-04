@@ -155,7 +155,16 @@ const Login: React.FC<LoginScreenProps> = ({
               isInputPassword: res.data.user.isInputPassword,
               firstName: res.data.user.firstName,
               lastName: res.data.user.lastName,
+              gender: res.data.user.gender ? res.data.user.gender : undefined,
+              birthday: res.data.user.birthday
+                ? res.data.user.birthday
+                : undefined,
+              phone: res.data.user.phone ? res.data.user.phone : undefined,
+              address: res.data.user.address
+                ? res.data.user.address
+                : undefined,
               moduleId: res.data.user.moduleId,
+              avatar: res.data.user.avatar ? res.data.user.avatar : undefined,
             };
             // If isInputPassword = false: require user enter the password
             if (userToStorage.isInputPassword === false) {
@@ -224,7 +233,12 @@ const Login: React.FC<LoginScreenProps> = ({
             isInputPassword: res.data.user.isInputPassword,
             firstName: res.data.user.firstName,
             lastName: res.data.user.lastName,
+            gender: res.data.user.gender,
+            birthday: res.data.user.birthday,
+            phone: res.data.user.phone,
+            address: res.data.user.address,
             moduleId: res.data.user.moduleId,
+            avatar: res.data.user.avatar,
             // dữ liệu tạm thời
             // Check isInputPassword: lấy từ API về
             // nếu là False: Hiện modal Nhập mật khẩu
@@ -311,7 +325,7 @@ const Login: React.FC<LoginScreenProps> = ({
       .login(data)
       .then(async (res) => {
         if (res.status && res.data) {
-          if (res.data.user.moduleId == 2 || res.data.user.moduleId == 4) {
+          if (res.data.user.moduleId == 2 || res.data.user.moduleId == 5) {
             // Dispatch data to reducer
             dispatch(login(res.data));
             // save data in async storage

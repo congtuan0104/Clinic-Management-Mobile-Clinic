@@ -10,6 +10,11 @@ export interface IUserInfo {
   id: string;
   email: string;
   isInputPassword: boolean;
+  gender?: number;
+  birthday?: string;
+  address?: string;
+  phone?: string;
+  avatar?: string;
   firstName: string;
   lastName: string;
   moduleId: number;
@@ -79,4 +84,35 @@ export interface ILinkAccountRequest {
 export interface IResetPasswordResponse {
   message: string;
   status: boolean;
+}
+
+export interface IUserInfoUpdateForm {
+  firstName: string;
+  lastName: string;
+  gender?: string;
+  birthday?: string;
+  address?: string;
+  phone?: string;
+  avatar?: string;
+}
+
+export interface IUserInfoUpdateRequest {
+  firstName: string;
+  lastName: string;
+  gender?: number | null;
+  birthday?: string | null;
+  address?: string | null;
+  phone?: string | null;
+  avatar?: string | null;
+}
+
+export interface IChangePasswordRequest {
+  currentPassword: string;
+  newPassword: string;
+  isReset: string;
+}
+
+export interface IAddNewPasswordRequest {
+  email: string;
+  password: string;
 }

@@ -40,7 +40,10 @@ export default function ClinicListNavigator({
     // Call API to get active clinic
     const getActiveClinic = async () => {
       try {
-        const response = await clinicService.getAllClinic();
+        const response = await clinicService.getAllClinic(
+          user?.id,
+          user?.moduleId
+        );
         let activeClinic: IClinicInfo[] = [];
         if (response.data) {
           // Get all clinic with status = 3 (active)
@@ -145,9 +148,9 @@ export default function ClinicListNavigator({
                           >
                             Địa chỉ:{" "}
                           </Text>
-                          {clinicItem.address}
+                          {clinicItem?.address}
                         </Text>
-                        {clinicItem.subscriptions[0].status === 3 && (
+                        {clinicItem?.subscriptions[0]?.status === 3 && (
                           <>
                             <Text color={appColor.textTitle} fontSize={14}>
                               <Text
@@ -171,7 +174,7 @@ export default function ClinicListNavigator({
                           </>
                         )}
                       </VStack>
-                      <VStack flex={1} justifyContent="flex-start">
+                      {/* <VStack flex={1} justifyContent="flex-start">
                         <Image
                           source={
                             clinicItem?.logo
@@ -183,11 +186,11 @@ export default function ClinicListNavigator({
                           size={16}
                           alignSelf="center"
                         />
-                      </VStack>
+                      </VStack> */}
                     </HStack>
                     {/**Status and navigation button */}
                     <HStack justifyContent="space-between" alignItems="center">
-                      {clinicItem.subscriptions[0].status === 3 && (
+                      {clinicItem?.subscriptions[0]?.status === 3 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="green.600">
                             Đang kích hoạt
@@ -203,7 +206,7 @@ export default function ClinicListNavigator({
                           </Button>
                         </>
                       )}
-                      {clinicItem.subscriptions[0].status === 2 && (
+                      {clinicItem?.subscriptions[0]?.status === 2 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="red.600">
                             Đã hết hạn
@@ -219,7 +222,7 @@ export default function ClinicListNavigator({
                           </Button>
                         </>
                       )}
-                      {clinicItem.subscriptions[0].status === 1 && (
+                      {clinicItem?.subscriptions[0]?.status === 1 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="red.600">
                             Đang thanh toán
@@ -229,7 +232,7 @@ export default function ClinicListNavigator({
                           </Button>
                         </>
                       )}
-                      {clinicItem.subscriptions[0].status === 4 && (
+                      {clinicItem?.subscriptions[0]?.status === 4 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="amber.600">
                             Chưa kích hoạt
@@ -245,7 +248,7 @@ export default function ClinicListNavigator({
                           </Button>
                         </>
                       )}
-                      {clinicItem.subscriptions[0].status === 5 && (
+                      {clinicItem?.subscriptions[0]?.status === 5 && (
                         <>
                           <Text flex={3} fontWeight="bold" color="amber.600">
                             Pending
