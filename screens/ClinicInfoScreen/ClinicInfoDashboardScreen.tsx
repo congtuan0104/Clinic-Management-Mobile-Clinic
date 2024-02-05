@@ -58,7 +58,7 @@ export default function ClinicInfoDashboardScreen({
           >
             <Avatar
               alignSelf="center"
-              bg="grey"
+              bg="white"
               source={clinic.logo? { uri: clinic.logo} : require('../../assets/images/clinics/default_image_clinic.png')}
               size="2xl"
               mb={2}

@@ -210,7 +210,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               options={{
                 title: "Lịch hẹn khám",
                 drawerIcon: ({ color }) => (
-                  <Ionicons name="settings-outline" size={24} color={color} />
+                  <FontAwesome name="calendar" size={24} color={color} />
                 ),
               }}
               component={CalendarScreen}

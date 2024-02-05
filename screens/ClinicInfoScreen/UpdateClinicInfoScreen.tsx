@@ -13,6 +13,9 @@ import {
   WarningOutlineIcon,
   useToast,
 } from "native-base";
+import { TouchableOpacity } from 'react-native'
+import { useState } from 'react';
+import storage from '@react-native-firebase/storage';
 import { SubscriptionDashboardScreenProps } from "../../Navigator/SubscriptionNavigator";
 import { ClinicSelector, updateClinic, userInfoSelector } from "../../store";
 import { appColor } from "../../theme";
@@ -24,6 +27,10 @@ import * as yup from "yup";
 import { IClinicCreate } from "../../types/clinic.types";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
+import * as ImagePicker from "expo-image-picker";
+import UploadImageModal from "../../components/UploadImageModal/UploadImageModal";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+
 
 // Validate
 const schema: yup.ObjectSchema<IClinicCreate> = yup.object({
@@ -45,6 +52,10 @@ export default function UpdateClinicInfoScreen({
 }: UpdateClinicInfoScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
+  const [selectedImage, setSelectedImage] = useState<string>("");
+  const [fileNameImage, setFileNameImage] = useState<string>("");
+  const [showModal, setShowModal] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const {
     control,
     handleSubmit,
@@ -56,14 +67,25 @@ export default function UpdateClinicInfoScreen({
       email: clinic?.email,
       phone: clinic?.phone,
       address: clinic?.address,
-      logo: clinic?.logo,
-      description: clinic?.description,
+      logo: clinic?.logo? clinic.logo : "",
+      description: clinic?.description? clinic.description: "",
     },
   });
   const dispatch = useAppDispatch();
-
+  const onInvalid = (errors: any) => console.error(errors)
   const onSubmit = async (data: IClinicCreate) => {
+    console.log(data)
+    console.log('go here')
+    setIsLoading(true);
     const { planId, ...requestData } = data;
+    let url : string | undefined;
+    if (selectedImage !== ""){
+      url = await uploadImage(selectedImage, fileNameImage)
+    }
+    if (url) {
+      requestData.logo = url;
+    }
+    console.log('requestData: ', requestData)
     try {
       if (clinic?.id) {
         const response = await clinicService.updateClinicInfo(
@@ -115,6 +137,64 @@ export default function UpdateClinicInfoScreen({
     }
   };
 
+  // Handle when user press to the button "Take image from camera"
+  const onPressCamera = async () => {
+    try {
+      setShowModal(false)
+      await ImagePicker.requestCameraPermissionsAsync();
+      let result = await ImagePicker.launchCameraAsync({
+        cameraType: ImagePicker.CameraType.front,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        // After take a photo, we will get uri, name and send it to the firebase storage
+        // using handlSendImage function
+        const uri = result.assets[0].uri;
+        const fileName = uri.substring(uri.lastIndexOf("/") + 1);
+        //await handleSendImage(fileName, uri);
+        setSelectedImage(uri);
+        setFileNameImage(fileName);
+      } else {
+        alert("You did not select any image.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  const onPressUploadImageGallery = async () => {
+    setShowModal(false)
+    try {
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+      let result = await ImagePicker.launchImageLibraryAsync({
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        allowsEditing: true,
+        aspect: [1, 1],
+        quality: 1,
+      });
+      if (!result.canceled) {
+        // save image
+        const uri = result.assets[0].uri;
+        const fileName = uri.substring(uri.lastIndexOf("/") + 1);
+        // await handleSendImage(fileName, uri);
+        setSelectedImage(uri);
+        setFileNameImage(fileName);
+      } else {
+        alert("You did not select any image.");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  const uploadImage = async (uri : string, imageName : string) => {
+    const imageRef = storage().ref(`clinic-logo/${imageName}`)
+    await imageRef.putFile(uri, { contentType: 'image/jpg'}).catch((error) => { throw error })
+    const url = await imageRef.getDownloadURL().catch((error) => { throw error });
+    return url;
+  }
+
   return (
     <Box>
       <Box
@@ -129,9 +209,27 @@ export default function UpdateClinicInfoScreen({
         borderRadius={20}
         mt="5%"
       >
-        <Heading mb={2} fontSize={20}>
-          Cập nhật phòng khám
-        </Heading>
+        <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
+        <UploadImageModal
+            showModal={showModal}
+            setShowModal={setShowModal}
+            onPressCamera={onPressCamera}
+            onPressUploadImageGallery={onPressUploadImageGallery}
+          />
+          <TouchableOpacity
+            onPress={() => {
+              setShowModal(true);
+            }}
+          >
+            <Avatar
+              alignSelf="center"
+              bg="white"
+              source={selectedImage ? { uri: selectedImage } : ( clinic?.logo ? {uri: clinic.logo} : 
+                require('../../assets/images/clinics/default_image_clinic.png'))}
+              size="2xl"
+              mb={2}
+            />
+          </TouchableOpacity>
         <ScrollView minWidth="100%" maxWidth="100%">
           <VStack space={5}>
             <VStack space={5}>
@@ -250,35 +348,7 @@ export default function UpdateClinicInfoScreen({
                   {errors.address && <Text>{errors.address.message}</Text>}
                 </FormControl.ErrorMessage>
               </FormControl>
-              {/**Logo */}
-              <FormControl isInvalid={errors.logo ? true : false}>
-                <FormControl.Label
-                  _text={{
-                    bold: true,
-                    color: appColor.inputLabel,
-                  }}
-                >
-                  Logo{" "}
-                </FormControl.Label>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      type="text"
-                      placeholder="Nhập link Logo"
-                      onChangeText={onChange}
-                      value={value}
-                      onBlur={onBlur}
-                    />
-                  )}
-                  name="logo"
-                />
-                <FormControl.ErrorMessage
-                  leftIcon={<WarningOutlineIcon size="xs" />}
-                >
-                  {errors.logo && <Text>{errors.logo.message}</Text>}
-                </FormControl.ErrorMessage>
-              </FormControl>
+              
               {/**Description */}
               <FormControl isInvalid={errors.description ? true : false}>
                 <FormControl.Label
@@ -296,7 +366,7 @@ export default function UpdateClinicInfoScreen({
                       type="text"
                       placeholder="Nhập mô tả"
                       onChangeText={onChange}
-                      value={value}
+                      value={value? value : undefined}
                       onBlur={onBlur}
                     />
                   )}
@@ -332,7 +402,7 @@ export default function UpdateClinicInfoScreen({
         >
           Quay lại
         </Button>
-        <Button flex={1} onPress={handleSubmit(onSubmit)}>
+        <Button flex={1} onPress={handleSubmit(onSubmit, onInvalid)}>
           Thay đổi thông tin
         </Button>
       </HStack>
