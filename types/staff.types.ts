@@ -7,6 +7,10 @@ export interface IClinicMember {
     lastName: string;
     email: string;
     avatar: string;
+    phone: string;
+    address: string;
+    gender: number;
+    birthday: string;
   };
   
   role: {

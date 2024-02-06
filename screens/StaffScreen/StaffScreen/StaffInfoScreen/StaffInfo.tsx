@@ -64,6 +64,22 @@ export default function StaffInfoScreen({
             <Text color={appColor.textSecondary}>Địa chỉ Email</Text>
             <Text color={appColor.textSecondary}>{staff.users.email}</Text>
           </HStack>
+          <HStack justifyContent="space-between" width="full">
+            <Text color={appColor.textSecondary}>Địa chỉ</Text>
+            <Text color={appColor.textSecondary}>{staff.users.address}</Text>
+          </HStack>
+          <HStack justifyContent="space-between" width="full">
+            <Text color={appColor.textSecondary}>Số điện thoại</Text>
+            <Text color={appColor.textSecondary}>{staff.users.phone}</Text>
+          </HStack>
+          <HStack justifyContent="space-between" width="full">
+            <Text color={appColor.textSecondary}>Giới tính</Text>
+            <Text color={appColor.textSecondary}>{staff.users.gender===1? "Nam" : (staff.users.gender===0? "Nữ" : null)}</Text>
+          </HStack>
+          <HStack justifyContent="space-between" width="full">
+            <Text color={appColor.textSecondary}>Ngày sinh</Text>
+            <Text color={appColor.textSecondary}>{staff.users.birthday.slice(0,10).split("-").reverse().join("-")}</Text>
+          </HStack>
 
           <HStack justifyContent="space-between" width="full">
             <Text color={appColor.textSecondary}>Vai trò</Text>
