@@ -43,8 +43,8 @@ export default function StaffInfoScreen({
         <Image
           size={150}
           borderRadius={100}
-          source={require("../../../../assets/images/default_avatar.jpg")}
-          alt={staff.email}
+          source={staff.users.avatar? {uri: staff.users.avatar} : require("../../../../assets/images/default_avatar.jpg")}
+          alt="avatar"
         />
         {/* <Text color={appColor.textTitle} fontWeight="extrabold" fontSize="17">
           {staff?.lastName + " " + staff?.firstName}
@@ -56,13 +56,13 @@ export default function StaffInfoScreen({
           <HStack justifyContent="space-between" width="full">
             <Text color={appColor.textSecondary}>Họ và tên</Text>
             <Text color={appColor.textSecondary}>
-              {staff.lastName + " " + staff.firstName}
+              {staff.users.firstName + " " + staff.users.lastName}
             </Text>
           </HStack>
 
           <HStack justifyContent="space-between" width="full">
             <Text color={appColor.textSecondary}>Địa chỉ Email</Text>
-            <Text color={appColor.textSecondary}>{staff.email}</Text>
+            <Text color={appColor.textSecondary}>{staff.users.email}</Text>
           </HStack>
 
           <HStack justifyContent="space-between" width="full">
