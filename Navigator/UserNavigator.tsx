@@ -8,6 +8,7 @@ import { appColor } from "../theme";
 import CalendarScreen from "../screens/Calendar/CalendarScreen";
 import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen";
 import UpdateUserInfoScreen from "../screens/UpdateUserInfo/UpdateUserInfoScreen";
+import CategoryScreen from "../screens/CategoryScreen/CategoryScreen";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -45,6 +46,7 @@ export type UserNavigatorDrawerParamList = {
   RoleNavigator: undefined;
   CalendarNavigator: undefined;
   CreateTaskNavigator: undefined;
+  CategoryNavigator: undefined;
 };
 
 export const userNavigationRef =
@@ -94,6 +96,11 @@ export type CalendarNavigatorProps = NativeStackScreenProps<
 export type CreateTaskNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "CreateTaskNavigator"
+>;
+
+export type CategoryNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "CategoryNavigator"
 >;
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
@@ -204,6 +211,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 ),
               }}
               component={RoleNavigator}
+            />
+            <UserNavigatorDrawer.Screen
+              name="CategoryNavigator"
+              options={{
+                title: "Danh mục, phân loại",
+                drawerIcon: ({ color }) => (
+                  <MaterialIcons name="category" size={24} color={color} />
+                ),
+              }}
+              component={CategoryScreen}
             />
             <UserNavigatorDrawer.Screen
               name="CalendarNavigator"
