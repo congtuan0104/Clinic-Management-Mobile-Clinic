@@ -9,6 +9,7 @@ import CalendarScreen from "../screens/Calendar/CalendarScreen";
 import CreateTaskScreen from "../screens/Calendar/CreateTaskScreen";
 import UpdateUserInfoScreen from "../screens/UpdateUserInfo/UpdateUserInfoScreen";
 import CategoryScreen from "../screens/CategoryScreen/CategoryScreen";
+import CategoryPriceScreen from "../screens/CategoryPriceScreen/CategoryPriceScreen";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
@@ -47,6 +48,7 @@ export type UserNavigatorDrawerParamList = {
   CalendarNavigator: undefined;
   CreateTaskNavigator: undefined;
   CategoryNavigator: undefined;
+  CategoryPriceNavigator: undefined;
 };
 
 export const userNavigationRef =
@@ -101,6 +103,11 @@ export type CreateTaskNavigatorProps = NativeStackScreenProps<
 export type CategoryNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "CategoryNavigator"
+>;
+
+export type CategoryPriceNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "CategoryPriceNavigator"
 >;
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
@@ -221,6 +228,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 ),
               }}
               component={CategoryScreen}
+            />
+            <UserNavigatorDrawer.Screen
+              name="CategoryPriceNavigator"
+              options={{
+                title: "Bảng giá dịch vụ",
+                drawerIcon: ({ color }) => (
+                  <Entypo name="price-tag" size={24} color={color} />
+                ),
+              }}
+              component={CategoryPriceScreen}
             />
             <UserNavigatorDrawer.Screen
               name="CalendarNavigator"
