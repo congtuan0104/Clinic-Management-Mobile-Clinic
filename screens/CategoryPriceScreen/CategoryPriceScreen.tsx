@@ -51,9 +51,11 @@ export default function StaffDashboardScreen({
       setIsOpenDialog(true)
     }
     function filterList(text: string) {
+      if (text !== "") {
         setSearchFilterList(clinicServiceList.filter(item =>
             item.serviceName.toUpperCase().includes(text.toUpperCase()))
-        )
+        )}
+        else setSearchFilterList([]);
     }
     const getClinicServiceList = async () => {
       try {
