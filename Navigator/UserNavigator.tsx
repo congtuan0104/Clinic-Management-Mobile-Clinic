@@ -21,7 +21,6 @@ import { useToast } from "native-base";
 import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
-
 // Import custom icons
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -30,6 +29,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { NavigationContainerRef } from "@react-navigation/native";
+import EquipmentListScreen from "../screens/EquipmentNavigator/EquipmentListScreen";
+import MedicalSuppliesScreen from "../screens/EquipmentNavigator/EquipmentListScreen";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -49,6 +50,7 @@ export type UserNavigatorDrawerParamList = {
   CreateTaskNavigator: undefined;
   CategoryNavigator: undefined;
   CategoryPriceNavigator: undefined;
+  MedicalSuppliesNavigator: undefined;
 };
 
 export const userNavigationRef =
@@ -109,6 +111,12 @@ export type CategoryPriceNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "CategoryPriceNavigator"
 >;
+
+export type MedicalSuppliesNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "MedicalSuppliesNavigator"
+>;
+
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
 
@@ -238,6 +246,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 ),
               }}
               component={CategoryPriceScreen}
+            />
+            <UserNavigatorDrawer.Screen
+              name="MedicalSuppliesNavigator"
+              options={{
+                title: "Kho thuốc, vật tư",
+                drawerIcon: ({ color }) => (
+                  <MaterialIcons name="device-hub" size={24} color={color} />
+                ),
+              }}
+              component={MedicalSuppliesScreen}
             />
             <UserNavigatorDrawer.Screen
               name="CalendarNavigator"

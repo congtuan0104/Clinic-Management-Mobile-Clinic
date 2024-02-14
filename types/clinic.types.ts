@@ -48,8 +48,8 @@ export interface IClinicCreate {
   address: string;
   lat?: number;
   long?: number;
-  logo?: string | null;
-  description?: string | null;
+  logo?: string;
+  description?: string;
   planId?: string;
 }
 
