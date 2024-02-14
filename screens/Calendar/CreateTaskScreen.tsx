@@ -2,15 +2,14 @@ import React, { Fragment, useEffect, useState } from "react";
 import {
   Alert,
   Dimensions,
-  Image,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
   View,
 } from "react-native";
+import { Image } from 'native-base'
 import { CreateTaskNavigatorProps } from "../../Navigator/UserNavigator";
 import { CalendarList } from "react-native-calendars";
 import moment from "moment";
@@ -25,6 +24,8 @@ import { SafeAreaView } from "react-native-safe-area-context";
 
 const { width: vw } = Dimensions.get("window");
 moment().format("YYYY/MM/DD");
+const chevronDown = require("../../assets/chevron_down.png");
+
 
 export default function CreateTask({
   navigation,
@@ -108,11 +109,27 @@ export default function CreateTask({
             }}
             value={currentDay.substring(0, 10).split("-").reverse().join("-")}
           />
-          <TextInput
-            style={styles.title}
-            onChangeText={setDoctorName}
-            value={doctorName}
-            placeholder="Chọn bác sĩ"
+          <SelectDropdown
+            data={["Bác sĩ 1", "Bác sĩ 2"]}
+            onSelect={(selectedItem, index) => {
+              setDoctorName(selectedItem)
+            }}
+            defaultButtonText={"Chọn bác sĩ"}
+            buttonTextAfterSelection={(selectedItem, index) => {
+              return selectedItem;
+            }}
+            rowTextForSelection={(item, index) => {
+              return item;
+            }}
+            buttonStyle={styles.dropdown1BtnStyle}
+            buttonTextStyle={styles.dropdown1BtnTxtStyle}
+            renderDropdownIcon={() => (
+              <Image alt="icon" source={chevronDown} size={18} />
+            )}
+            dropdownIconPosition={"right"}
+            dropdownStyle={styles.dropdown1DropdownStyle}
+            rowStyle={styles.dropdown1RowStyle}
+            rowTextStyle={styles.dropdown1RowTxtStyle}
           />
 
           <View style={styles.notesContent} />
@@ -301,7 +318,7 @@ const styles = StyleSheet.create({
     fontSize: 19,
   },
   taskContainer: {
-    height: 400,
+    height: 420,
     width: 327,
     alignSelf: "center",
     borderRadius: 20,
@@ -317,7 +334,7 @@ const styles = StyleSheet.create({
     padding: 22,
   },
   calenderContainer: {
-    marginTop: 30,
+    marginTop: 0,
     width: 350,
     height: 350,
     alignSelf: "center",
@@ -331,7 +348,7 @@ const styles = StyleSheet.create({
   },
   backButton: {
     flexDirection: "row",
-    marginTop: 20,
+    marginTop: 5,
     width: "100%",
     alignItems: "center",
   },
@@ -339,4 +356,19 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#eaeef7",
   },
+  dropdown1BtnStyle: {
+    width: "100%",
+    height: 46,
+    backgroundColor: "#F5F5FC",
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: "#D4D4D5",
+  },
+  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF", marginTop: -70, borderRadius: 15 },
+  dropdown1RowStyle: {
+    backgroundColor: "#EFEFEF",
+    borderBottomColor: "#C5C5C5",
+  },
+  dropdown1RowTxtStyle: { color: "#444", textAlign: "left" },
 });

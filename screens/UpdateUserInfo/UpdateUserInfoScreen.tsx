@@ -15,7 +15,6 @@ import {
 } from "native-base";
 import { TouchableOpacity, Alert } from "react-native";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
-import { getStorage, ref, uploadBytes } from 'firebase/storage';
 import storage from '@react-native-firebase/storage';
 //import 'firebase/storage';
 import { useState } from "react";
@@ -536,7 +535,7 @@ const styles = StyleSheet.create({
     borderColor: "#D4D4D5",
   },
   dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
-  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF" },
+  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF", marginTop: -70, borderRadius: 15 },
   dropdown1RowStyle: {
     backgroundColor: "#EFEFEF",
     borderBottomColor: "#C5C5C5",

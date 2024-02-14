@@ -78,19 +78,21 @@ export default function CreateChattingModal({
       // (Using clinicId = 6d43806c-c86c-4e9e-ab12-ce9d4e0357f9 (testing))
       const clinicId = clinic?.id;
       if (clinicId) {
-        const response = await clinicService.getUsersInClinic(clinicId);
+        const response = await clinicService.getStaffClinic(clinicId);
+        console.log('res: ', response)
         let data: any = [];
         if (response.status) {
           const responseData = response.data;
           if (responseData) {
-            responseData.map((user) => {
-              if (user.id !== userInfo?.id)
+            responseData.map((item: any) => {
+              if (item.users.id !== userInfo?.id)
                 data.push({
-                  key: user.id,
-                  value: user.lastName + " " + user.firstName,
+                  key: item.users.id,
+                  value: item.users.firstName + " " + item.users.lastName,
                 });
             });
           }
+          //console.log('data: ', data);
           setUserInClinic(data);
         } else {
           console.log("Server error");
@@ -98,7 +100,7 @@ export default function CreateChattingModal({
       }
     };
     getUsersInClinic();
-  }, [userInClinic, clinic]);
+  }, []);
   // Xử lí việc gọi API tạo nhóm
   const onSubmit = async (data: ICreateGroupChatRequest) => {
     setIsLoading(true);
