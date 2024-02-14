@@ -23,6 +23,7 @@ import { clinicService } from "../../services";
 import ToastAlert from "../../components/Toast/Toast";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import PaymentModal from "./PaymentModal";
+// import MapBox from "../../components/Mapbox/Mapbox";
 
 export default function ClinicListNavigator({
   navigation,
@@ -111,6 +112,7 @@ export default function ClinicListNavigator({
               onPress={() => {
                 navigation.navigate("SubscriptionNavigator");
               }}
+              mb={3}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -174,19 +176,6 @@ export default function ClinicListNavigator({
                           </>
                         )}
                       </VStack>
-                      {/* <VStack flex={1} justifyContent="flex-start">
-                        <Image
-                          source={
-                            clinicItem?.logo
-                              ? { uri: clinicItem.logo }
-                              : require("../../assets/images/clinics/default_image_clinic.png")
-                          }
-                          borderRadius={100}
-                          alt={clinicItem.name}
-                          size={16}
-                          alignSelf="center"
-                        />
-                      </VStack> */}
                     </HStack>
                     {/**Status and navigation button */}
                     <HStack justifyContent="space-between" alignItems="center">

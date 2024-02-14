@@ -70,6 +70,13 @@
           "clientToken": "6b9ac107583746e675bbba995b377e66",
           "displayName": "CLINUS"
         }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsVersion": "11.1.0",
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoia2hhbmdubDI0MTEyMDAyIiwiYSI6ImNsczlubWhxODA1Y3IyaW5zM2VzNWkyaDQifQ.vn8nm-_IlboHapYDVdrlPg"
+        }
       ]
     ],
     "owner": "nhatminh287",

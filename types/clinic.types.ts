@@ -46,6 +46,8 @@ export interface IClinicCreate {
   email: string;
   phone: string;
   address: string;
+  lat?: number;
+  long?: number;
   logo?: string | null;
   description?: string | null;
   planId?: string;

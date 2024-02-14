@@ -10,6 +10,7 @@ import {
   WarningOutlineIcon,
   ScrollView,
   useToast,
+  View,
 } from "native-base";
 import { PlanDataCard } from "../../../components/PlanDataCard/PlanDataCard";
 import { Controller, Form } from "react-hook-form";
@@ -21,10 +22,50 @@ import { useAppSelector } from "../../../hooks";
 import { userInfoSelector } from "../../../store";
 import { clinicService } from "../../../services";
 import ToastAlert from "../../../components/Toast/Toast";
+import React, { useEffect, useRef, useState } from "react";
+import { useDebounce } from "use-debounce";
+import { Dropdown } from "react-native-element-dropdown";
+import AntDesign from "@expo/vector-icons/AntDesign";
+// import MapBox from "../../../components/Mapbox/Mapbox";
+import { StyleSheet } from "react-native";
+import { Entypo } from "@expo/vector-icons";
+import MapboxGL from "@rnmapbox/maps";
+import { TouchableOpacity } from "react-native";
+import { locationApi } from "../../../services/location.services";
+import { IMapBoxFeature } from "../../../types/location.types";
+import { Camera } from "@rnmapbox/maps";
+MapboxGL.setAccessToken(
+  "sk.eyJ1Ijoia2hhbmdubDI0MTEyMDAyIiwiYSI6ImNsczlubWhxODA1Y3IyaW5zM2VzNWkyaDQifQ.vn8nm-_IlboHapYDVdrlPg"
+);
+const AnnotationContent = ({ title }: { title: string }) => (
+  <View>
+    <Text></Text>
+    <TouchableOpacity>
+      <Text>{title}</Text>
+      <Entypo name="location-pin" size={50} color="red" />
+    </TouchableOpacity>
+  </View>
+);
+// [10.778203, 106.654055]; //long-lat
+const INITIAL_COORDINATES: [number, number] = [106.654055, 10.778203];
 
 export const StepOneScreen = (props: any) => {
+  const camera = useRef<Camera>(null);
+  const [point, setPoint] =
+    React.useState<GeoJSON.Position>(INITIAL_COORDINATES);
+  const [allowOverlapWithPuck, setAllowOverlapWithPuck] =
+    React.useState<boolean>(false);
+  const [searchAddress, setSearchAddress] = React.useState<string>("");
   const toast = useToast();
+  const [debounced] = useDebounce(searchAddress, 500);
   const userInfo = useAppSelector(userInfoSelector);
+  const [suggestLocations, setSuggestLocations] = useState<any[]>([]);
+
+  useEffect(() => {
+    camera.current?.setCamera({
+      centerCoordinate: [106.654055, 10.778203],
+    });
+  }, []);
   const { planData, changePosition, setSubscriptionPlanId, handleNavigation } =
     props;
   // Validate
@@ -36,6 +77,8 @@ export const StepOneScreen = (props: any) => {
       .email("Email không hợp lệ"),
     phone: yup.string().required("Số điện thoại không được để trống"),
     address: yup.string().required("Địa chỉ không được để trống"),
+    lat: yup.number(),
+    long: yup.number(),
     logo: yup.string(),
     description: yup.string(),
     planId: yup.string().required(),
@@ -58,14 +101,34 @@ export const StepOneScreen = (props: any) => {
     },
   });
 
+  useEffect(() => {
+    getSuggestLocations(searchAddress);
+  }, [debounced]);
+
+  const getSuggestLocations = async (address: string) => {
+    const res = await locationApi.getSuggestLocations(address);
+
+    if (res.data) {
+      const features: IMapBoxFeature[] = res.data.features;
+      const suggestLocations: any[] = features.map((feature) => {
+        return {
+          label: feature.place_name,
+          value: feature.center.toString(),
+        };
+      });
+      setSuggestLocations(suggestLocations);
+    }
+  };
+
   // send data to server to create clinic
   const onSubmit = async (data: IClinicCreate) => {
     try {
-      const response = await clinicService.createClinic(data);
-      if (response.status) {
-        setSubscriptionPlanId(response.data.subscription.id);
-        changePosition(true);
-      }
+      console.log(data);
+      // const response = await clinicService.createClinic(data);
+      // if (response.status) {
+      //   setSubscriptionPlanId(response.data.subscription.id);
+      //   changePosition(true);
+      // }
     } catch (error) {
       toast.show({
         render: () => {
@@ -80,6 +143,7 @@ export const StepOneScreen = (props: any) => {
       });
     }
   };
+
   return (
     <VStack space={5} maxH="100%" minH="50%">
       <Heading>Bước 1: Điền thông tin</Heading>
@@ -170,33 +234,74 @@ export const StepOneScreen = (props: any) => {
             </FormControl.ErrorMessage>
           </FormControl>
           {/**Address */}
-          <FormControl isRequired isInvalid={errors.address ? true : false}>
-            <FormControl.Label
-              _text={{
-                bold: true,
+          <FormControl.Label
+            _text={{
+              bold: true,
+            }}
+          >
+            Nhập địa chỉ
+          </FormControl.Label>
+          <Dropdown
+            style={{
+              marginTop: -10,
+            }}
+            placeholderStyle={{}}
+            selectedTextStyle={{
+              fontFamily: "Montserrat-SemiBold",
+              fontSize: 14,
+              marginBottom: -5,
+            }}
+            data={suggestLocations}
+            search
+            maxHeight={300}
+            labelField="label"
+            valueField="value"
+            placeholder="Nhập địa chỉ"
+            searchPlaceholder="Search..."
+            value={searchAddress}
+            onChangeText={(search) => {
+              setSearchAddress(search);
+            }}
+            onChange={(item) => {
+              console.log(item);
+              setSearchAddress(item.value);
+              const arr = item.value.split(",");
+              setPoint(arr);
+            }}
+            // renderLeftIcon={() => (
+            //   <AntDesign color="black" name="Safety" size={20} />
+            // )}
+          />
+
+          <MapboxGL.MapView
+            style={{ height: 300 }}
+            projection="mercator"
+            zoomEnabled={true}
+            logoEnabled={false}
+            localizeLabels={true}
+            attributionPosition={{ top: 8, left: 8 }}
+            tintColor="#333"
+            styleURL="mapbox://styles/mapbox/streets-v12"
+            rotateEnabled={true}
+          >
+            <MapboxGL.Camera
+              defaultSettings={{
+                zoomLevel: 15,
+                centerCoordinate: point,
               }}
-            >
-              Địa chỉ{" "}
-            </FormControl.Label>
-            <Controller
-              control={control}
-              render={({ field: { onChange, onBlur, value } }) => (
-                <Input
-                  type="text"
-                  placeholder="Nhập địa chỉ"
-                  onChangeText={onChange}
-                  value={value}
-                  onBlur={onBlur}
-                />
-              )}
-              name="address"
+              centerCoordinate={point}
+              zoomLevel={15}
+              followUserLocation={true}
             />
-            <FormControl.ErrorMessage
-              leftIcon={<WarningOutlineIcon size="xs" />}
+
+            <MapboxGL.MarkerView
+              coordinate={point}
+              allowOverlapWithPuck={allowOverlapWithPuck}
             >
-              {errors.address && <Text>{errors.address.message}</Text>}
-            </FormControl.ErrorMessage>
-          </FormControl>
+              <AnnotationContent title={""} />
+            </MapboxGL.MarkerView>
+          </MapboxGL.MapView>
+
           {/**Logo */}
           <FormControl isInvalid={errors.logo ? true : false}>
             <FormControl.Label
