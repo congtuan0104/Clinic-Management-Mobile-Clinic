@@ -9,4 +9,10 @@ export const medicalSuppliesServices = {
   async addNewMedicalSupplies(data: any): Promise<IApiResponse<any>> {
     return axiosClient.post(`/medical-supplies`, data);
   },
+  async updateMedicalSupplies(
+    data: any,
+    medicalSupplyId: any
+  ): Promise<IApiResponse<any>> {
+    return axiosClient.put(`/medical-supplies/${medicalSupplyId}`, data);
+  },
 };

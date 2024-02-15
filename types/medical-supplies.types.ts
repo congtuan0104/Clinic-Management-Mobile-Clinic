@@ -26,3 +26,15 @@ export interface IPostMedicalSuppliesParams {
   unit: string;
   vendor: string | undefined;
 }
+
+export interface IUpdateMedicalSuppliesParams {
+  categoryId: number;
+  clinicId: string;
+  description: string | undefined;
+  expiry: string | undefined;
+  medicineName: string;
+  stock: number;
+  unit: string;
+  vendor: string | undefined;
+  isDisabled: boolean;
+}

@@ -24,6 +24,7 @@ import ToastAlert from "../../components/Toast/Toast";
 import { useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
 import AddMedicalSupplyModal from "./AddMedicalSupplyModal";
+import UpdateMedicalSupplyModal from "./UpdateMedicalSupplyModal";
 
 export default function MedicalSuppliesScreen({
   navigation,
@@ -42,6 +43,8 @@ export default function MedicalSuppliesScreen({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenAddServiceModal, setIsOpenAddServiceModal] =
     useState<boolean>(false);
+  const [service, setService] = useState<IMedicalSupplies>();
+  const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
 
   function filterList(text: string) {
     if (text !== "") {
@@ -58,6 +61,11 @@ export default function MedicalSuppliesScreen({
   };
   const handleReRender = () => setIsReRender(!isReRender);
 
+  const handleOpenUpdateModal = async (item: IMedicalSupplies) => {
+    await handleSetService(item);
+    setIsOpenServiceModal(true);
+  };
+  const handleSetService = async (item: IMedicalSupplies) => setService(item);
   const getClinicServiceList = async () => {
     try {
       if (clinic?.id) {
@@ -169,7 +177,11 @@ export default function MedicalSuppliesScreen({
                               {medicalSupply.medicineName}
                             </Text>
                             <HStack space={2} alignItems="center">
-                              <Pressable onPress={() => {}}>
+                              <Pressable
+                                onPress={() =>
+                                  handleOpenUpdateModal(medicalSupply)
+                                }
+                              >
                                 <FontAwesome5
                                   name="edit"
                                   size={18}
@@ -262,7 +274,11 @@ export default function MedicalSuppliesScreen({
                               {medicalSupply.medicineName}
                             </Text>
                             <HStack space={2} alignItems="center">
-                              <Pressable onPress={() => {}}>
+                              <Pressable
+                                onPress={() =>
+                                  handleOpenUpdateModal(medicalSupply)
+                                }
+                              >
                                 <FontAwesome5
                                   name="edit"
                                   size={18}
@@ -337,6 +353,16 @@ export default function MedicalSuppliesScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
+      {service && isOpenServiceModal ? (
+        <UpdateMedicalSupplyModal
+          isOpen={isOpenServiceModal}
+          onClose={() => {
+            setIsOpenServiceModal(false);
+          }}
+          service={service} // service <=> medical supply
+          handleReRender={handleReRender}
+        />
+      ) : null}
       <AddMedicalSupplyModal
         isOpen={isOpenAddServiceModal}
         onClose={() => {

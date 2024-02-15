@@ -29,7 +29,7 @@ import {
   clinicServiceApi,
   medicalSuppliesServices,
 } from "../../services";
-import { useAppDispatch, useAppSelector } from "../../hooks";
+import { useAppSelector } from "../../hooks";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
@@ -40,13 +40,19 @@ import {
   IClinicService,
   IPostClinicServiceParams,
 } from "../../types";
-import { IPostMedicalSuppliesParams } from "../../types/medical-supplies.types";
+import {
+  IMedicalSupplies,
+  IPostMedicalSuppliesParams,
+  IUpdateMedicalSuppliesParams,
+} from "../../types/medical-supplies.types";
+import dayjs from "dayjs";
 
 const chevronDown = require("../../assets/chevron_down.png");
 
 interface IProps {
   isOpen: boolean;
   onClose: () => void;
+  service: IMedicalSupplies;
   handleReRender: () => void;
 }
 
@@ -58,6 +64,7 @@ interface IFormData {
   expiry?: string | undefined;
   unit: string;
   categoryId: number;
+  status: string;
 }
 
 // Validate
@@ -69,11 +76,13 @@ const schema = yup.object().shape({
   stock: yup.string().required("Vui lòng nhập số lượng tối thiểu"),
   expiry: yup.string(),
   categoryId: yup.number().required("Vui lòng chọn loại vật tư"),
+  status: yup.string().required("Bạn chưa chọn trang thái dịch vụ"),
 });
 
-export default function AddMedicalSupplyModal({
+export default function UpdateServiceModal({
   isOpen,
   onClose,
+  service,
   handleReRender,
 }: IProps) {
   const toast = useToast();
@@ -111,12 +120,16 @@ export default function AddMedicalSupplyModal({
   } = useForm({
     resolver: yupResolver(schema),
     defaultValues: {
-      medicineName: "",
-      description: "",
-      vendor: "",
-      stock: "1",
-      expiry: "",
-      unit: "",
+      medicineName: service.medicineName,
+      description: service.description,
+      vendor: service.vendor,
+      stock: service.stock.toString(),
+      expiry: service.expiredAt
+        ? dayjs(service.expiredAt).format("DD/MM/YYYY")
+        : "",
+      categoryId: service.categoryId,
+      status: service.isDisabled ? "Không hoạt động" : "Đang hoạt động",
+      unit: service.unit,
     },
   });
 
@@ -140,7 +153,7 @@ export default function AddMedicalSupplyModal({
       return;
     }
     if (clinic?.id) {
-      const dataRequest: IPostMedicalSuppliesParams = {
+      const dataRequest: IUpdateMedicalSuppliesParams = {
         medicineName: newData.medicineName,
         categoryId: newData.categoryId,
         clinicId: clinic?.id,
@@ -149,10 +162,12 @@ export default function AddMedicalSupplyModal({
         stock: parseInt(newData.stock),
         unit: newData.unit,
         vendor: newData.vendor,
+        isDisabled: statusService,
       };
       try {
-        const res = await medicalSuppliesServices.addNewMedicalSupplies(
-          dataRequest
+        const res = await medicalSuppliesServices.updateMedicalSupplies(
+          dataRequest,
+          service.id
         );
         if (res.status) {
           toast.show({
@@ -160,7 +175,7 @@ export default function AddMedicalSupplyModal({
               return (
                 <ToastAlert
                   title="Thành công"
-                  description="Thêm vật tư thành công!"
+                  description="Cập nhật vật tư thành công!"
                   status="success"
                 />
               );
@@ -213,7 +228,7 @@ export default function AddMedicalSupplyModal({
         <Modal.CloseButton />
         <Modal.Header>
           <Text fontSize={16} fontWeight={"bold"}>
-            Tạo mới vật tư
+            Cập nhật thông tin vật tư
           </Text>
         </Modal.Header>
         <Modal.Body>
@@ -273,7 +288,7 @@ export default function AddMedicalSupplyModal({
                           setValue("categoryId", categoryList[index].id);
                           setCategoryId(categoryList[index].id);
                         }}
-                        defaultButtonText={"Chọn loại vật tư"}
+                        defaultButtonText={service.categoryName}
                         buttonTextAfterSelection={(selectedItem, index) => {
                           return selectedItem;
                         }}
@@ -458,6 +473,57 @@ export default function AddMedicalSupplyModal({
                     )}
                   </FormControl.ErrorMessage>
                 </FormControl>
+                {/* Trạng thái */}
+                <FormControl
+                  isRequired
+                  isInvalid={errors.status ? true : false}
+                >
+                  <FormControl.Label
+                    _text={{
+                      bold: true,
+                    }}
+                  >
+                    Trạng thái dịch vụ
+                  </FormControl.Label>
+                  <Controller
+                    control={control}
+                    render={({ field: { onChange, onBlur, value } }) => (
+                      <SelectDropdown
+                        data={["Đang hoạt động", "Không hoạt động"]}
+                        onSelect={(selectedItem, index) => {
+                          if (index === 0) setStatusService(true);
+                          else setStatusService(false);
+                        }}
+                        defaultButtonText={
+                          service.isDisabled
+                            ? "Không hoạt động"
+                            : "Đang hoạt động"
+                        }
+                        buttonTextAfterSelection={(selectedItem, index) => {
+                          return selectedItem;
+                        }}
+                        rowTextForSelection={(item, index) => {
+                          return item;
+                        }}
+                        buttonStyle={styles.dropdown1BtnStyle}
+                        buttonTextStyle={styles.dropdown1BtnTxtStyle}
+                        renderDropdownIcon={() => (
+                          <Image alt="icon" source={chevronDown} size={18} />
+                        )}
+                        dropdownIconPosition={"right"}
+                        dropdownStyle={styles.dropdown1DropdownStyle}
+                        rowStyle={styles.dropdown1RowStyle}
+                        rowTextStyle={styles.dropdown1RowTxtStyle}
+                      />
+                    )}
+                    name="status"
+                  />
+                  <FormControl.ErrorMessage
+                    leftIcon={<WarningOutlineIcon size="xs" />}
+                  >
+                    {errors.status && <Text>{errors.status.message}</Text>}
+                  </FormControl.ErrorMessage>
+                </FormControl>
                 <Box height={100}></Box>
               </VStack>
             </ScrollView>
@@ -492,12 +558,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D5",
   },
-  dropdown1BtnTxtStyle: {
-    // color: "#a1a1aa",
-    textAlign: "left",
-    fontSize: 15,
-    marginLeft: 4,
-  },
+  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
   dropdown1DropdownStyle: {
     backgroundColor: "#EFEFEF",
     marginTop: -70,
@@ -507,8 +568,5 @@ const styles = StyleSheet.create({
     backgroundColor: "#EFEFEF",
     borderBottomColor: "#C5C5C5",
   },
-  dropdown1RowTxtStyle: {
-    color: "#444",
-    textAlign: "left",
-  },
+  dropdown1RowTxtStyle: { color: "#444", textAlign: "left" },
 });
