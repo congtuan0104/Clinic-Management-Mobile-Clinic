@@ -160,10 +160,12 @@ export default function AddServiceModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <Modal.Content width="90%">
+      <Modal.Content borderRadius={20} width="90%">
         <Modal.CloseButton />
         <Modal.Header>
-          <Text fontWeight={"bold"}>Tạo dịch vụ mới</Text>
+          <Text fontSize={16} fontWeight={"bold"}>
+            Tạo dịch vụ mới
+          </Text>
         </Modal.Header>
         <Modal.Body>
           <Box>
@@ -308,7 +310,15 @@ export default function AddServiceModal({
         <Modal.Footer>
           <Button.Group space={2}>
             <Button
-              bg="grey"
+              backgroundColor="#fff"
+              borderColor="secondary.300"
+              borderWidth={1}
+              _text={{
+                color: "secondary.300",
+              }}
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
               onPress={() => {
                 onClose();
               }}

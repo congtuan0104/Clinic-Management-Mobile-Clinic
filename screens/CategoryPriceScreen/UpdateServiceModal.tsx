@@ -159,10 +159,12 @@ export default function UpdateServiceModal({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <Modal.Content width="90%">
+      <Modal.Content borderRadius={20} width="90%">
         <Modal.CloseButton />
         <Modal.Header>
-          <Text fontWeight={"bold"}>Cập nhật thông tin dịch vụ</Text>
+          <Text fontSize={16} fontWeight={"bold"}>
+            Cập nhật thông tin dịch vụ
+          </Text>
         </Modal.Header>
         <Modal.Body>
           <Box>
@@ -358,6 +360,15 @@ export default function UpdateServiceModal({
         <Modal.Footer>
           <Button.Group space={2}>
             <Button
+              backgroundColor="#fff"
+              borderColor="secondary.300"
+              borderWidth={1}
+              _text={{
+                color: "secondary.300",
+              }}
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
               onPress={() => {
                 onClose();
               }}
@@ -383,7 +394,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D5",
   },
-  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
+  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 15 },
   dropdown1DropdownStyle: {
     backgroundColor: "#EFEFEF",
     marginTop: -70,
