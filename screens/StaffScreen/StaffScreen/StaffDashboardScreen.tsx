@@ -25,10 +25,9 @@ export default function StaffDashboardScreen({
     useState<boolean>(false);
   const getStaffList = async () => {
     try {
-      if (clinic?.id)
-      {
+      if (clinic?.id) {
         const response = await clinicService.getStaffClinic(clinic?.id);
-        console.log('response: ', response);
+        console.log("response: ", response);
         if (response.status && response.data) {
           setStaffList(response.data);
         } else {
@@ -99,7 +98,7 @@ export default function StaffDashboardScreen({
                         {staff.users.firstName + " " + staff.users.lastName}
                       </Text>
                       <HStack space={2} alignItems="center">
-                        {staff.role.name!=="Admin" && (
+                        {staff.role.name !== "Admin" && (
                           <>
                             <Pressable
                               onPress={() => {
@@ -127,7 +126,7 @@ export default function StaffDashboardScreen({
                         )}
                       </HStack>
                     </HStack>
-                    {staff.role.name==="Admin" && (
+                    {staff.role.name === "Admin" && (
                       <Text fontWeight="bold" color="#ca3c0c">
                         Chủ phòng khám
                       </Text>

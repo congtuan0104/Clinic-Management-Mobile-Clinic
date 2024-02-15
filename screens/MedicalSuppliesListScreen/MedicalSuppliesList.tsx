@@ -8,7 +8,7 @@ import {
   useToast,
 } from "native-base";
 import { useEffect, useState, useCallback } from "react";
-import { clinicServiceApi, medicalSuppliesServices } from "../../services";
+import { medicalSuppliesServices } from "../../services";
 import { useAppSelector } from "../../hooks";
 import { ClinicSelector } from "../../store";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
@@ -23,6 +23,7 @@ import { IMedicalSupplies } from "../../types/medical-supplies.types";
 import ToastAlert from "../../components/Toast/Toast";
 import { useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
+import AddMedicalSupplyModal from "./AddMedicalSupplyModal";
 
 export default function MedicalSuppliesScreen({
   navigation,
@@ -30,14 +31,32 @@ export default function MedicalSuppliesScreen({
 }: MedicalSuppliesNavigatorProps) {
   const clinic = useAppSelector(ClinicSelector);
   const toast = useToast();
-
+  const [isReRender, setIsReRender] = useState(false);
   const [medicalSuppliesList, setMedicalSuppliesList] = useState<
     IMedicalSupplies[]
   >([]);
+  const [searchQuery, setSearchQuery] = useState("");
   const [searchFilterList, setSearchFilterList] = useState<IMedicalSupplies[]>(
     []
   );
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isOpenAddServiceModal, setIsOpenAddServiceModal] =
+    useState<boolean>(false);
+
+  function filterList(text: string) {
+    if (text !== "") {
+      setSearchFilterList(
+        medicalSuppliesList.filter((item) =>
+          item.medicineName.toUpperCase().includes(text.toUpperCase())
+        )
+      );
+    } else setSearchFilterList([]);
+  }
+  const onChangeTextHandler = (query: string) => {
+    setSearchQuery(query); // Cập nhật giá trị của searchQuery
+    filterList(query);
+  };
+  const handleReRender = () => setIsReRender(!isReRender);
 
   const getClinicServiceList = async () => {
     try {
@@ -54,7 +73,6 @@ export default function MedicalSuppliesScreen({
         }
       }
     } catch (error: any) {
-      console.log(error);
       toast.show({
         render: () => {
           return (
@@ -71,7 +89,7 @@ export default function MedicalSuppliesScreen({
   useFocusEffect(
     useCallback(() => {
       getClinicServiceList();
-    }, [clinic?.id])
+    }, [clinic?.id, isReRender])
   );
 
   return (
@@ -90,12 +108,11 @@ export default function MedicalSuppliesScreen({
       <Searchbar
         style={{ height: 40, marginBottom: 15 }}
         placeholder="Tìm kiếm thuốc, vật tư"
-        onChangeText={() => {}}
-        value={"zz"}
+        onChangeText={onChangeTextHandler}
+        value={searchQuery}
         inputStyle={{
           paddingBottom: 20,
           paddingTop: 5,
-          fontFamily: "Montserrat-SemiBold",
           fontSize: 15,
           color: appColor.textTitle,
         }}
@@ -113,7 +130,11 @@ export default function MedicalSuppliesScreen({
             <Text my="2" fontWeight="bold" fontSize={20}>
               Kho thuốc, vật tư
             </Text>
-            <Pressable onPress={() => {}}>
+            <Pressable
+              onPress={() => {
+                setIsOpenAddServiceModal(true);
+              }}
+            >
               <Ionicons
                 name="add-circle-outline"
                 size={25}
@@ -316,6 +337,13 @@ export default function MedicalSuppliesScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
+      <AddMedicalSupplyModal
+        isOpen={isOpenAddServiceModal}
+        onClose={() => {
+          setIsOpenAddServiceModal(false);
+        }}
+        handleReRender={handleReRender}
+      />
     </Box>
   );
 }

@@ -29,8 +29,8 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { NavigationContainerRef } from "@react-navigation/native";
-import EquipmentListScreen from "../screens/EquipmentNavigator/EquipmentListScreen";
-import MedicalSuppliesScreen from "../screens/EquipmentNavigator/EquipmentListScreen";
+import EquipmentListScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
+import MedicalSuppliesScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params

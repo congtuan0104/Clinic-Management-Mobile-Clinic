@@ -79,7 +79,7 @@ export default function CreateChattingModal({
       const clinicId = clinic?.id;
       if (clinicId) {
         const response = await clinicService.getStaffClinic(clinicId);
-        console.log('res: ', response)
+        console.log("res: ", response);
         let data: any = [];
         if (response.status) {
           const responseData = response.data;
@@ -206,7 +206,7 @@ export default function CreateChattingModal({
               </FormControl.ErrorMessage>
             </FormControl>
             <MultipleSelectList
-              fontFamily="Montserrat-SemiBold"
+              fontFamily="Montserrat-Semibold"
               setSelected={(val: any) => setSelected(val)}
               //   onSelect={() => console.log(selected)}
 

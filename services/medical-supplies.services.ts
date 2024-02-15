@@ -6,4 +6,7 @@ export const medicalSuppliesServices = {
   async getMedicalSupplies(clinicId: any): Promise<IApiResponse<any>> {
     return axiosClient.get(`/medical-supplies?clinicId=${clinicId}`);
   },
+  async addNewMedicalSupplies(data: any): Promise<IApiResponse<any>> {
+    return axiosClient.post(`/medical-supplies`, data);
+  },
 };
