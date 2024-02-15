@@ -466,7 +466,15 @@ export default function AddMedicalSupplyModal({
         <Modal.Footer>
           <Button.Group space={2}>
             <Button
-              bg="grey"
+              backgroundColor="#fff"
+              borderColor="secondary.300"
+              borderWidth={1}
+              _text={{
+                color: "secondary.300",
+              }}
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
               onPress={() => {
                 onClose();
               }}

@@ -25,6 +25,7 @@ import { useFocusEffect } from "@react-navigation/native";
 import dayjs from "dayjs";
 import AddMedicalSupplyModal from "./AddMedicalSupplyModal";
 import UpdateMedicalSupplyModal from "./UpdateMedicalSupplyModal";
+import DeleteMedicalSupplyDialog from "./DeleteDialog";
 
 export default function MedicalSuppliesScreen({
   navigation,
@@ -40,6 +41,8 @@ export default function MedicalSuppliesScreen({
   const [searchFilterList, setSearchFilterList] = useState<IMedicalSupplies[]>(
     []
   );
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenAddServiceModal, setIsOpenAddServiceModal] =
     useState<boolean>(false);
@@ -60,10 +63,15 @@ export default function MedicalSuppliesScreen({
     filterList(query);
   };
   const handleReRender = () => setIsReRender(!isReRender);
+  const onCloseDialog = () => setIsOpenDialog(false);
 
   const handleOpenUpdateModal = async (item: IMedicalSupplies) => {
     await handleSetService(item);
     setIsOpenServiceModal(true);
+  };
+  const handleDeleteButton = async (item: IMedicalSupplies) => {
+    await handleSetService(item);
+    setIsOpenDialog(true);
   };
   const handleSetService = async (item: IMedicalSupplies) => setService(item);
   const getClinicServiceList = async () => {
@@ -188,7 +196,11 @@ export default function MedicalSuppliesScreen({
                                   color={appColor.primary}
                                 />
                               </Pressable>
-                              <Pressable onPress={() => {}}>
+                              <Pressable
+                                onPress={() =>
+                                  handleDeleteButton(medicalSupply)
+                                }
+                              >
                                 <MaterialIcons
                                   name="delete"
                                   size={24}
@@ -285,7 +297,11 @@ export default function MedicalSuppliesScreen({
                                   color={appColor.primary}
                                 />
                               </Pressable>
-                              <Pressable onPress={() => {}}>
+                              <Pressable
+                                onPress={() =>
+                                  handleDeleteButton(medicalSupply)
+                                }
+                              >
                                 <MaterialIcons
                                   name="delete"
                                   size={24}
@@ -360,6 +376,14 @@ export default function MedicalSuppliesScreen({
             setIsOpenServiceModal(false);
           }}
           service={service} // service <=> medical supply
+          handleReRender={handleReRender}
+        />
+      ) : null}
+      {service && isOpenDialog ? (
+        <DeleteMedicalSupplyDialog
+          isOpen={isOpenDialog}
+          onClose={onCloseDialog}
+          service={service}
           handleReRender={handleReRender}
         />
       ) : null}

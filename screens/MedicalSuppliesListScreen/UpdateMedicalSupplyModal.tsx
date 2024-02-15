@@ -474,10 +474,7 @@ export default function UpdateServiceModal({
                   </FormControl.ErrorMessage>
                 </FormControl>
                 {/* Trạng thái */}
-                <FormControl
-                  isRequired
-                  isInvalid={errors.status ? true : false}
-                >
+                <FormControl isInvalid={errors.status ? true : false}>
                   <FormControl.Label
                     _text={{
                       bold: true,
@@ -532,7 +529,15 @@ export default function UpdateServiceModal({
         <Modal.Footer>
           <Button.Group space={2}>
             <Button
-              bg="grey"
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
+              _text={{
+                color: "secondary.300",
+              }}
+              backgroundColor="#fff"
+              borderWidth={1}
+              borderColor="secondary.300"
               onPress={() => {
                 onClose();
               }}
@@ -558,7 +563,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D5",
   },
-  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
+  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 15 },
   dropdown1DropdownStyle: {
     backgroundColor: "#EFEFEF",
     marginTop: -70,

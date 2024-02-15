@@ -15,4 +15,9 @@ export const medicalSuppliesServices = {
   ): Promise<IApiResponse<any>> {
     return axiosClient.put(`/medical-supplies/${medicalSupplyId}`, data);
   },
+  async deleteMedicalSupplies(
+    medicalSupplyId: any
+  ): Promise<IApiResponse<any>> {
+    return axiosClient.delete(`/medical-supplies/${medicalSupplyId}`);
+  },
 };
