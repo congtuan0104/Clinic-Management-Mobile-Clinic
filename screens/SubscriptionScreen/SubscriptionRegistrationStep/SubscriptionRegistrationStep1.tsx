@@ -91,7 +91,7 @@ export const StepOneScreen = (props: any) => {
   } = useForm<IClinicCreate>({
     resolver: yupResolver(schema),
     defaultValues: {
-      name: userInfo?.firstName,
+      name: "",
       email: userInfo?.email,
       phone: "",
       address: "",
@@ -124,11 +124,11 @@ export const StepOneScreen = (props: any) => {
   const onSubmit = async (data: IClinicCreate) => {
     try {
       console.log(data);
-      // const response = await clinicService.createClinic(data);
-      // if (response.status) {
-      //   setSubscriptionPlanId(response.data.subscription.id);
-      //   changePosition(true);
-      // }
+      const response = await clinicService.createClinic(data);
+      if (response.status) {
+        setSubscriptionPlanId(response.data.subscription.id);
+        changePosition(true);
+      }
     } catch (error) {
       toast.show({
         render: () => {

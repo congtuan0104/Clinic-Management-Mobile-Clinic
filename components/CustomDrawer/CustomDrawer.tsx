@@ -56,7 +56,9 @@ const CustomDrawer = (props: any) => {
             alignSelf="center"
             bg="#fff"
             source={{
-              uri: `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
+              uri: userInfo?.avatar
+                ? userInfo.avatar
+                : `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
             }}
             size={100}
             borderRadius={100}

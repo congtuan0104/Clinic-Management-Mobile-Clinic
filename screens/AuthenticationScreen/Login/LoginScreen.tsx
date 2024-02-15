@@ -78,6 +78,7 @@ const Login: React.FC<LoginScreenProps> = ({
     useState<boolean>(false);
   const [emailChoose, setEmailChoose] = useState<string>(""); // email được chọn để đăng ký tài khoản
   const [additionalPassword, setAdditionalPassword] = useState<string>("");
+  const [errorPassword, setErrorPassword] = useState<string>("");
   const [
     showEnterAdditionalPasswordModal,
     setShowEnterAdditionalPasswordModal,
@@ -297,19 +298,46 @@ const Login: React.FC<LoginScreenProps> = ({
   };
 
   const handleAddingAdditionalPassword = async () => {
+    setIsLoading(true);
     if (additionalPassword === "") {
-      console.log("mat khau trong");
+      setErrorPassword("Mật khẩu trống!");
+    } else if (additionalPassword.length < 8) {
+      setErrorPassword("Mật khẩu tối thiểu 8 kí tự!");
     } else {
-      console.log(emailFromResponse, additionalPassword);
-      const response = await authApi.addingAdditionalPassword(
-        emailFromResponse,
-        additionalPassword
-      );
-      if (response.status) {
-        console.log("Thay doi mat khau thanh cong");
-        setShowEnterAdditionalPasswordModal(false);
+      try {
+        const response = await authApi.addingAdditionalPassword(
+          emailFromResponse,
+          additionalPassword
+        );
+        if (response.status) {
+          toast.show({
+            render: () => {
+              return (
+                <ToastAlert
+                  title="Thành công"
+                  description="Cập nhật mật khẩu thành công!"
+                  status="success"
+                />
+              );
+            },
+          });
+          setShowEnterAdditionalPasswordModal(false);
+        }
+      } catch (err: any) {
+        toast.show({
+          render: () => {
+            return (
+              <ToastAlert
+                title="Thất bại"
+                description={err.response.data.message}
+                status="error"
+              />
+            );
+          },
+        });
       }
     }
+    setIsLoading(false);
   };
 
   /**
@@ -649,14 +677,14 @@ const Login: React.FC<LoginScreenProps> = ({
           isOpen={showEnterEmailModal}
           onClose={() => setShowEnterEmailModal(false)}
         >
-          <Modal.Content maxWidth="400px">
+          <Modal.Content borderRadius={20} maxWidth="400px">
             <Modal.Header>
               Tài khoản của bạn chưa được liên kết, vui lòng chọn email muốn
               liên kết
             </Modal.Header>
             <Modal.Body>
               <FormControl>
-                <FormControl.Label>
+                <FormControl.Label _text={{ color: appColor.inputLabel }}>
                   Chọn Email để liên kết tài khoản
                 </FormControl.Label>
                 <Button
@@ -672,7 +700,9 @@ const Login: React.FC<LoginScreenProps> = ({
                 </Button>
               </FormControl>
               <FormControl mt="3">
-                <FormControl.Label>Hoặc nhập Email của bạn</FormControl.Label>
+                <FormControl.Label _text={{ color: appColor.inputLabel }}>
+                  Hoặc nhập Email của bạn
+                </FormControl.Label>
                 <Input
                   placeholder="Nhập tài khoản bạn muốn liên kết"
                   value={emailChoose}
@@ -685,8 +715,15 @@ const Login: React.FC<LoginScreenProps> = ({
             <Modal.Footer>
               <Button.Group space={2}>
                 <Button
-                  variant="ghost"
-                  colorScheme="blueGray"
+                  backgroundColor={appColor.white}
+                  borderWidth={1}
+                  borderColor="secondary.300"
+                  _pressed={{
+                    backgroundColor: "secondary.100",
+                  }}
+                  _text={{
+                    color: "secondary.300",
+                  }}
                   onPress={() => {
                     setShowEnterEmailModal(false);
                   }}
@@ -710,14 +747,16 @@ const Login: React.FC<LoginScreenProps> = ({
           isOpen={showEnterAdditionalPasswordModal}
           onClose={() => setShowEnterAdditionalPasswordModal(false)}
         >
-          <Modal.Content maxWidth="400px">
+          <Modal.Content borderRadius={20} maxWidth="400px">
             <Modal.Header>
               Tài khoản mà bạn liên kết chưa có mật khẩu, vui lòng nhập mật khẩu
               bổ sung:
             </Modal.Header>
             <Modal.Body>
-              <FormControl mt="3">
-                <FormControl.Label>Nhập mật khẩu mới: </FormControl.Label>
+              <FormControl>
+                <FormControl.Label _text={{ color: appColor.inputLabel }}>
+                  Nhập mật khẩu mới:{" "}
+                </FormControl.Label>
                 <Input
                   placeholder="Nhập mật khẩu"
                   value={additionalPassword}
@@ -725,11 +764,21 @@ const Login: React.FC<LoginScreenProps> = ({
                     setAdditionalPassword(password);
                   }}
                 />
+                <Text color="error.400">{errorPassword}</Text>
               </FormControl>
             </Modal.Body>
             <Modal.Footer>
               <Button.Group space={2}>
                 <Button
+                  backgroundColor={appColor.white}
+                  borderWidth={1}
+                  borderColor="secondary.300"
+                  _pressed={{
+                    backgroundColor: "secondary.100",
+                  }}
+                  _text={{
+                    color: "secondary.300",
+                  }}
                   onPress={() => {
                     setShowEnterAdditionalPasswordModal(false);
                   }}

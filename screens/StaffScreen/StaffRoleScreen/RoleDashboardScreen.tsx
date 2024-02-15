@@ -63,8 +63,7 @@ export default function RoleDashboardScreen({
       alignSelf="center"
       alignItems="center"
       p={5}
-      borderRadius={20}
-      mt="5%"
+      borderBottomRadius={20}
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
 
@@ -100,6 +99,8 @@ export default function RoleDashboardScreen({
                     backgroundColor={appColor.background}
                     key={index}
                     p={3}
+                    minW="full"
+                    maxW="full"
                   >
                     <HStack justifyContent="space-between" alignItems="center">
                       <Text

@@ -1,10 +1,13 @@
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RoleNavigatorProps } from "./UserNavigator";
 import RoleDashboardScreen from "../screens/StaffScreen/StaffRoleScreen/RoleDashboardScreen";
-import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import StaffInfoNavigator from "./StaffInfoNavigator";
+import { createMaterialTopTabNavigator } from "@react-navigation/material-top-tabs";
+import { appColor } from "../theme";
+import { Dimensions } from "react-native";
+
 export type StaffNavigatorStackParamList = {
   RoleDashboard: undefined;
   StaffInfoNavigator: undefined;
@@ -21,35 +24,45 @@ export type StaffInfoNavigatorScreenProps = NativeStackScreenProps<
 >;
 
 const StaffTabNavigator =
-  createBottomTabNavigator<StaffNavigatorStackParamList>();
-
+  createMaterialTopTabNavigator<StaffNavigatorStackParamList>();
 export default function RoleNavigator({
   navigation,
   route,
 }: RoleNavigatorProps) {
   return (
-    <StaffTabNavigator.Navigator initialRouteName="StaffInfoNavigator">
+    <StaffTabNavigator.Navigator
+      initialRouteName="StaffInfoNavigator"
+      initialLayout={{ width: Dimensions.get("window").width }}
+      screenOptions={{
+        tabBarPressColor: appColor.backgroundPrimary,
+        tabBarActiveTintColor: appColor.primary,
+        tabBarLabelStyle: {
+          fontSize: 15,
+          textTransform: "none",
+        },
+        tabBarStyle: {
+          backgroundColor: appColor.white,
+          width: "90%",
+          alignSelf: "center",
+          elevation: 0,
+          borderTopLeftRadius: 20,
+          borderTopRightRadius: 20,
+          marginTop: 20,
+        },
+        tabBarAndroidRipple: {
+          color: "transparent",
+        },
+      }}
+    >
       <StaffTabNavigator.Screen
+        options={{ tabBarLabel: "Nhân viên" }}
         name="StaffInfoNavigator"
         component={StaffInfoNavigator}
-        options={{
-          headerShown: false,
-          title: "Danh sách nhân viên",
-          tabBarIcon: ({ color }) => (
-            <Feather name="list" size={24} color={color} />
-          ),
-        }}
       />
       <StaffTabNavigator.Screen
         name="RoleDashboard"
         component={RoleDashboardScreen}
-        options={{
-          headerShown: false,
-          title: "Vai trò nhân viên",
-          tabBarIcon: ({ color }) => (
-            <AntDesign name="user" size={24} color={color} />
-          ),
-        }}
+        options={{ tabBarLabel: "Vai trò" }}
       />
     </StaffTabNavigator.Navigator>
   );

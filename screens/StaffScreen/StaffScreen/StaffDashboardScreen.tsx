@@ -50,8 +50,7 @@ export default function StaffDashboardScreen({
       alignSelf="center"
       alignItems="center"
       p={5}
-      borderRadius={20}
-      mt="5%"
+      borderBottomRadius={20}
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       {staffList?.length ? (
