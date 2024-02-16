@@ -30,7 +30,7 @@ export default function StaffInfoScreen({
         alignSelf="center"
         alignItems="center"
         p={5}
-        borderRadius={20}
+        borderBottomRadius={20}
       >
         <Heading>Thông tin nhân viên</Heading>
         <Box
@@ -44,7 +44,11 @@ export default function StaffInfoScreen({
           <Image
             size={150}
             borderRadius={100}
-            source={staff.users.avatar? {uri: staff.users.avatar} : require("../../../../assets/images/default_avatar.jpg")}
+            source={
+              staff.users.avatar
+                ? { uri: staff.users.avatar }
+                : require("../../../../assets/images/default_avatar.jpg")
+            }
             alt="avatar"
           />
           {/* <Text color={appColor.textTitle} fontWeight="extrabold" fontSize="17">
@@ -78,11 +82,25 @@ export default function StaffInfoScreen({
             </HStack>
             <HStack justifyContent="space-between" width="full">
               <Text color={appColor.textSecondary}>Giới tính</Text>
-              <Text color={appColor.textSecondary}>{staff.users.gender===1? "Nam" : (staff.users.gender===0? "Nữ" : null)}</Text>
+              <Text color={appColor.textSecondary}>
+                {staff.users.gender === 1
+                  ? "Nam"
+                  : staff.users.gender === 0
+                  ? "Nữ"
+                  : null}
+              </Text>
             </HStack>
             <HStack justifyContent="space-between" width="full">
               <Text color={appColor.textSecondary}>Ngày sinh</Text>
-              <Text color={appColor.textSecondary}>{staff.users.birthday? staff.users.birthday.slice(0,10).split("-").reverse().join("-") : null}</Text>
+              <Text color={appColor.textSecondary}>
+                {staff.users.birthday
+                  ? staff.users.birthday
+                      .slice(0, 10)
+                      .split("-")
+                      .reverse()
+                      .join("-")
+                  : null}
+              </Text>
             </HStack>
             <HStack width="full">
               <Button

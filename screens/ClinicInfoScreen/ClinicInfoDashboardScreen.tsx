@@ -30,6 +30,7 @@ export default function ClinicInfoDashboardScreen({
 }: ClinicInfoDashboardScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
+  const user = useAppSelector(userInfoSelector);
   const handleChangeClinicInfo = () => {
     navigation.navigate("UpdateClinicInfo");
   };
@@ -59,7 +60,11 @@ export default function ClinicInfoDashboardScreen({
             <Avatar
               alignSelf="center"
               bg="white"
-              source={clinic.logo? { uri: clinic.logo} : require('../../assets/images/clinics/default_image_clinic.png')}
+              source={
+                clinic.logo
+                  ? { uri: clinic.logo }
+                  : require("../../assets/images/clinics/default_image_clinic.png")
+              }
               size="2xl"
               mb={2}
             />
@@ -119,7 +124,7 @@ export default function ClinicInfoDashboardScreen({
               </HStack>
             </VStack>
           </Box>
-          <Box mt={2}>
+          <Box mt={3}>
             <HStack width="full">
               <Button width="full" onPress={handleChangeClinicInfo}>
                 Thay đổi thông tin

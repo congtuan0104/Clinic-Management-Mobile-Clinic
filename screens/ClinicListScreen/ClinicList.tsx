@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import { ClinicListNavigatorProps } from "../../Navigator/UserNavigator";
 import {
   Box,
@@ -23,6 +23,7 @@ import { clinicService } from "../../services";
 import ToastAlert from "../../components/Toast/Toast";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import PaymentModal from "./PaymentModal";
+import { useFocusEffect } from "@react-navigation/native";
 // import MapBox from "../../components/Mapbox/Mapbox";
 
 export default function ClinicListNavigator({
@@ -37,40 +38,40 @@ export default function ClinicListNavigator({
   const [openPaymentModal, setOpenPaymentModal] =
     React.useState<boolean>(false);
   const [chosenClinic, setChosenClinic] = React.useState<IClinicInfo>();
-  React.useEffect(() => {
-    // Call API to get active clinic
-    const getActiveClinic = async () => {
-      try {
-        const response = await clinicService.getAllClinic(
-          user?.id,
-          user?.moduleId
-        );
-        let activeClinic: IClinicInfo[] = [];
-        if (response.data) {
-          // Get all clinic with status = 3 (active)
-          response.data.map((clinicItem: IClinicInfo) => {
-            activeClinic.push(clinicItem);
-          });
-        }
-        setClinicList(activeClinic);
-      } catch (error) {
-        toast.show({
-          render: () => {
-            return (
-              <ToastAlert
-                title="Lỗi"
-                description="Không có phòng khám. Vui lòng thử lại sau."
-                status="error"
-              />
-            );
-          },
+  useFocusEffect(
+    useCallback(() => {
+      setShowLoading(true);
+      getActiveClinic();
+      setShowLoading(false);
+    }, [])
+  );
+  const getActiveClinic = async () => {
+    try {
+      const response = await clinicService.getAllClinic(
+        user?.id,
+        user?.moduleId
+      );
+      let activeClinic: IClinicInfo[] = [];
+      if (response.data) {
+        response.data.map((clinicItem: IClinicInfo) => {
+          activeClinic.push(clinicItem);
         });
       }
-    };
-    setShowLoading(true);
-    getActiveClinic();
-    setShowLoading(false);
-  }, []);
+      setClinicList(activeClinic);
+    } catch (error) {
+      toast.show({
+        render: () => {
+          return (
+            <ToastAlert
+              title="Lỗi"
+              description="Có lỗi xảy ra. Vui lòng thử lại sau."
+              status="error"
+            />
+          );
+        },
+      });
+    }
+  };
   const handleGoToClinic = (clinicItem: IClinicInfo) => {
     setClinic(clinicItem);
     dispatch(changeClinic(clinicItem));
@@ -108,18 +109,20 @@ export default function ClinicListNavigator({
             <Heading fontSize={20} mb={3}>
               Danh sách phòng khám
             </Heading>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("SubscriptionNavigator");
-              }}
-              mb={3}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={25}
-                color={appColor.primary}
-              />
-            </Pressable>
+            {user?.moduleId === 2 && (
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("SubscriptionNavigator");
+                }}
+                mb={3}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={25}
+                  color={appColor.primary}
+                />
+              </Pressable>
+            )}
           </HStack>
           <ScrollView>
             <VStack space={5}>
@@ -270,9 +273,27 @@ export default function ClinicListNavigator({
             maxH="90%"
             alignSelf="center"
           >
+            <HStack justifyContent="space-between" alignItems="center">
+              <Heading fontSize={20} mb={3}>
+                Danh sách phòng khám
+              </Heading>
+              {user?.moduleId === 2 && (
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("SubscriptionNavigator");
+                  }}
+                  mb={3}
+                >
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={25}
+                    color={appColor.primary}
+                  />
+                </Pressable>
+              )}
+            </HStack>
             <Text fontSize={20} color="gray.500">
-              Hiện tại bạn chưa có bất kì phòng khám nào. Hãy tạo phòng khám
-              mới.
+              Hiện tại bạn chưa có hoặc tham gia bất kì phòng khám nào
             </Text>
           </Box>
         </VStack>

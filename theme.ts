@@ -36,11 +36,11 @@ export const theme = extendTheme({
       },
     },
   },
-  fonts: {
-    heading: "Montserrat-Bold",
-    body: "Montserrat-SemiBold",
-    mono: "Montserrat-SemiBold",
-  },
+  // fonts: {
+  //   heading: "Montserrat-Bold",
+  //   body: "Montserrat-SemiBold",
+  //   mono: "Montserrat-SemiBold",
+  // },
   colors: {
     primary: {
       50: "#F5F5FC",
