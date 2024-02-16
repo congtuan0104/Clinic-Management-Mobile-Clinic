@@ -15,10 +15,6 @@ import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import SubscriptionNavigator from "./SubscriptionNavigator";
 import NotificationNavigator from "./NotificationNavigator";
-import { clinicService } from "../services";
-import ToastAlert from "../components/Toast/Toast";
-import { useToast } from "native-base";
-import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
 // Import custom icons
@@ -28,11 +24,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import {
-  NavigationContainerRef,
-  useFocusEffect,
-} from "@react-navigation/native";
-import EquipmentListScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
+import { NavigationContainerRef } from "@react-navigation/native";
 import MedicalSuppliesScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
 import { useAppSelector } from "../hooks";
 import { userInfoSelector } from "../store";

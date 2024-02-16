@@ -2,7 +2,7 @@ import {
   DrawerContentScrollView,
   DrawerItemList,
 } from "@react-navigation/drawer";
-import { Avatar, Button, HStack, Image, Text, VStack, View } from "native-base";
+import { Button, HStack, Image, Text, VStack, View } from "native-base";
 import { appColor } from "../../theme";
 import { ImageBackground } from "expo-image";
 import { Ionicons } from "@expo/vector-icons";

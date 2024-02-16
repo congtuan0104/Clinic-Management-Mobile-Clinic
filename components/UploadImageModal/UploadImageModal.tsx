@@ -1,6 +1,6 @@
 import { View, Text } from "react-native";
 import React from "react";
-import { Button, FormControl, Input, Modal } from "native-base";
+import { Button, Modal } from "native-base";
 import { Entypo } from "@expo/vector-icons";
 const UploadImageModal = (props: any) => {
   const { showModal, setShowModal, onPressCamera, onPressUploadImageGallery } =
