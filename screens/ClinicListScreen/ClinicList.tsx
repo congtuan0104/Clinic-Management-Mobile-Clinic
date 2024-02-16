@@ -109,18 +109,20 @@ export default function ClinicListNavigator({
             <Heading fontSize={20} mb={3}>
               Danh sách phòng khám
             </Heading>
-            <Pressable
-              onPress={() => {
-                navigation.navigate("SubscriptionNavigator");
-              }}
-              mb={3}
-            >
-              <Ionicons
-                name="add-circle-outline"
-                size={25}
-                color={appColor.primary}
-              />
-            </Pressable>
+            {user?.moduleId === 2 && (
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("SubscriptionNavigator");
+                }}
+                mb={3}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={25}
+                  color={appColor.primary}
+                />
+              </Pressable>
+            )}
           </HStack>
           <ScrollView>
             <VStack space={5}>
@@ -275,22 +277,23 @@ export default function ClinicListNavigator({
               <Heading fontSize={20} mb={3}>
                 Danh sách phòng khám
               </Heading>
-              <Pressable
-                onPress={() => {
-                  navigation.navigate("SubscriptionNavigator");
-                }}
-                mb={3}
-              >
-                <Ionicons
-                  name="add-circle-outline"
-                  size={25}
-                  color={appColor.primary}
-                />
-              </Pressable>
+              {user?.moduleId === 2 && (
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("SubscriptionNavigator");
+                  }}
+                  mb={3}
+                >
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={25}
+                    color={appColor.primary}
+                  />
+                </Pressable>
+              )}
             </HStack>
             <Text fontSize={20} color="gray.500">
-              Hiện tại bạn chưa có bất kì phòng khám nào. Hãy tạo phòng khám
-              mới.
+              Hiện tại bạn chưa có hoặc tham gia bất kì phòng khám nào
             </Text>
           </Box>
         </VStack>

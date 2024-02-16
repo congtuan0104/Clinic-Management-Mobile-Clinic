@@ -28,7 +28,7 @@ export const clinicService = {
     if (moduleId === 2) {
       return axiosClient.get(`/clinics?ownerId=${id}`);
     } else {
-      return axiosClient.get(`/clinics?staffId=${id}`);
+      return axiosClient.get(`/clinics?suid=${id}`);
     }
   },
   async updateClinicInfo(

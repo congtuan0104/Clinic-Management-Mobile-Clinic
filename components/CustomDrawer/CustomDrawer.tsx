@@ -42,51 +42,58 @@ const CustomDrawer = (props: any) => {
   };
   return (
     <View style={{ flex: 1 }}>
-      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <DrawerContentScrollView
-        {...props}
-        contentContainerStyle={{
-          backgroundColor: appColor.background,
-        }}
-      >
-        <ImageBackground
-          source={require("../../assets/images/menu-bg.jpeg")}
-          style={{ padding: 20, marginBottom: 20 }}
-        >
-          <Image
-            alignSelf="center"
-            bg="#fff"
-            source={{
-              uri: userInfo?.avatar
-                ? userInfo.avatar
-                : `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
-            }}
-            size={100}
-            borderRadius={100}
-            mb={2}
-            alt={userInfo?.email}
+      {userInfo && (
+        <>
+          <LoadingSpinner
+            showLoading={isLoading}
+            setShowLoading={setIsLoading}
           />
-          <VStack alignItems="center">
-            <Text color="#fff" fontWeight="bold" fontSize="16">
-              {userInfo?.lastName + " " + userInfo?.firstName}
-            </Text>
-            <Text color="#fff" fontSize="13">
-              {userInfo?.email}
-            </Text>
-          </VStack>
-        </ImageBackground>
-        <DrawerItemList {...props} />
-      </DrawerContentScrollView>
-      <View p="5" borderTopWidth="1" borderTopColor="#ccc">
-        <Button onPress={handleLogout}>
-          <HStack space={1}>
-            <Ionicons name="log-out-outline" size={24} color="#fff" />
-            <Text fontSize={15} color="#fff">
-              Đăng xuất
-            </Text>
-          </HStack>
-        </Button>
-      </View>
+          <DrawerContentScrollView
+            {...props}
+            contentContainerStyle={{
+              backgroundColor: appColor.background,
+            }}
+          >
+            <ImageBackground
+              source={require("../../assets/images/menu-bg.jpeg")}
+              style={{ padding: 20, marginBottom: 20 }}
+            >
+              <Image
+                alignSelf="center"
+                bg="#fff"
+                source={
+                  userInfo.avatar
+                    ? { uri: userInfo.avatar }
+                    : require("../../assets/user.png")
+                }
+                size={100}
+                borderRadius={100}
+                mb={2}
+                alt={userInfo?.email}
+              />
+              <VStack alignItems="center">
+                <Text color="#fff" fontWeight="bold" fontSize="16">
+                  {userInfo?.firstName + " " + userInfo?.lastName}
+                </Text>
+                <Text color="#fff" fontSize="13">
+                  {userInfo?.email}
+                </Text>
+              </VStack>
+            </ImageBackground>
+            <DrawerItemList {...props} />
+          </DrawerContentScrollView>
+          <View p="5" borderTopWidth="1" borderTopColor="#ccc">
+            <Button onPress={handleLogout}>
+              <HStack space={1}>
+                <Ionicons name="log-out-outline" size={24} color="#fff" />
+                <Text fontSize={15} color="#fff">
+                  Đăng xuất
+                </Text>
+              </HStack>
+            </Button>
+          </View>
+        </>
+      )}
     </View>
   );
 };
