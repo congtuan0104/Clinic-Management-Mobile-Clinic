@@ -24,6 +24,8 @@ export const ClinicSlice = createSlice({
         state.clinic.phone = action.payload.phone;
         state.clinic.logo = action.payload.logo;
         state.clinic.description = action.payload.description;
+        state.clinic.lat = action.payload.lat;
+        state.clinic.long = action.payload.long;
       }
     },
     changeClinic: (state, action: PayloadAction<IClinicInfo>) => {

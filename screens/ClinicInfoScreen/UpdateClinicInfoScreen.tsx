@@ -38,6 +38,7 @@ import { locationApi } from "../../services/location.services";
 import { IMapBoxFeature } from "../../types/location.types";
 import { Entypo } from "@expo/vector-icons";
 import { Dropdown } from "react-native-element-dropdown";
+import HTMLView from "react-native-htmlview";
 
 MapboxGL.setAccessToken(
   "sk.eyJ1Ijoia2hhbmdubDI0MTEyMDAyIiwiYSI6ImNsczlubWhxODA1Y3IyaW5zM2VzNWkyaDQifQ.vn8nm-_IlboHapYDVdrlPg"
@@ -74,7 +75,7 @@ export default function UpdateClinicInfoScreen({
 }: UpdateClinicInfoScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
-  const INITIAL_COORDINATES: [number, number] = [106.654055, 10.778203];
+  const INITIAL_COORDINATES: [any, any] = [clinic?.lat, clinic?.long];
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [fileNameImage, setFileNameImage] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -124,8 +125,6 @@ export default function UpdateClinicInfoScreen({
   };
 
   const onSubmit = async (data: IClinicCreate) => {
-    console.log(data);
-    console.log("go here");
     setIsLoading(true);
     const { planId, ...requestData } = data;
     let url: string | undefined;
@@ -135,7 +134,6 @@ export default function UpdateClinicInfoScreen({
     if (url) {
       requestData.logo = url;
     }
-    console.log("requestData: ", requestData);
     try {
       if (clinic?.id) {
         const response = await clinicService.updateClinicInfo(
@@ -402,14 +400,13 @@ export default function UpdateClinicInfoScreen({
                 maxHeight={300}
                 labelField="label"
                 valueField="value"
-                placeholder="Nhập địa chỉ"
+                placeholder={clinic?.address}
                 searchPlaceholder="Search..."
                 value={searchAddress}
                 onChangeText={(search) => {
                   setSearchAddress(search);
                 }}
                 onChange={(item) => {
-                  console.log(item);
                   setSearchAddress(item.value);
                   const arr = item.value.split(",");
                   setPoint(arr);
@@ -458,7 +455,7 @@ export default function UpdateClinicInfoScreen({
                 >
                   Mô tả{" "}
                 </FormControl.Label>
-                <Controller
+                {/* <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
                     <TextArea
@@ -472,7 +469,8 @@ export default function UpdateClinicInfoScreen({
                     />
                   )}
                   name="description"
-                />
+                /> */}
+                {clinic?.description && <HTMLView value={clinic.description} />}
                 <FormControl.ErrorMessage
                   leftIcon={<WarningOutlineIcon size="xs" />}
                 >

@@ -127,7 +127,6 @@ export default function UpdateUserInfoScreen({
       phone: data.phone ? data.phone : null,
       avatar: url ? url : userInfo?.avatar ? userInfo?.avatar : "",
     };
-    console.log("requestData: ", requestData);
     const token = await AsyncStorage.getItem("token");
     try {
       if (userInfo?.id) {
