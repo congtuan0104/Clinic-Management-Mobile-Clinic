@@ -137,9 +137,7 @@ const Login: React.FC<LoginScreenProps> = ({
     const userSignIn = auth().signInWithCredential(googleCredential);
     userSignIn
       .then(async (userInfoFromProvider) => {
-        console.log(userInfoFromProvider);
         if (userInfoFromProvider) {
-          console.log(userInfoFromProvider);
           setUserIdFromProvider(userInfoFromProvider.user.uid);
           setProviderLogin(providerStr);
           // kiểm tra account có tồn tại, nếu có thì lưu thông tin user và token
@@ -172,6 +170,24 @@ const Login: React.FC<LoginScreenProps> = ({
               setEmailFromResponse(userToStorage.email);
               setShowEnterAdditionalPasswordModal(true);
             } else {
+              // Kiểm tra ModuleId: Nếu moduleId = 2 hoặc = 5 thì mới cho vào
+              if (
+                res.data.user.moduleId !== 2 ||
+                res.data.user.moduleId !== 5
+              ) {
+                toast.show({
+                  render: () => {
+                    return (
+                      <ToastAlert
+                        title="Thất bại!"
+                        description="Đăng nhập thất bại! Vai trò của bạn không đúng!"
+                        status="error"
+                      />
+                    );
+                  },
+                });
+                return;
+              }
               // Tạo object userToReduxStore để lưu dữ liệu User vào redux, interface là ILoginResponse
               const userToReduxStore: ILoginResponse = {
                 user: userToStorage,
@@ -184,6 +200,17 @@ const Login: React.FC<LoginScreenProps> = ({
               dispatch(login(userToReduxStore));
               // setToken để render lại màn hình
               setLogin(res.data.user, res.data.token);
+              toast.show({
+                render: () => {
+                  return (
+                    <ToastAlert
+                      title="Thành công"
+                      description="Đăng nhập thành công!"
+                      status="success"
+                    />
+                  );
+                },
+              });
             }
           } else {
             const providedEmail =
@@ -217,7 +244,6 @@ const Login: React.FC<LoginScreenProps> = ({
     const userSignIn = signInWithCredential(auth, facebookCredentials);
     userSignIn
       .then(async (userInfoFromProvider) => {
-        console.log(userInfoFromProvider);
         setUserIdFromProvider(userInfoFromProvider.user.uid);
         setProviderLogin(providerStr);
         // kiểm tra account có tồn tại, nếu có thì lưu thông tin user và token
@@ -251,6 +277,21 @@ const Login: React.FC<LoginScreenProps> = ({
             setEmailFromResponse(userToStorage.email);
             setShowEnterAdditionalPasswordModal(true);
           } else {
+            // Kiểm tra ModuleId: Nếu moduleId = 2 hoặc = 5 thì mới cho vào
+            if (res.data.user.moduleId !== 2 || res.data.user.moduleId !== 5) {
+              toast.show({
+                render: () => {
+                  return (
+                    <ToastAlert
+                      title="Thất bại!"
+                      description="Đăng nhập thất bại! Vai trò của bạn không đúng!"
+                      status="error"
+                    />
+                  );
+                },
+              });
+              return;
+            }
             // Tạo object userToReduxStore để lưu dữ liệu User vào redux, interface là ILoginResponse
             const userToReduxStore: ILoginResponse = {
               user: userToStorage,
@@ -263,6 +304,17 @@ const Login: React.FC<LoginScreenProps> = ({
             dispatch(login(userToReduxStore));
             // setToken để render lại màn hình
             setLogin(res.data.user, res.data.token);
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thành công"
+                    description="Đăng nhập thành công!"
+                    status="success"
+                  />
+                );
+              },
+            });
           }
         } else {
           setEmailFromProvider(userInfoFromProvider.user.email);
@@ -758,6 +810,7 @@ const Login: React.FC<LoginScreenProps> = ({
                   Nhập mật khẩu mới:{" "}
                 </FormControl.Label>
                 <Input
+                  type="password"
                   placeholder="Nhập mật khẩu"
                   value={additionalPassword}
                   onChangeText={(password) => {

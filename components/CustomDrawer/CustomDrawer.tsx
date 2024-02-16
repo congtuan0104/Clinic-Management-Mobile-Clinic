@@ -10,7 +10,7 @@ import React from "react";
 import { LoadingSpinner } from "../LoadingSpinner/LoadingSpinner";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { logout, userInfoSelector } from "../../store";
+import { deleteClinic, logout, userInfoSelector } from "../../store";
 import { notificationService } from "../../services/notification.services";
 import messaging from "@react-native-firebase/messaging";
 
@@ -36,6 +36,7 @@ const CustomDrawer = (props: any) => {
     await AsyncStorage.removeItem("user");
     await AsyncStorage.removeItem("token");
     dispatch(logout());
+    dispatch(deleteClinic());
     logOut();
     setIsLoading(false);
   };

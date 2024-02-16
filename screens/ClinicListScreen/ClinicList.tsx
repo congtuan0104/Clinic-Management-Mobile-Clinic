@@ -270,6 +270,23 @@ export default function ClinicListNavigator({
             maxH="90%"
             alignSelf="center"
           >
+            <HStack justifyContent="space-between" alignItems="center">
+              <Heading fontSize={20} mb={3}>
+                Danh sách phòng khám
+              </Heading>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("SubscriptionNavigator");
+                }}
+                mb={3}
+              >
+                <Ionicons
+                  name="add-circle-outline"
+                  size={25}
+                  color={appColor.primary}
+                />
+              </Pressable>
+            </HStack>
             <Text fontSize={20} color="gray.500">
               Hiện tại bạn chưa có bất kì phòng khám nào. Hãy tạo phòng khám
               mới.

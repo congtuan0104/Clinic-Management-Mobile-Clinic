@@ -29,6 +29,9 @@ export const ClinicSlice = createSlice({
     changeClinic: (state, action: PayloadAction<IClinicInfo>) => {
       state.clinic = action.payload;
     },
+    deleteClinic: (state) => {
+      state.clinic = null;
+    },
     // Use the PayloadAction type to declare the contents of `action.payload`
     // login: (state, action: PayloadAction<ILoginResponse>) => {
     //   (state.user = action.payload.user), (state.token = action.payload.token);
@@ -44,10 +47,7 @@ export const ClinicSlice = createSlice({
   },
 });
 
-export const { updateClinic, changeClinic } = ClinicSlice.actions;
-
-// Other code such as selectors can use the imported `RootState` type
-// export const selectCount = (state: RootState) => state.
+export const { updateClinic, changeClinic, deleteClinic } = ClinicSlice.actions;
 
 export const clinicReducer = ClinicSlice.reducer;
 export const ClinicSelector = (state: RootState) => state?.clinicReducer.clinic;
