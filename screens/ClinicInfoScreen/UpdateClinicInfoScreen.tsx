@@ -75,7 +75,7 @@ export default function UpdateClinicInfoScreen({
 }: UpdateClinicInfoScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
-  const INITIAL_COORDINATES: [any, any] = [clinic?.lat, clinic?.long];
+  const INITIAL_COORDINATES: [any, any] = [clinic?.long, clinic?.lat];
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [fileNameImage, setFileNameImage] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
@@ -90,6 +90,7 @@ export default function UpdateClinicInfoScreen({
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IClinicCreate>({
     resolver: yupResolver(schema),
@@ -99,6 +100,8 @@ export default function UpdateClinicInfoScreen({
       phone: clinic?.phone,
       address: clinic?.address,
       logo: clinic?.logo ? clinic.logo : "",
+      lat: clinic?.lat ? clinic.lat : undefined,
+      long: clinic?.long ? clinic.long : undefined,
       description: clinic?.description ? clinic.description : "",
     },
   });
@@ -125,6 +128,7 @@ export default function UpdateClinicInfoScreen({
   };
 
   const onSubmit = async (data: IClinicCreate) => {
+    console.log(data);
     setIsLoading(true);
     const { planId, ...requestData } = data;
     let url: string | undefined;
@@ -409,7 +413,9 @@ export default function UpdateClinicInfoScreen({
                 onChange={(item) => {
                   setSearchAddress(item.value);
                   const arr = item.value.split(",");
-                  setPoint(arr);
+                  setPoint([parseFloat(arr[0]), parseFloat(arr[1])]);
+                  setValue("long", parseFloat(arr[0]));
+                  setValue("lat", parseFloat(arr[1]));
                 }}
                 // renderLeftIcon={() => (
                 //   <AntDesign color="black" name="Safety" size={20} />

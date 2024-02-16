@@ -101,7 +101,6 @@ export default function SubscriptionRegistrationProcessScreen({
     } catch (error) {
       console.log(error);
     }
-    navigation.goBack();
   };
   return (
     <Box>
