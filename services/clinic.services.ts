@@ -14,9 +14,7 @@ export const clinicService = {
   ): Promise<IApiResponse<IUserInClinicInfo[]>> {
     return axiosClient.get(`/clinics/${clinicId}/users`);
   },
-  async getStaffClinic(
-    clinicId: string
-  ): Promise<any> {
+  async getStaffClinic(clinicId: string): Promise<any> {
     return axiosClient.get(`/staffs`, {
       params: {
         clinicId: clinicId,

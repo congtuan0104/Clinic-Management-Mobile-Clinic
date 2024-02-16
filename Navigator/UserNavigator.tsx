@@ -126,7 +126,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
   return (
     <>
       <UserNavigatorDrawer.Navigator
-        initialRouteName="ClinicListNavigator"
+        initialRouteName="SubscriptionNavigator"
         screenOptions={{
           headerStyle: {
             backgroundColor: appColor.white,
@@ -134,7 +134,6 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           headerTintColor: appColor.title,
           headerTitleStyle: {
             fontWeight: "bold",
-            fontFamily: "Montserrat-Bold",
             fontSize: 20,
           },
           headerTitleAlign: "center",
@@ -180,7 +179,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
         />
         <UserNavigatorDrawer.Screen
           options={{
-            title: "Cập nhật thông tin tài khoản",
+            title: "Cập nhật tài khoản",
             drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
             drawerItemStyle: { height: 0 },
           }}
