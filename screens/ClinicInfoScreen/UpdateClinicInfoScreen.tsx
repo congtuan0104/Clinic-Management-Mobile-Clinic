@@ -382,75 +382,88 @@ export default function UpdateClinicInfoScreen({
                 </FormControl.ErrorMessage>
               </FormControl>
               {/**Address */}
-              <FormControl.Label
-                _text={{
-                  bold: true,
-                  color: appColor.inputLabel,
-                }}
-              >
-                Nhập địa chỉ
-              </FormControl.Label>
-              <Dropdown
-                style={{
-                  marginTop: -10,
-                }}
-                placeholderStyle={{}}
-                selectedTextStyle={{
-                  fontSize: 14,
-                  marginBottom: -5,
-                }}
-                data={suggestLocations}
-                search
-                maxHeight={300}
-                labelField="label"
-                valueField="value"
-                placeholder={clinic?.address}
-                searchPlaceholder="Search..."
-                value={searchAddress}
-                onChangeText={(search) => {
-                  setSearchAddress(search);
-                }}
-                onChange={(item) => {
-                  setSearchAddress(item.value);
-                  const arr = item.value.split(",");
-                  setPoint([parseFloat(arr[0]), parseFloat(arr[1])]);
-                  setValue("long", parseFloat(arr[0]));
-                  setValue("lat", parseFloat(arr[1]));
-                }}
-                // renderLeftIcon={() => (
-                //   <AntDesign color="black" name="Safety" size={20} />
-                // )}
-              />
-
-              <MapboxGL.MapView
-                style={{ height: 300 }}
-                projection="mercator"
-                zoomEnabled={true}
-                logoEnabled={false}
-                localizeLabels={true}
-                attributionPosition={{ top: 8, left: 8 }}
-                tintColor="#333"
-                styleURL="mapbox://styles/mapbox/streets-v12"
-                rotateEnabled={true}
-              >
-                <MapboxGL.Camera
-                  defaultSettings={{
-                    zoomLevel: 15,
-                    centerCoordinate: point,
+              <FormControl isInvalid={errors.address ? true : false}>
+                <FormControl.Label
+                  _text={{
+                    bold: true,
+                    color: appColor.inputLabel,
                   }}
-                  centerCoordinate={point}
-                  zoomLevel={15}
-                  followUserLocation={true}
-                />
-
-                <MapboxGL.MarkerView
-                  coordinate={point}
-                  allowOverlapWithPuck={allowOverlapWithPuck}
                 >
-                  <AnnotationContent title={""} />
-                </MapboxGL.MarkerView>
-              </MapboxGL.MapView>
+                  Nhập địa chỉ
+                </FormControl.Label>
+                <Dropdown
+                  style={{
+                    marginTop: -10,
+                    marginBottom: 30,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 14,
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 14,
+                    height: 100,
+                    marginTop: 80,
+                  }}
+                  containerStyle={{
+                    borderRadius: 20,
+                  }}
+                  inputSearchStyle={{
+                    borderRadius: 18,
+                  }}
+                  itemTextStyle={{}}
+                  data={suggestLocations}
+                  search
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={clinic?.address}
+                  searchPlaceholder="Search..."
+                  value={searchAddress}
+                  onChangeText={(search) => {
+                    setSearchAddress(search);
+                  }}
+                  onChange={(item) => {
+                    setSearchAddress(item.value);
+                    const arr = item.value.split(",");
+                    setPoint([parseFloat(arr[0]), parseFloat(arr[1])]);
+                    setValue("long", parseFloat(arr[0]));
+                    setValue("lat", parseFloat(arr[1]));
+                  }}
+                />
+                <FormControl.ErrorMessage
+                  leftIcon={<WarningOutlineIcon size="xs" />}
+                >
+                  {errors.address && <Text>{errors.address.message}</Text>}
+                </FormControl.ErrorMessage>
+                <MapboxGL.MapView
+                  style={{ height: 300 }}
+                  projection="mercator"
+                  zoomEnabled={true}
+                  logoEnabled={false}
+                  localizeLabels={true}
+                  attributionPosition={{ top: 8, left: 8 }}
+                  tintColor="#333"
+                  styleURL="mapbox://styles/mapbox/streets-v12"
+                  rotateEnabled={true}
+                >
+                  <MapboxGL.Camera
+                    defaultSettings={{
+                      zoomLevel: 15,
+                      centerCoordinate: point,
+                    }}
+                    centerCoordinate={point}
+                    zoomLevel={15}
+                    followUserLocation={true}
+                  />
 
+                  <MapboxGL.MarkerView
+                    coordinate={point}
+                    allowOverlapWithPuck={allowOverlapWithPuck}
+                  >
+                    <AnnotationContent title={""} />
+                  </MapboxGL.MarkerView>
+                </MapboxGL.MapView>
+              </FormControl>
               {/**Description */}
               <FormControl isInvalid={errors.description ? true : false}>
                 <FormControl.Label

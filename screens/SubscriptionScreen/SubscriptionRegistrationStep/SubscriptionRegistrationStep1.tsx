@@ -337,7 +337,7 @@ export const StepOneScreen = (props: any) => {
             <Dropdown
               style={{
                 marginTop: -10,
-                marginBottom: 20,
+                marginBottom: 30,
               }}
               placeholderStyle={{
                 fontSize: 14,
