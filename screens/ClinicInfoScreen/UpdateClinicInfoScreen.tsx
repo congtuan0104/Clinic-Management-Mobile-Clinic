@@ -8,14 +8,15 @@ import {
   Input,
   ScrollView,
   Text,
+  TextArea,
   VStack,
   View,
   WarningOutlineIcon,
   useToast,
 } from "native-base";
-import { TouchableOpacity } from 'react-native'
-import { useState } from 'react';
-import storage from '@react-native-firebase/storage';
+import { TouchableOpacity } from "react-native";
+import { useEffect, useState } from "react";
+import storage from "@react-native-firebase/storage";
 import { SubscriptionDashboardScreenProps } from "../../Navigator/SubscriptionNavigator";
 import { ClinicSelector, updateClinic, userInfoSelector } from "../../store";
 import { appColor } from "../../theme";
@@ -30,8 +31,18 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as ImagePicker from "expo-image-picker";
 import UploadImageModal from "../../components/UploadImageModal/UploadImageModal";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import MapboxGL from "@rnmapbox/maps";
+import { useDebounce } from "use-debounce";
+import React from "react";
+import { locationApi } from "../../services/location.services";
+import { IMapBoxFeature } from "../../types/location.types";
+import { Entypo } from "@expo/vector-icons";
+import { Dropdown } from "react-native-element-dropdown";
+import HTMLView from "react-native-htmlview";
 
-
+MapboxGL.setAccessToken(
+  "sk.eyJ1Ijoia2hhbmdubDI0MTEyMDAyIiwiYSI6ImNsczlubWhxODA1Y3IyaW5zM2VzNWkyaDQifQ.vn8nm-_IlboHapYDVdrlPg"
+);
 // Validate
 const schema: yup.ObjectSchema<IClinicCreate> = yup.object({
   name: yup.string().required("Tên không được để trống"),
@@ -42,9 +53,21 @@ const schema: yup.ObjectSchema<IClinicCreate> = yup.object({
   phone: yup.string().required("Số điện thoại không được để trống"),
   address: yup.string().required("Địa chỉ không được để trống"),
   logo: yup.string(),
+  lat: yup.number(),
+  long: yup.number(),
   description: yup.string(),
   planId: yup.string(),
 });
+
+const AnnotationContent = ({ title }: { title: string }) => (
+  <View>
+    <Text></Text>
+    <TouchableOpacity>
+      <Text>{title}</Text>
+      <Entypo name="location-pin" size={50} color="red" />
+    </TouchableOpacity>
+  </View>
+);
 
 export default function UpdateClinicInfoScreen({
   navigation,
@@ -52,13 +75,22 @@ export default function UpdateClinicInfoScreen({
 }: UpdateClinicInfoScreenProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
+  const INITIAL_COORDINATES: [any, any] = [clinic?.long, clinic?.lat];
   const [selectedImage, setSelectedImage] = useState<string>("");
   const [fileNameImage, setFileNameImage] = useState<string>("");
   const [showModal, setShowModal] = useState<boolean>(false);
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [searchAddress, setSearchAddress] = React.useState<string>("");
+  const [debounced] = useDebounce(searchAddress, 500);
+  const [suggestLocations, setSuggestLocations] = useState<any[]>([]);
+  const [point, setPoint] =
+    React.useState<GeoJSON.Position>(INITIAL_COORDINATES);
+  const [allowOverlapWithPuck, setAllowOverlapWithPuck] =
+    React.useState<boolean>(false);
   const {
     control,
     handleSubmit,
+    setValue,
     formState: { errors },
   } = useForm<IClinicCreate>({
     resolver: yupResolver(schema),
@@ -67,25 +99,45 @@ export default function UpdateClinicInfoScreen({
       email: clinic?.email,
       phone: clinic?.phone,
       address: clinic?.address,
-      logo: clinic?.logo? clinic.logo : "",
-      description: clinic?.description? clinic.description: "",
+      logo: clinic?.logo ? clinic.logo : "",
+      lat: clinic?.lat ? clinic.lat : undefined,
+      long: clinic?.long ? clinic.long : undefined,
+      description: clinic?.description ? clinic.description : "",
     },
   });
+  useEffect(() => {
+    getSuggestLocations(searchAddress);
+  }, [debounced]);
+
   const dispatch = useAppDispatch();
-  const onInvalid = (errors: any) => console.error(errors)
+  const onInvalid = (errors: any) => console.error(errors);
+
+  const getSuggestLocations = async (address: string) => {
+    const res = await locationApi.getSuggestLocations(address);
+
+    if (res.data) {
+      const features: IMapBoxFeature[] = res.data.features;
+      const suggestLocations: any[] = features.map((feature) => {
+        return {
+          label: feature.place_name,
+          value: feature.center.toString(),
+        };
+      });
+      setSuggestLocations(suggestLocations);
+    }
+  };
+
   const onSubmit = async (data: IClinicCreate) => {
-    console.log(data)
-    console.log('go here')
+    console.log(data);
     setIsLoading(true);
     const { planId, ...requestData } = data;
-    let url : string | undefined;
-    if (selectedImage !== ""){
-      url = await uploadImage(selectedImage, fileNameImage)
+    let url: string | undefined;
+    if (selectedImage !== "") {
+      url = await uploadImage(selectedImage, fileNameImage);
     }
     if (url) {
       requestData.logo = url;
     }
-    console.log('requestData: ', requestData)
     try {
       if (clinic?.id) {
         const response = await clinicService.updateClinicInfo(
@@ -135,12 +187,13 @@ export default function UpdateClinicInfoScreen({
         },
       });
     }
+    setIsLoading(false);
   };
 
   // Handle when user press to the button "Take image from camera"
   const onPressCamera = async () => {
     try {
-      setShowModal(false)
+      setShowModal(false);
       await ImagePicker.requestCameraPermissionsAsync();
       let result = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.front,
@@ -164,7 +217,7 @@ export default function UpdateClinicInfoScreen({
     }
   };
   const onPressUploadImageGallery = async () => {
-    setShowModal(false)
+    setShowModal(false);
     try {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -188,12 +241,16 @@ export default function UpdateClinicInfoScreen({
     }
   };
 
-  const uploadImage = async (uri : string, imageName : string) => {
-    const imageRef = storage().ref(`clinic-logo/${imageName}`)
-    await imageRef.putFile(uri, { contentType: 'image/jpg'}).catch((error) => { throw error })
-    const url = await imageRef.getDownloadURL().catch((error) => { throw error });
+  const uploadImage = async (uri: string, imageName: string) => {
+    const imageRef = storage().ref(`clinic-logo/${imageName}`);
+    await imageRef.putFile(uri, { contentType: "image/jpg" }).catch((error) => {
+      throw error;
+    });
+    const url = await imageRef.getDownloadURL().catch((error) => {
+      throw error;
+    });
     return url;
-  }
+  };
 
   return (
     <Box>
@@ -211,25 +268,30 @@ export default function UpdateClinicInfoScreen({
       >
         <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
         <UploadImageModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            onPressCamera={onPressCamera}
-            onPressUploadImageGallery={onPressUploadImageGallery}
+          showModal={showModal}
+          setShowModal={setShowModal}
+          onPressCamera={onPressCamera}
+          onPressUploadImageGallery={onPressUploadImageGallery}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setShowModal(true);
+          }}
+        >
+          <Avatar
+            alignSelf="center"
+            bg="white"
+            source={
+              selectedImage
+                ? { uri: selectedImage }
+                : clinic?.logo
+                ? { uri: clinic.logo }
+                : require("../../assets/images/clinics/default_image_clinic.png")
+            }
+            size="2xl"
+            mb={2}
           />
-          <TouchableOpacity
-            onPress={() => {
-              setShowModal(true);
-            }}
-          >
-            <Avatar
-              alignSelf="center"
-              bg="white"
-              source={selectedImage ? { uri: selectedImage } : ( clinic?.logo ? {uri: clinic.logo} : 
-                require('../../assets/images/clinics/default_image_clinic.png'))}
-              size="2xl"
-              mb={2}
-            />
-          </TouchableOpacity>
+        </TouchableOpacity>
         <ScrollView minWidth="100%" maxWidth="100%">
           <VStack space={5}>
             <VStack space={5}>
@@ -320,35 +382,88 @@ export default function UpdateClinicInfoScreen({
                 </FormControl.ErrorMessage>
               </FormControl>
               {/**Address */}
-              <FormControl isRequired isInvalid={errors.address ? true : false}>
+              <FormControl isInvalid={errors.address ? true : false}>
                 <FormControl.Label
                   _text={{
                     bold: true,
                     color: appColor.inputLabel,
                   }}
                 >
-                  Địa chỉ{" "}
+                  Nhập địa chỉ
                 </FormControl.Label>
-                <Controller
-                  control={control}
-                  render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
-                      type="text"
-                      placeholder="Nhập địa chỉ"
-                      onChangeText={onChange}
-                      value={value}
-                      onBlur={onBlur}
-                    />
-                  )}
-                  name="address"
+                <Dropdown
+                  style={{
+                    marginTop: -10,
+                    marginBottom: 30,
+                  }}
+                  placeholderStyle={{
+                    fontSize: 14,
+                  }}
+                  selectedTextStyle={{
+                    fontSize: 14,
+                    height: 100,
+                    marginTop: 80,
+                  }}
+                  containerStyle={{
+                    borderRadius: 20,
+                  }}
+                  inputSearchStyle={{
+                    borderRadius: 18,
+                  }}
+                  itemTextStyle={{}}
+                  data={suggestLocations}
+                  search
+                  maxHeight={300}
+                  labelField="label"
+                  valueField="value"
+                  placeholder={clinic?.address}
+                  searchPlaceholder="Search..."
+                  value={searchAddress}
+                  onChangeText={(search) => {
+                    setSearchAddress(search);
+                  }}
+                  onChange={(item) => {
+                    setSearchAddress(item.value);
+                    const arr = item.value.split(",");
+                    setPoint([parseFloat(arr[0]), parseFloat(arr[1])]);
+                    setValue("long", parseFloat(arr[0]));
+                    setValue("lat", parseFloat(arr[1]));
+                  }}
                 />
                 <FormControl.ErrorMessage
                   leftIcon={<WarningOutlineIcon size="xs" />}
                 >
                   {errors.address && <Text>{errors.address.message}</Text>}
                 </FormControl.ErrorMessage>
+                <MapboxGL.MapView
+                  style={{ height: 300 }}
+                  projection="mercator"
+                  zoomEnabled={true}
+                  logoEnabled={false}
+                  localizeLabels={true}
+                  attributionPosition={{ top: 8, left: 8 }}
+                  tintColor="#333"
+                  styleURL="mapbox://styles/mapbox/streets-v12"
+                  rotateEnabled={true}
+                >
+                  <MapboxGL.Camera
+                    defaultSettings={{
+                      zoomLevel: 15,
+                      centerCoordinate: point,
+                    }}
+                    centerCoordinate={point}
+                    zoomLevel={15}
+                    followUserLocation={true}
+                  />
+
+                  <MapboxGL.MarkerView
+                    coordinate={point}
+                    allowOverlapWithPuck={allowOverlapWithPuck}
+                  >
+                    <AnnotationContent title={""} />
+                  </MapboxGL.MarkerView>
+                </MapboxGL.MapView>
               </FormControl>
-              
               {/**Description */}
               <FormControl isInvalid={errors.description ? true : false}>
                 <FormControl.Label
@@ -359,19 +474,22 @@ export default function UpdateClinicInfoScreen({
                 >
                   Mô tả{" "}
                 </FormControl.Label>
-                <Controller
+                {/* <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                    <Input
+                    <TextArea
                       type="text"
                       placeholder="Nhập mô tả"
                       onChangeText={onChange}
-                      value={value? value : undefined}
+                      value={value ? value : undefined}
                       onBlur={onBlur}
+                      autoCompleteType={true}
+                      fontSize={14}
                     />
                   )}
                   name="description"
-                />
+                /> */}
+                {clinic?.description && <HTMLView value={clinic.description} />}
                 <FormControl.ErrorMessage
                   leftIcon={<WarningOutlineIcon size="xs" />}
                 >

@@ -23,6 +23,7 @@ import { UserProfileScreenProps } from "../../Navigator/ProfileNavigator";
 import { MaterialIcons } from "@expo/vector-icons";
 import { appColor } from "../../theme";
 import { FCMConfig } from "../../config/firebaseCloudMessage";
+import dayjs from "dayjs";
 GoogleSignin.configure({
   webClientId:
     "931199521045-rn8i7um077q2b9pgpsrdejj90qj26fvv.apps.googleusercontent.com",
@@ -34,7 +35,7 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
   //console.log('profile page: ', userInfo);
   const [showModal, setShowModal] = useState<boolean>(true);
   const handleChangeUserInfo = () => {
-    navigation.navigate("UpdateUserInfo")
+    navigation.navigate("UpdateUserInfo");
   };
 
   useEffect(() => {
@@ -49,15 +50,14 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       p={5}
       borderBottomRadius={20}
     >
-      { userInfo?.isInputPassword? (
-          <></>
-        ) : (
-          <AddNewPasswordModal
+      {userInfo?.isInputPassword ? (
+        <></>
+      ) : (
+        <AddNewPasswordModal
           showModal={showModal}
           setShowModal={setShowModal}
-          />
-        )
-      }
+        />
+      )}
       <Box
         width="full"
         alignItems="center"
@@ -69,8 +69,10 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
         <Avatar
           alignSelf="center"
           bg="grey"
-          source={ userInfo?.avatar ? {uri: userInfo.avatar} : require('../../assets/user.png')
-          
+          source={
+            userInfo?.avatar
+              ? { uri: userInfo.avatar }
+              : require("../../assets/user.png")
           }
           size="2xl"
           mb={2}
@@ -101,7 +103,13 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
             <Text fontWeight="bold" color={appColor.textSecondary}>
               Giới tính
             </Text>
-            <Text color={appColor.textSecondary}>{userInfo?.gender ===1 ? "Nam" : (userInfo?.gender ===0 ? "Nữ" : "")}</Text>
+            <Text color={appColor.textSecondary}>
+              {userInfo?.gender === 1
+                ? "Nam"
+                : userInfo?.gender === 0
+                ? "Nữ"
+                : ""}
+            </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>
@@ -113,7 +121,9 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
             <Text fontWeight="bold" color={appColor.textSecondary}>
               Ngày sinh
             </Text>
-            <Text color={appColor.textSecondary}>{dateString?.split("-").reverse().join("-")}</Text>
+            <Text color={appColor.textSecondary}>
+              {dayjs(userInfo?.birthday).format("DD/MM/YYYY")}
+            </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
             <Text fontWeight="bold" color={appColor.textSecondary}>

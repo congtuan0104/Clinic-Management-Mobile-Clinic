@@ -9,3 +9,5 @@ export * from "./appointment.service";
 export * from "./staff.service";
 export * from "./patient.service";
 export * from "./medical_record.service";
+export * from "./medical-supplies.services";
+

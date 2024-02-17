@@ -7,7 +7,7 @@ const UploadImageModal = (props: any) => {
     props;
   return (
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
-      <Modal.Content>
+      <Modal.Content borderRadius={20}>
         <Modal.CloseButton />
         <Modal.Header backgroundColor="secondary.200">Chọn ảnh</Modal.Header>
         <Modal.Body>

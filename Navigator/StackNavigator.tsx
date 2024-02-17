@@ -138,9 +138,6 @@ const StackNavigator = () => {
       // await AsyncStorage.setItem("user", JSON.stringify(userToStorage));
       // await AsyncStorage.setItem("token", token);
 
-      await AsyncStorage.removeItem("user");
-      await AsyncStorage.removeItem("token");
-
       // Restore userInfo and dispatch to the store
       const testData = await AsyncStorage.getItem("user");
       const tokenString = await AsyncStorage.getItem("token");
@@ -289,43 +286,19 @@ const StackNavigator = () => {
                 initialParams={{ setLogin: setLogin }}
               />
             </>
-          ) : user?.moduleId === 2 ? (
+          ) : (
             <>
               <RootStack.Screen
                 name="UserNavigator"
                 component={UserNavigator}
                 options={{ headerShown: false }}
                 initialParams={{
-                  screen: "",
+                  screen: "ClinicListNavigator",
                   params: { setLogout },
                 }}
               />
             </>
-          ) : user?.moduleId === 2 ? (
-            <>
-              <RootStack.Screen
-                name="UserNavigator"
-                component={UserNavigator}
-                options={{ headerShown: false }}
-                initialParams={{
-                  screen: "",
-                  params: { setLogout },
-                }}
-              />
-            </>
-          ) : user?.moduleId === 4 ? (
-            <>
-              <RootStack.Screen
-                name="UserNavigator"
-                component={UserNavigator}
-                options={{ headerShown: false }}
-                initialParams={{
-                  screen: "",
-                  params: { setLogout },
-                }}
-              />
-            </>
-          ) : null}
+          )}
         </RootStack.Navigator>
       </NavigationContainer>
     </NativeBaseProvider>

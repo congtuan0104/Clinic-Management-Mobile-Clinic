@@ -15,7 +15,7 @@ import {
 } from "native-base";
 import { TouchableOpacity, Alert } from "react-native";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
-import storage from '@react-native-firebase/storage';
+import storage from "@react-native-firebase/storage";
 //import 'firebase/storage';
 import { useState } from "react";
 import { IUserInfo, ILoginResponse } from "../../types";
@@ -27,7 +27,7 @@ import { appColor } from "../../theme";
 import ToastAlert from "../../components/Toast/Toast";
 import { UpdateProfileNavigatorProps } from "../../Navigator/UserNavigator";
 import { useAppDispatch, useAppSelector } from "../../hooks";
-import { IUserInfoUpdateForm, IUserInfoUpdateRequest } from "../../types"
+import { IUserInfoUpdateForm, IUserInfoUpdateRequest } from "../../types";
 import * as yup from "yup";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -35,6 +35,7 @@ import { authApi } from "../../services";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import UploadImageModal from "../../components/UploadImageModal/UploadImageModal";
 import * as ImagePicker from "expo-image-picker";
+import dayjs from "dayjs";
 
 const chevronDown = require("../../assets/chevron_down.png");
 
@@ -42,13 +43,11 @@ const chevronDown = require("../../assets/chevron_down.png");
 const schema: yup.ObjectSchema<IUserInfoUpdateForm> = yup.object({
   firstName: yup.string().required("Họ không được để trống"),
   lastName: yup.string().required("Tên không được để trống"),
-  gender: yup
-    .string(),
+  gender: yup.string(),
   birthday: yup.string(),
   phone: yup.string(),
   address: yup.string(),
   avatar: yup.string(),
-  
 });
 
 export default function UpdateUserInfoScreen({
@@ -58,8 +57,8 @@ export default function UpdateUserInfoScreen({
   const userInfo = useAppSelector(userInfoSelector);
   const dateString = userInfo?.birthday?.slice(0, 10);
   const [selectedDate, setSelectedDate] = useState<Date | undefined>(
-      dateString ? new Date(dateString) : undefined
-    );
+    dateString ? new Date(dateString) : undefined
+  );
   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
   const [showModal, setShowModal] = useState<boolean>(false);
   const [selectedImage, setSelectedImage] = useState<string>("");
@@ -93,45 +92,47 @@ export default function UpdateUserInfoScreen({
       lastName: userInfo?.lastName,
       gender: userInfo?.gender ? "Nam" : "Nữ",
       birthday: dateString?.split("-").reverse().join("/"),
-      phone: userInfo?.phone? userInfo?.phone : "",
-      address: userInfo?.address? userInfo?.address : "",
-      avatar: userInfo?.avatar? userInfo?.avatar: "",
+      phone: userInfo?.phone ? userInfo?.phone : "",
+      address: userInfo?.address ? userInfo?.address : "",
+      avatar: userInfo?.avatar ? userInfo?.avatar : "",
     },
   });
   const dispatch = useAppDispatch();
 
-
   const onSubmit = async (data: IUserInfoUpdateForm) => {
     //console.log('go here')
     setIsLoading(true);
-    let genderNumber : number | undefined;
-    if (data.gender === "Nam")
-      {
-        genderNumber = 1;
-      }
-    if (data.gender === "Nữ"){
-        genderNumber = 0;
+
+    let genderNumber: number | undefined;
+    if (data.gender === "Nam") {
+      genderNumber = 1;
+    }
+    if (data.gender === "Nữ") {
+      genderNumber = 0;
     }
     //console.log('data form: ', data)
-    let url : string | undefined;
-    if (selectedImage !== ""){
-      url = await uploadImage(selectedImage, fileNameImage)
+    let url: string | undefined;
+    if (selectedImage !== "") {
+      url = await uploadImage(selectedImage, fileNameImage);
     }
     const requestData: IUserInfoUpdateRequest = {
       firstName: data.firstName,
       lastName: data.lastName,
-      gender: genderNumber? genderNumber : null,
-      birthday: data.birthday? data.birthday : null,
-      address: data.address? data.address : null,
-      phone: data.phone? data.phone : null,
-      avatar: url? url : (userInfo?.avatar? userInfo?.avatar : ""),
+      gender: genderNumber ? genderNumber : null,
+      // birthday: data.birthday ? data.birthday : null,
+      birthday: selectedDate
+        ? dayjs(selectedDate).format("MM/DD/YYYY")
+        : data.birthday,
+      address: data.address ? data.address : null,
+      phone: data.phone ? data.phone : null,
+      avatar: url ? url : userInfo?.avatar ? userInfo?.avatar : "",
     };
-    console.log('requestData: ', requestData)
-    const token = await AsyncStorage.getItem("token")
+    const token = await AsyncStorage.getItem("token");
     try {
       if (userInfo?.id) {
         const response = await authApi.updateUserInfo(
-          requestData, userInfo?.id
+          requestData,
+          userInfo?.id
         );
         if (response.status === true && response.data && token) {
           const userToStorage: IUserInfo = {
@@ -145,11 +146,11 @@ export default function UpdateUserInfoScreen({
             phone: response.data.phone,
             address: response.data.address,
             moduleId: response.data.moduleId,
-            avatar: response.data.avatar
+            avatar: response.data.avatar,
           };
           const userToReduxStore: ILoginResponse = {
             user: userToStorage,
-            token: token ,
+            token: token,
           };
           // Call to update data in reducer
           dispatch(login(userToReduxStore));
@@ -164,7 +165,7 @@ export default function UpdateUserInfoScreen({
               );
             },
           });
-          navigation.navigate("ProfileNavigator")
+          navigation.navigate("ProfileNavigator");
         }
       } else {
         toast.show({
@@ -179,14 +180,14 @@ export default function UpdateUserInfoScreen({
           },
         });
       }
-    } catch (error) {
+    } catch (error: any) {
       console.log(error);
       toast.show({
         render: () => {
           return (
             <ToastAlert
               title="Lỗi"
-              description="Không cập nhật được thông tin tài khoản. Vui lòng thử lại sau."
+              description={error.response.data.message}
               status="error"
             />
           );
@@ -199,7 +200,7 @@ export default function UpdateUserInfoScreen({
   // Handle when user press to the button "Take image from camera"
   const onPressCamera = async () => {
     try {
-      setShowModal(false)
+      setShowModal(false);
       await ImagePicker.requestCameraPermissionsAsync();
       let result = await ImagePicker.launchCameraAsync({
         cameraType: ImagePicker.CameraType.front,
@@ -223,7 +224,7 @@ export default function UpdateUserInfoScreen({
     }
   };
   const onPressUploadImageGallery = async () => {
-    setShowModal(false)
+    setShowModal(false);
     try {
       await ImagePicker.requestMediaLibraryPermissionsAsync();
       let result = await ImagePicker.launchImageLibraryAsync({
@@ -247,12 +248,16 @@ export default function UpdateUserInfoScreen({
     }
   };
 
-  const uploadImage = async (uri : string, imageName : string) => {
-    const imageRef = storage().ref(`avatars/${imageName}`)
-    await imageRef.putFile(uri, { contentType: 'image/jpg'}).catch((error) => { throw error })
-    const url = await imageRef.getDownloadURL().catch((error) => { throw error });
+  const uploadImage = async (uri: string, imageName: string) => {
+    const imageRef = storage().ref(`avatars/${imageName}`);
+    await imageRef.putFile(uri, { contentType: "image/jpg" }).catch((error) => {
+      throw error;
+    });
+    const url = await imageRef.getDownloadURL().catch((error) => {
+      throw error;
+    });
     return url;
-  }
+  };
 
   return (
     <>
@@ -274,31 +279,39 @@ export default function UpdateUserInfoScreen({
           mode="date"
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
+        />
+        <UploadImageModal
+          showModal={showModal}
+          setShowModal={setShowModal}
+          onPressCamera={onPressCamera}
+          onPressUploadImageGallery={onPressUploadImageGallery}
+        />
+        <TouchableOpacity
+          onPress={() => {
+            setShowModal(true);
+          }}
+        >
+          <Avatar
+            alignSelf="center"
+            bg="grey"
+            source={
+              selectedImage
+                ? { uri: selectedImage }
+                : userInfo?.avatar
+                ? { uri: userInfo.avatar }
+                : require("../../assets/user.png")
+            }
+            size="2xl"
+            mb={2}
           />
-          <UploadImageModal
-            showModal={showModal}
-            setShowModal={setShowModal}
-            onPressCamera={onPressCamera}
-            onPressUploadImageGallery={onPressUploadImageGallery}
-          />
-          <TouchableOpacity
-            onPress={() => {
-              setShowModal(true);
-            }}
-          >
-            <Avatar
-              alignSelf="center"
-              bg="grey"
-              source={selectedImage ? { uri: selectedImage } : ( userInfo?.avatar ? {uri: userInfo.avatar} : 
-                require('../../assets/user.png'))}
-              size="2xl"
-              mb={2}
-            />
-          </TouchableOpacity>
+        </TouchableOpacity>
         <ScrollView minWidth="100%" maxWidth="100%">
           <VStack space={5}>
             <VStack space={5}>
-            <FormControl isRequired isInvalid={errors.firstName ? true : false}>
+              <FormControl
+                isRequired
+                isInvalid={errors.firstName ? true : false}
+              >
                 <FormControl.Label
                   _text={{
                     bold: true,
@@ -326,14 +339,17 @@ export default function UpdateUserInfoScreen({
                   {errors.firstName && <Text>{errors.firstName.message}</Text>}
                 </FormControl.ErrorMessage>
               </FormControl>
-              <FormControl isRequired isInvalid={errors.lastName ? true : false}>
+              <FormControl
+                isRequired
+                isInvalid={errors.lastName ? true : false}
+              >
                 <FormControl.Label
                   _text={{
                     bold: true,
                     color: appColor.inputLabel,
                   }}
                 >
-                  Tên 
+                  Tên
                 </FormControl.Label>
                 <Controller
                   control={control}
@@ -367,15 +383,19 @@ export default function UpdateUserInfoScreen({
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                      <SelectDropdown
+                    <SelectDropdown
                       data={["Nam", "Nữ"]}
                       onSelect={(selectedItem, index) => {
-                        if (index === 0)
-                          setValue('gender', 'Nam')
-                        if (index === 1)
-                          setValue('gender', 'Nữ')
+                        if (index === 0) setValue("gender", "Nam");
+                        if (index === 1) setValue("gender", "Nữ");
                       }}
-                      defaultButtonText={userInfo?.gender ===1 ? "Nam" : (userInfo?.gender ===0 ? "Nữ" : "Chọn giới tính")}
+                      defaultButtonText={
+                        userInfo?.gender === 1
+                          ? "Nam"
+                          : userInfo?.gender === 0
+                          ? "Nữ"
+                          : "Chọn giới tính"
+                      }
                       buttonTextAfterSelection={(selectedItem, index) => {
                         return selectedItem;
                       }}
@@ -460,7 +480,7 @@ export default function UpdateUserInfoScreen({
                 </FormControl.ErrorMessage>
               </FormControl>
               {/**Avatar */}
-              
+
               {/**Birthday */}
               <FormControl isInvalid={errors.birthday ? true : false}>
                 <FormControl.Label
@@ -474,18 +494,18 @@ export default function UpdateUserInfoScreen({
                 <Controller
                   control={control}
                   render={({ field: { onChange, onBlur, value } }) => (
-                      <Input
-                          type="text"
-                          placeholder=""
-                          onChangeText={onChange}
-                          value={selectedDate
-                          ?.toISOString()
-                          .substring(0, 10)
-                          .split("-")
-                          .reverse()
-                          .join("-")}
-                          onBlur={onBlur}
-                          onFocus={showDatePicker}
+                    <Input
+                      type="text"
+                      placeholder=""
+                      onChangeText={onChange}
+                      value={selectedDate
+                        ?.toISOString()
+                        .substring(0, 10)
+                        .split("-")
+                        .reverse()
+                        .join("-")}
+                      onBlur={onBlur}
+                      onFocus={showDatePicker}
                     />
                   )}
                   name="birthday"
@@ -493,9 +513,7 @@ export default function UpdateUserInfoScreen({
                 <FormControl.ErrorMessage
                   leftIcon={<WarningOutlineIcon size="xs" />}
                 >
-                  {errors.birthday && (
-                    <Text>{errors.birthday.message}</Text>
-                  )}
+                  {errors.birthday && <Text>{errors.birthday.message}</Text>}
                 </FormControl.ErrorMessage>
               </FormControl>
             </VStack>
@@ -504,18 +522,21 @@ export default function UpdateUserInfoScreen({
       </Box>
       <HStack mt={5} space={5} minW="90%" maxW="90%" alignSelf="center">
         <Button
-          borderColor={appColor.backgroundPrimary}
+          borderColor="secondary.300"
           borderWidth={1}
           backgroundColor={appColor.white}
           flex={1}
           onPress={() => {
-            navigation.navigate("ProfileNavigator")
+            navigation.navigate("ProfileNavigator");
           }}
           _pressed={{
-            backgroundColor: "primary.100",
+            backgroundColor: "secondary.100",
+          }}
+          _text={{
+            color: "secondary.300",
           }}
         >
-          <Text>Quay lại</Text>
+          Quay lại
         </Button>
         <Button flex={1} onPress={handleSubmit(onSubmit)}>
           Thay đổi thông tin
@@ -534,8 +555,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D5",
   },
-  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
-  dropdown1DropdownStyle: { backgroundColor: "#EFEFEF", marginTop: -70, borderRadius: 15 },
+  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 15 },
+  dropdown1DropdownStyle: {
+    backgroundColor: "#EFEFEF",
+    marginTop: -70,
+    borderRadius: 15,
+  },
   dropdown1RowStyle: {
     backgroundColor: "#EFEFEF",
     borderBottomColor: "#C5C5C5",

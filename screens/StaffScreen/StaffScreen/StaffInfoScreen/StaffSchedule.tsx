@@ -26,7 +26,7 @@ export default function StaffScheduleScreen({
       alignSelf="center"
       alignItems="center"
       p={5}
-      borderRadius={20}
+      borderBottomRadius={20}
     >
       <Heading>Lịch làm việc</Heading>
       <Box

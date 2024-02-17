@@ -104,15 +104,6 @@ export default function ChattingGroupListScreen({
                 as={<MaterialIcons name="search" />}
               />
             }
-            // InputRightElement={
-            //   <Icon
-            //     m="2"
-            //     mr="3"
-            //     size="6"
-            //     color="gray.400"
-            //     as={<MaterialIcons name="mic" />}
-            //   />
-            // }
           />
         </Box>
         {/** *************************** RENDER USER LIST ****************************** */}

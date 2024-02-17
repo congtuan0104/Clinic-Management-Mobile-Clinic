@@ -1,41 +1,63 @@
-import { Box, HStack, Pressable, ScrollView, Text, VStack } from "native-base";
-import { useEffect, useState } from "react";
-import { clinicServiceApi } from "../../services";
+import {
+  Box,
+  HStack,
+  Pressable,
+  ScrollView,
+  Text,
+  VStack,
+  useToast,
+} from "native-base";
+import { useEffect, useState, useCallback } from "react";
+import { medicalSuppliesServices } from "../../services";
 import { useAppSelector } from "../../hooks";
 import { ClinicSelector } from "../../store";
-import UpdateServiceModal from "./UpdateServiceModal";
-import AddServiceModal from "./AddServiceModal";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { Ionicons } from "@expo/vector-icons";
 import { appColor } from "../../theme";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IClinicService } from "../../types";
-import DeleteDialog from "./DeleteDialog";
-import { CategoryPriceNavigatorProps } from "../../Navigator/UserNavigator";
 import { Searchbar } from "react-native-paper";
+import { MedicalSuppliesNavigatorProps } from "../../Navigator/UserNavigator";
+import { IMedicalSupplies } from "../../types/medical-supplies.types";
+import ToastAlert from "../../components/Toast/Toast";
+import { useFocusEffect } from "@react-navigation/native";
+import dayjs from "dayjs";
+import AddMedicalSupplyModal from "./AddMedicalSupplyModal";
+import UpdateMedicalSupplyModal from "./UpdateMedicalSupplyModal";
+import DeleteMedicalSupplyDialog from "./DeleteDialog";
 
-export default function StaffDashboardScreen({
+export default function MedicalSuppliesScreen({
   navigation,
   route,
-}: CategoryPriceNavigatorProps) {
+}: MedicalSuppliesNavigatorProps) {
   const clinic = useAppSelector(ClinicSelector);
-  const [clinicServiceList, setClinicServiceList] = useState<IClinicService[]>(
+  const toast = useToast();
+  const [isReRender, setIsReRender] = useState(false);
+  const [medicalSuppliesList, setMedicalSuppliesList] = useState<
+    IMedicalSupplies[]
+  >([]);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [searchFilterList, setSearchFilterList] = useState<IMedicalSupplies[]>(
     []
   );
-  const [searchFilterList, setSearchFilterList] = useState<IClinicService[]>(
-    []
-  );
+  const [isOpenDialog, setIsOpenDialog] = useState(false);
+
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenAddServiceModal, setIsOpenAddServiceModal] =
     useState<boolean>(false);
+  const [service, setService] = useState<IMedicalSupplies>();
   const [isOpenServiceModal, setIsOpenServiceModal] = useState<boolean>(false);
-  const [service, setService] = useState<IClinicService>();
-  const [expanded, setExpanded] = useState(false);
-  const [isOpenDialog, setIsOpenDialog] = useState(false);
-  const [isReRender, setIsReRender] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
 
+  function filterList(text: string) {
+    if (text !== "") {
+      setSearchFilterList(
+        medicalSuppliesList.filter((item) =>
+          item.medicineName.toUpperCase().includes(text.toUpperCase())
+        )
+      );
+    } else setSearchFilterList([]);
+  }
   const onChangeTextHandler = (query: string) => {
     setSearchQuery(query); // Cập nhật giá trị của searchQuery
     filterList(query);
@@ -43,43 +65,48 @@ export default function StaffDashboardScreen({
   const handleReRender = () => setIsReRender(!isReRender);
   const onCloseDialog = () => setIsOpenDialog(false);
 
-  const handlePress = () => setExpanded(!expanded);
-
-  const handleSetService = async (item: IClinicService) => setService(item);
-  const handleOpenUpdateModal = async (item: IClinicService) => {
+  const handleOpenUpdateModal = async (item: IMedicalSupplies) => {
     await handleSetService(item);
     setIsOpenServiceModal(true);
   };
-  const handleDeleteButton = async (item: IClinicService) => {
+  const handleDeleteButton = async (item: IMedicalSupplies) => {
     await handleSetService(item);
     setIsOpenDialog(true);
   };
-  function filterList(text: string) {
-    if (text !== "") {
-      setSearchFilterList(
-        clinicServiceList.filter((item) =>
-          item.serviceName.toUpperCase().includes(text.toUpperCase())
-        )
-      );
-    } else setSearchFilterList([]);
-  }
+  const handleSetService = async (item: IMedicalSupplies) => setService(item);
   const getClinicServiceList = async () => {
     try {
       if (clinic?.id) {
-        const response = await clinicServiceApi.getClinicServices(clinic!.id);
-        //console.log('response: ', response);
+        const response = await medicalSuppliesServices.getMedicalSupplies(
+          clinic.id
+        );
         if (response.status && response.data) {
-          setClinicServiceList(response.data);
+          setMedicalSuppliesList(response.data);
+          setSearchFilterList(response.data);
         } else {
+          setMedicalSuppliesList([]);
+          setSearchFilterList([]);
         }
       }
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      toast.show({
+        render: () => {
+          return (
+            <ToastAlert
+              title="Lỗi"
+              description={error.response.data.message}
+              status="error"
+            />
+          );
+        },
+      });
     }
   };
-  useEffect(() => {
-    getClinicServiceList();
-  }, [clinic?.id, isReRender]);
+  useFocusEffect(
+    useCallback(() => {
+      getClinicServiceList();
+    }, [clinic?.id, isReRender])
+  );
 
   return (
     <Box
@@ -96,7 +123,7 @@ export default function StaffDashboardScreen({
     >
       <Searchbar
         style={{ height: 40, marginBottom: 15 }}
-        placeholder="Tìm kiếm"
+        placeholder="Tìm kiếm thuốc, vật tư"
         onChangeText={onChangeTextHandler}
         value={searchQuery}
         inputStyle={{
@@ -108,7 +135,7 @@ export default function StaffDashboardScreen({
         placeholderTextColor={appColor.textSecondary}
       />
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      {clinicServiceList?.length ? (
+      {medicalSuppliesList?.length ? (
         <>
           <HStack
             width="full"
@@ -117,7 +144,7 @@ export default function StaffDashboardScreen({
             mt={-3}
           >
             <Text my="2" fontWeight="bold" fontSize={20}>
-              Bảng giá dịch vụ
+              Kho thuốc, vật tư
             </Text>
             <Pressable
               onPress={() => {
@@ -135,7 +162,7 @@ export default function StaffDashboardScreen({
             <VStack space={5}>
               {searchFilterList.length
                 ? searchFilterList.map(
-                    (serviceItem: IClinicService, index: number) => {
+                    (medicalSupply: IMedicalSupplies, index: number) => {
                       return (
                         <Box
                           borderRadius={20}
@@ -155,12 +182,12 @@ export default function StaffDashboardScreen({
                               fontSize={16}
                               maxWidth={"70%"}
                             >
-                              {serviceItem.serviceName}
+                              {medicalSupply.medicineName}
                             </Text>
                             <HStack space={2} alignItems="center">
                               <Pressable
                                 onPress={() =>
-                                  handleOpenUpdateModal(serviceItem)
+                                  handleOpenUpdateModal(medicalSupply)
                                 }
                               >
                                 <FontAwesome5
@@ -170,7 +197,9 @@ export default function StaffDashboardScreen({
                                 />
                               </Pressable>
                               <Pressable
-                                onPress={() => handleDeleteButton(serviceItem)}
+                                onPress={() =>
+                                  handleDeleteButton(medicalSupply)
+                                }
                               >
                                 <MaterialIcons
                                   name="delete"
@@ -187,23 +216,45 @@ export default function StaffDashboardScreen({
                                 fontWeight="bold"
                                 color={appColor.textSecondary}
                               >
-                                Giá dịch vụ:
+                                Loại vật tư:
                               </Text>
                               <Text
                                 fontWeight="bold"
                                 color={appColor.textSecondary}
                               >
-                                Trạng thái:
+                                Số lượng tồn:
+                              </Text>
+                              <Text
+                                fontWeight="bold"
+                                color={appColor.textSecondary}
+                              >
+                                Nhà sản xuất:
+                              </Text>
+                              <Text
+                                fontWeight="bold"
+                                color={appColor.textSecondary}
+                              >
+                                Hạn sử dụng:
                               </Text>
                             </VStack>
                             <VStack>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.price + "đ"}
+                                {medicalSupply.categoryName}
                               </Text>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.isDisabled
-                                  ? "Không hoạt động"
-                                  : "Đang hoạt động"}
+                                {medicalSupply.stock} {medicalSupply.unit}
+                              </Text>
+                              <Text color={appColor.textSecondary}>
+                                {medicalSupply.vendor
+                                  ? medicalSupply.vendor
+                                  : "Không có"}
+                              </Text>
+                              <Text color={appColor.textSecondary}>
+                                {medicalSupply.expiredAt
+                                  ? dayjs(medicalSupply.expiredAt).format(
+                                      "DD/MM/YYYY"
+                                    )
+                                  : "Không có"}
                               </Text>
                             </VStack>
                           </HStack>
@@ -211,8 +262,8 @@ export default function StaffDashboardScreen({
                       );
                     }
                   )
-                : clinicServiceList.map(
-                    (serviceItem: IClinicService, index: number) => {
+                : medicalSuppliesList.map(
+                    (medicalSupply: IMedicalSupplies, index: number) => {
                       return (
                         <Box
                           borderRadius={20}
@@ -232,12 +283,12 @@ export default function StaffDashboardScreen({
                               fontSize={16}
                               maxWidth={"70%"}
                             >
-                              {serviceItem.serviceName}
+                              {medicalSupply.medicineName}
                             </Text>
                             <HStack space={2} alignItems="center">
                               <Pressable
                                 onPress={() =>
-                                  handleOpenUpdateModal(serviceItem)
+                                  handleOpenUpdateModal(medicalSupply)
                                 }
                               >
                                 <FontAwesome5
@@ -247,7 +298,9 @@ export default function StaffDashboardScreen({
                                 />
                               </Pressable>
                               <Pressable
-                                onPress={() => handleDeleteButton(serviceItem)}
+                                onPress={() =>
+                                  handleDeleteButton(medicalSupply)
+                                }
                               >
                                 <MaterialIcons
                                   name="delete"
@@ -264,23 +317,45 @@ export default function StaffDashboardScreen({
                                 fontWeight="bold"
                                 color={appColor.textSecondary}
                               >
-                                Giá dịch vụ:
+                                Loại vật tư:
                               </Text>
                               <Text
                                 fontWeight="bold"
                                 color={appColor.textSecondary}
                               >
-                                Trạng thái:
+                                Số lượng tồn:
+                              </Text>
+                              <Text
+                                fontWeight="bold"
+                                color={appColor.textSecondary}
+                              >
+                                Nhà sản xuất:
+                              </Text>
+                              <Text
+                                fontWeight="bold"
+                                color={appColor.textSecondary}
+                              >
+                                Hạn sử dụng:
                               </Text>
                             </VStack>
                             <VStack>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.price + "đ"}
+                                {medicalSupply.categoryName}
                               </Text>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.isDisabled
-                                  ? "Không hoạt động"
-                                  : "Đang hoạt động"}
+                                {medicalSupply.stock} {medicalSupply.unit}
+                              </Text>
+                              <Text color={appColor.textSecondary}>
+                                {medicalSupply.vendor
+                                  ? medicalSupply.vendor
+                                  : "Không có"}
+                              </Text>
+                              <Text color={appColor.textSecondary}>
+                                {medicalSupply.expiredAt
+                                  ? dayjs(medicalSupply.expiredAt).format(
+                                      "DD/MM/YYYY"
+                                    )
+                                  : "Không có"}
                               </Text>
                             </VStack>
                           </HStack>
@@ -295,24 +370,24 @@ export default function StaffDashboardScreen({
         <Text>Danh sách rỗng</Text>
       )}
       {service && isOpenServiceModal ? (
-        <UpdateServiceModal
+        <UpdateMedicalSupplyModal
           isOpen={isOpenServiceModal}
           onClose={() => {
             setIsOpenServiceModal(false);
           }}
-          service={service}
+          service={service} // service <=> medical supply
           handleReRender={handleReRender}
         />
       ) : null}
       {service && isOpenDialog ? (
-        <DeleteDialog
+        <DeleteMedicalSupplyDialog
           isOpen={isOpenDialog}
           onClose={onCloseDialog}
           service={service}
           handleReRender={handleReRender}
         />
       ) : null}
-      <AddServiceModal
+      <AddMedicalSupplyModal
         isOpen={isOpenAddServiceModal}
         onClose={() => {
           setIsOpenAddServiceModal(false);

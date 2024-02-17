@@ -6,6 +6,8 @@ export interface IClinicInfo {
   ownerId: string;
   address: string;
   logo: string;
+  lat: number;
+  long: number;
   description: string;
   metadata: string | null;
   isActive: boolean;
@@ -46,8 +48,10 @@ export interface IClinicCreate {
   email: string;
   phone: string;
   address: string;
-  logo?: string | null;
-  description?: string | null;
+  lat?: number;
+  long?: number;
+  logo?: string;
+  description?: string;
   planId?: string;
 }
 

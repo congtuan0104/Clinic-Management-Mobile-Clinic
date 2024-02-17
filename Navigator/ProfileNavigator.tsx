@@ -44,7 +44,6 @@ export default function ProfileNavigator({
         tabBarPressColor: appColor.backgroundPrimary,
         tabBarActiveTintColor: appColor.primary,
         tabBarLabelStyle: {
-          fontFamily: "Montserrat-SemiBold",
           fontSize: 15,
           textTransform: "none",
         },
@@ -72,7 +71,6 @@ export default function ProfileNavigator({
         component={ConnectingScreen}
         options={{ tabBarLabel: "Thông tin tài khoản" }}
       />
-      
     </ProfileTopTabNavigator.Navigator>
   );
 }

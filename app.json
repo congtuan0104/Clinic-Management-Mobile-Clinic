@@ -9,7 +9,7 @@
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
-      "backgroundColor": "#D0D0FF"
+      "backgroundColor": "#FFFFFF"
     },
     "assetBundlePatterns": ["**/*"],
     "ios": {
@@ -32,7 +32,7 @@
     "android": {
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
-        "backgroundColor": "#D0D0FF"
+        "backgroundColor": "#FFFFFF"
       },
       "googleServicesFile": "./google-services.json",
       "package": "com.nhatminh287.Mobileapppatient",
@@ -69,6 +69,13 @@
           "appID": "246416061448702",
           "clientToken": "6b9ac107583746e675bbba995b377e66",
           "displayName": "CLINUS"
+        }
+      ],
+      [
+        "@rnmapbox/maps",
+        {
+          "RNMapboxMapsVersion": "11.1.0",
+          "RNMapboxMapsDownloadToken": "sk.eyJ1Ijoia2hhbmdubDI0MTEyMDAyIiwiYSI6ImNsczlubWhxODA1Y3IyaW5zM2VzNWkyaDQifQ.vn8nm-_IlboHapYDVdrlPg"
         }
       ]
     ],

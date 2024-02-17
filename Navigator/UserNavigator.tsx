@@ -24,7 +24,9 @@ import { useToast } from "native-base";
 import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
+
 import PatientNavigator from "./PatientNavigator";
+
 // Import custom icons
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -34,6 +36,17 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { NavigationContainerRef } from "@react-navigation/native";
 import { IPatient } from "../types";
+import {
+  NavigationContainerRef,
+  useFocusEffect,
+} from "@react-navigation/native";
+import EquipmentListScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
+import MedicalSuppliesScreen from "../screens/MedicalSuppliesListScreen/MedicalSuppliesList";
+import { useAppSelector } from "../hooks";
+import { userInfoSelector } from "../store";
+import { IStaffPermission } from "../types/staff.types";
+import { staffServices } from "../services/staff.servcies";
+
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -54,8 +67,7 @@ export type UserNavigatorDrawerParamList = {
   CreateTaskNavigator: undefined;
   CategoryNavigator: undefined;
   CategoryPriceNavigator: undefined;
-  // PatientInfoNavigator: { patient: IPatient };
-  // MedicalRecordNavigator: { patient: IPatient };
+  MedicalSuppliesNavigator: undefined;
 };
 
 export const userNavigationRef =
@@ -121,17 +133,34 @@ export type PatientNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "PatientNavigator"
 >;
+export type MedicalSuppliesNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "MedicalSuppliesNavigator"
+>;
 
 const UserNavigatorDrawer =
   createDrawerNavigator<UserNavigatorDrawerParamList>();
 
 export default function UserScreen({ navigation, route }: UserNavigatorProps) {
   const { setLogout } = route.params?.params;
-  const [clinic, setClinic] = React.useState<IClinicInfo | any>(null);
+  const [clinic, setClinic] = React.useState<IClinicInfo | undefined>();
+  const [permissions, setPermissions] = React.useState<IStaffPermission[]>([]);
+  const user = useAppSelector(userInfoSelector);
+  const getStaffPermissions = async () => {
+    if (!clinic) return;
+    const response = await staffServices.getPermissions(clinic.id, user?.id);
+    if (response.data) {
+      setPermissions(response.data[0]?.role.permissions);
+    }
+  };
+  React.useEffect(() => {
+    // Get permission in clinic
+    getStaffPermissions();
+  }, [clinic]);
   return (
     <>
       <UserNavigatorDrawer.Navigator
-        initialRouteName="ClinicListNavigator"
+        initialRouteName="SubscriptionNavigator"
         screenOptions={{
           headerStyle: {
             backgroundColor: appColor.white,
@@ -139,7 +168,6 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           headerTintColor: appColor.title,
           headerTitleStyle: {
             fontWeight: "bold",
-            fontFamily: "Montserrat-Bold",
             fontSize: 20,
           },
           headerTitleAlign: "center",
@@ -171,21 +199,8 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
           component={ProfileNavigator}
         />
         <UserNavigatorDrawer.Screen
-          name="ClinicInfoNavigator"
           options={{
-            title: "Thông tin phòng khám",
-            drawerIcon: ({ color }) => (
-              <FontAwesome5 name="clinic-medical" size={24} color={color} />
-            ),
-          }}
-          component={ClinicInfoNavigator}
-          initialParams={{
-            clinic,
-          }}
-        />
-        <UserNavigatorDrawer.Screen
-          options={{
-            title: "Cập nhật thông tin tài khoản",
+            title: "Cập nhật tài khoản",
             drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
             drawerItemStyle: { height: 0 },
           }}
@@ -219,8 +234,20 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
             setClinic,
           }}
         />
-
-        {clinic && (
+        <UserNavigatorDrawer.Screen
+          name="ClinicInfoNavigator"
+          options={{
+            title: "Thông tin phòng khám",
+            drawerIcon: ({ color }) => (
+              <FontAwesome5 name="clinic-medical" size={24} color={color} />
+            ),
+          }}
+          component={ClinicInfoNavigator}
+          initialParams={{
+            clinic,
+          }}
+        />
+        {clinic && user?.moduleId === 2 && (
           <>
             <UserNavigatorDrawer.Screen
               name="RoleNavigator"
@@ -264,6 +291,16 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               component={CategoryPriceScreen}
             />
             <UserNavigatorDrawer.Screen
+              name="MedicalSuppliesNavigator"
+              options={{
+                title: "Kho thuốc, vật tư",
+                drawerIcon: ({ color }) => (
+                  <MaterialIcons name="device-hub" size={24} color={color} />
+                ),
+              }}
+              component={MedicalSuppliesScreen}
+            />
+            <UserNavigatorDrawer.Screen
               name="CalendarNavigator"
               options={{
                 title: "Lịch hẹn khám",
@@ -303,6 +340,116 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               }}
             />
             
+          </>
+        )}
+        {clinic && user?.moduleId === 5 && (
+          <>
+            {/**Quản lý thăm khám bệnh nhân (id = 3) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 3
+            ) !== -1 && (
+              <UserNavigatorDrawer.Screen
+                name="RoleNavigator"
+                options={{
+                  title: "Quản lý nhân viên",
+                  drawerIcon: ({ color }) => (
+                    <FontAwesome name="users" size={24} color={color} />
+                  ),
+                }}
+                component={RoleNavigator}
+              />
+            )}
+            {/**Quản lý danh mục dùng chung (id = 7) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 7
+            ) !== -1 && (
+              <UserNavigatorDrawer.Screen
+                name="CategoryNavigator"
+                options={{
+                  title: "Danh mục, phân loại",
+                  drawerIcon: ({ color }) => (
+                    <MaterialIcons name="category" size={24} color={color} />
+                  ),
+                }}
+                component={CategoryScreen}
+              />
+            )}
+            {/**Quản lý bảng giá dịch vụ (id = 8) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 8
+            ) !== -1 && (
+              <UserNavigatorDrawer.Screen
+                name="CategoryPriceNavigator"
+                options={{
+                  title: "Bảng giá dịch vụ",
+                  drawerIcon: ({ color }) => (
+                    <Entypo name="price-tag" size={24} color={color} />
+                  ),
+                }}
+                component={CategoryPriceScreen}
+              />
+            )}
+            {/**Quản lý kho thuốc, vật tư (id = 5) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 5
+            ) !== -1 && (
+              <UserNavigatorDrawer.Screen
+                name="MedicalSuppliesNavigator"
+                options={{
+                  title: "Kho thuốc, vật tư",
+                  drawerIcon: ({ color }) => (
+                    <MaterialIcons name="device-hub" size={24} color={color} />
+                  ),
+                }}
+                component={MedicalSuppliesScreen}
+              />
+            )}
+            {/**Quản lý lịch hẹn khám (id = 10) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 10
+            ) !== -1 && (
+              <>
+                <UserNavigatorDrawer.Screen
+                  name="CalendarNavigator"
+                  options={{
+                    title: "Lịch hẹn khám",
+                    drawerIcon: ({ color }) => (
+                      <FontAwesome name="calendar" size={24} color={color} />
+                    ),
+                  }}
+                  component={CalendarScreen}
+                />
+                <UserNavigatorDrawer.Screen
+                  name="CreateTaskNavigator"
+                  component={CreateTaskScreen}
+                  options={{
+                    title: "Thêm lịch hẹn",
+                    drawerLabel: () => null, // Set drawerLabel to null to hide it in the drawer
+                    drawerItemStyle: { height: 0 },
+                  }}
+                />
+              </>
+            )}
+            <UserNavigatorDrawer.Screen
+              name="ChattingNavigator"
+              options={{
+                title: "Nhắn tin",
+                drawerIcon: ({ color }) => (
+                  <Entypo name="chat" size={24} color={color} />
+                ),
+              }}
+              component={ChattingNavigator}
+            />
+            <UserNavigatorDrawer.Screen
+              name="NotificationNavigator"
+              options={{
+                title: "Thông báo",
+                drawerIcon: ({ color }) => (
+                  <Ionicons name="notifications" size={24} color={color} />
+                ),
+              }}
+              component={NotificationNavigator}
+            />
           </>
         )}
       </UserNavigatorDrawer.Navigator>
