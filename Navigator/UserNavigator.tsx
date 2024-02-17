@@ -34,7 +34,6 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
-import { NavigationContainerRef } from "@react-navigation/native";
 import { IPatient } from "../types";
 import {
   NavigationContainerRef,
