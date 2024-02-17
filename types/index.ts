@@ -4,3 +4,8 @@ export * from "./chat.types";
 export * from "./appointment.type";
 export * from "./category.types";
 export * from "./clinicService.types";
+export * from "./role.types";
+export * from "./staff.types";
+export * from './patient.types'
+export * from './clinic.types'
+export * from './medical_record.types'

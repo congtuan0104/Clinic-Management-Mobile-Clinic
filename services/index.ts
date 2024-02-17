@@ -5,3 +5,7 @@ export * from "./notification.services";
 export * from "./subscription.services";
 export * from "./category.services";
 export * from "./clinicService.service";
+export * from "./appointment.service";
+export * from "./staff.service";
+export * from "./patient.service";
+export * from "./medical_record.service";

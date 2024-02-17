@@ -55,8 +55,8 @@ const CustomDrawer = (props: any) => {
           <Image
             alignSelf="center"
             bg="#fff"
-            source={{
-              uri: `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
+            source={userInfo?.avatar? {uri: userInfo?.avatar} : {
+               uri: `https://static.vecteezy.com/system/resources/previews/011/675/374/original/man-avatar-image-for-profile-png.png`,
             }}
             size={100}
             borderRadius={100}
@@ -65,7 +65,7 @@ const CustomDrawer = (props: any) => {
           />
           <VStack alignItems="center">
             <Text color="#fff" fontWeight="bold" fontSize="16">
-              {userInfo?.lastName + " " + userInfo?.firstName}
+              {userInfo?.firstName + " " + userInfo?.lastName}
             </Text>
             <Text color="#fff" fontSize="13">
               {userInfo?.email}
