@@ -1,35 +1,37 @@
 import { Box, HStack, Pressable, ScrollView, Text, VStack } from "native-base";
 import { useEffect, useState } from "react";
-import { clinicService } from "../../../services";
-import { useAppDispatch, useAppSelector } from "../../../hooks";
-import { ClinicSelector } from "../../../store";
-import { IRole } from "../../../types/role.types";
-import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
+import { patientApi } from "../../services";
+import { useAppDispatch, useAppSelector } from "../../hooks";
+import { ClinicSelector } from "../../store";
+import { IRole } from "../../types/role.types";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { Ionicons } from "@expo/vector-icons";
-import { appColor } from "../../../theme";
+import { appColor } from "../../theme";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
-import { IClinicMember } from "../../../types/staff.types";
-import AddStaffModal from "./AddStaffModal";
-import { StaffDashboardScreenProps } from "../../../Navigator/StaffInfoNavigator";
+import { IClinicMember, IPatient } from "../../types";
+//import AddStaffModal from "./AddStaffModal";
 
-export default function StaffDashboardScreen({
+import { PatientDashboardProps } from "../../Navigator/PatientNavigator";
+
+export default function PatientScreen({
   navigation,
   route,
-}: StaffDashboardScreenProps) {
+}: PatientDashboardProps) {
   const clinic = useAppSelector(ClinicSelector);
 
-  const [staffList, setStaffList] = useState<IClinicMember[]>([]);
+  const [patientList, setPatientList] = useState<IPatient[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenAddStaffModal, setIsOpenAddStaffModal] =
     useState<boolean>(false);
-  const getStaffList = async () => {
+  const getPatientList = async () => {
     try {
-      if (clinic?.id) {
-        const response = await clinicService.getStaffClinic(clinic?.id);
-        console.log("response: ", response);
+      if (clinic?.id)
+      {
+        const response = await patientApi.getPatients({ clinicId: clinic?.id });
+        console.log('response: ', response);
         if (response.status && response.data) {
-          setStaffList(response.data);
+            setPatientList(response.data)
         } else {
         }
       }
@@ -38,7 +40,7 @@ export default function StaffDashboardScreen({
     }
   };
   useEffect(() => {
-    getStaffList();
+    getPatientList();
   }, [clinic?.id]);
   return (
     <Box
@@ -50,10 +52,11 @@ export default function StaffDashboardScreen({
       alignSelf="center"
       alignItems="center"
       p={5}
-      borderBottomRadius={20}
+      borderRadius={20}
+      mt="5%"
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      {staffList?.length ? (
+      {patientList?.length ? (
         <>
           <HStack
             width="full"
@@ -62,7 +65,7 @@ export default function StaffDashboardScreen({
             mt={-3}
           >
             <Text my="2" fontWeight="bold" fontSize={20}>
-              Danh sách nhân viên
+              Danh sách bệnh nhân
             </Text>
             <Pressable
               onPress={() => {
@@ -78,7 +81,7 @@ export default function StaffDashboardScreen({
           </HStack>
           <ScrollView>
             <VStack space={5}>
-              {staffList.map((staff: IClinicMember, index: number) => {
+              {patientList.map((patient: IPatient, index: number) => {
                 return (
                   <Box
                     borderRadius={20}
@@ -94,25 +97,24 @@ export default function StaffDashboardScreen({
                         color={appColor.textTitle}
                         fontSize={16}
                       >
-                        {staff.users? staff.users.firstName + " " + staff.users.lastName : null}
+                        {patient? patient.firstName + " " + patient.lastName : null}
                       </Text>
-                      <HStack space={2} alignItems="center">
-                        {staff.role.name !== "Admin" && (
+                      <HStack space={2} alignItems="center">                       
                           <>
                             <Pressable
                               onPress={() => {
-                                navigation.navigate("StaffInfo", { staff });
+                                navigation.navigate("PatientInfoNavigator", { patient });
                               }}
                             >
                               <FontAwesome5
-                                name="edit"
+                                name="eye"
                                 size={18}
                                 color={appColor.primary}
                               />
                             </Pressable>
                             <Pressable
                               onPress={() => {
-                                navigation.navigate("StaffSchedule");
+                                //navigation.navigate("StaffSchedule");
                               }}
                             >
                               <MaterialIcons
@@ -122,29 +124,25 @@ export default function StaffDashboardScreen({
                               />
                             </Pressable>
                           </>
-                        )}
+                        
                       </HStack>
                     </HStack>
-                    {staff.role.name === "Admin" && (
-                      <Text fontWeight="bold" color="#ca3c0c">
-                        Chủ phòng khám
-                      </Text>
-                    )}
+                    
                     <HStack space={4} mt={2}>
                       <VStack>
                         <Text fontWeight="bold" color={appColor.textSecondary}>
                           Email:
                         </Text>
                         <Text fontWeight="bold" color={appColor.textSecondary}>
-                          Vai trò:
+                          Trạng thái:
                         </Text>
                       </VStack>
                       <VStack>
                         <Text color={appColor.textSecondary}>
-                          {staff.users? staff.users.email: null}
+                          {patient? patient.email: null}
                         </Text>
                         <Text color={appColor.textSecondary}>
-                          {staff.role.name}
+                          {patient.emailVerified? "Đã xác thực": "Chưa xác thực"}
                         </Text>
                       </VStack>
                     </HStack>
@@ -157,13 +155,13 @@ export default function StaffDashboardScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
-      <AddStaffModal
+      {/* <AddStaffModal
         isOpen={isOpenAddStaffModal}
         onClose={() => {
           setIsOpenAddStaffModal(false);
         }}
         getStaffList={getStaffList}
-      />
+      /> */}
     </Box>
   );
 }

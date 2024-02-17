@@ -89,7 +89,7 @@ export default class Task extends React.Component<TaskProps> {
               style={styles.btnContainer}
               onPress={() => setModalVisible(false)}
             >
-              <Text style={styles.textContainer}>Cancel</Text>
+              <Text style={styles.textContainer}>Quay lại</Text>
             </Pressable>
           </View>
         </View>

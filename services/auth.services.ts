@@ -12,7 +12,8 @@ import {
   IResetPasswordResponse,
   IUserInfoUpdateRequest,
   IChangePasswordRequest,
-  IAddNewPasswordRequest
+  IAddNewPasswordRequest,
+  IUserInfo
 } from "../types";
 import { IInviteClinicMemberRequest } from "../types/clinic.types";
 
@@ -91,5 +92,9 @@ export const authApi = {
 
   addNewPassword(data: IAddNewPasswordRequest): Promise<any> {
     return axiosClient.put('/auth/add-new-password', data);
-  }
+  },
+
+  findUserByEmail(email: string, emailVerified?: string): Promise<IApiResponse<IUserInfo>> {
+    return axiosClient.get('/auth/find-user-by-email', { params: { email, emailVerified } });
+  },
 };

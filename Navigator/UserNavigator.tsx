@@ -11,6 +11,9 @@ import UpdateUserInfoScreen from "../screens/UpdateUserInfo/UpdateUserInfoScreen
 import CategoryScreen from "../screens/CategoryScreen/CategoryScreen";
 import CategoryPriceScreen from "../screens/CategoryPriceScreen/CategoryPriceScreen";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
+import PatientScreen from "../screens/PatientScreen/PatientScreen";
+import PatientInfo from "../screens/PatientInfoScreen/PatientInfo";
+import MedicalRecord from "../screens/MedicalRecord/MedicalRecord";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import SubscriptionNavigator from "./SubscriptionNavigator";
@@ -21,6 +24,9 @@ import { useToast } from "native-base";
 import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
+
+import PatientNavigator from "./PatientNavigator";
+
 // Import custom icons
 import { Ionicons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
@@ -28,6 +34,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
+import { NavigationContainerRef } from "@react-navigation/native";
+import { IPatient } from "../types";
 import {
   NavigationContainerRef,
   useFocusEffect,
@@ -38,6 +46,7 @@ import { useAppSelector } from "../hooks";
 import { userInfoSelector } from "../store";
 import { IStaffPermission } from "../types/staff.types";
 import { staffServices } from "../services/staff.servcies";
+
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -53,6 +62,7 @@ export type UserNavigatorDrawerParamList = {
     setClinic: (clinic: IClinicInfo) => void;
   };
   RoleNavigator: undefined;
+  PatientNavigator: undefined;
   CalendarNavigator: undefined;
   CreateTaskNavigator: undefined;
   CategoryNavigator: undefined;
@@ -119,6 +129,10 @@ export type CategoryPriceNavigatorProps = NativeStackScreenProps<
   "CategoryPriceNavigator"
 >;
 
+export type PatientNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "PatientNavigator"
+>;
 export type MedicalSuppliesNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "MedicalSuppliesNavigator"
@@ -246,6 +260,17 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               component={RoleNavigator}
             />
             <UserNavigatorDrawer.Screen
+              name="PatientNavigator"
+              options={{
+                title: "Bệnh nhân",
+                drawerIcon: ({ color }) => (
+                  <FontAwesome5 name="hospital-user" size={24} color={color} />
+                ),
+              }}
+              component={PatientNavigator}
+            />
+            
+            <UserNavigatorDrawer.Screen
               name="CategoryNavigator"
               options={{
                 title: "Danh mục, phân loại",
@@ -314,6 +339,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 drawerItemStyle: { height: 0 },
               }}
             />
+            
           </>
         )}
         {clinic && user?.moduleId === 5 && (
