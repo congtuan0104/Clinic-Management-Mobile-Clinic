@@ -27,9 +27,7 @@ import ToastAlert from "../../components/Toast/Toast";
 import Task from "./Task";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const leftArrowIcon = require("../../assets/left-arrow.png");
-const rightArrowIcon = require("../../assets/right-arrow.png");
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const datesWhitelist = [
@@ -74,8 +72,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       selectedColor: "#2E66E7",
     },
   });
-  // const vietnamMoment = moment().utcOffset("+07:00"); // Đặt múi giờ UTC+7 cho Việt Nam
-  // const formattedDate = `${vietnamMoment.format("YYYY-MM-DD")}`;
+
   const toast = useToast();
   const handleReRender = () => setIsReRender(!isReRender)
   const getAppointmentList = async () => {
@@ -95,10 +92,14 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       console.log(error);
     }
   };
-  useEffect(() =>{
-    getAppointmentList();
-    console.log('vao day')
-  }, [clinic?.id, isReRender])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getAppointmentList();
+      //console.log('vao day')
+    }, [clinic?.id, isReRender])
+  );
+
 
   console.log('render lai trang lich')
   const currentDateAppointments: Array<IAppointment> = useMemo(() => {
