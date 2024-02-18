@@ -103,7 +103,7 @@ export default function CreateTask({
         const response = await clinicServiceApi.getClinicServices(clinic!.id);
         //console.log('response: ', response);
         if (response.status && response.data) {
-          setClinicServiceList(response.data)
+          setClinicServiceList(response.data.filter(service => !service.isDisabled))
         } else {
         }
       }
