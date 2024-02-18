@@ -46,7 +46,6 @@ import { userInfoSelector } from "../store";
 import { IStaffPermission } from "../types/staff.types";
 import { staffServices } from "../services/staff.servcies";
 
-
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
   ProfileNavigator: undefined;
@@ -268,7 +267,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               }}
               component={PatientNavigator}
             />
-            
+
             <UserNavigatorDrawer.Screen
               name="CategoryNavigator"
               options={{
@@ -338,7 +337,6 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                 drawerItemStyle: { height: 0 },
               }}
             />
-            
           </>
         )}
         {clinic && user?.moduleId === 5 && (

@@ -4,7 +4,6 @@ import {
 } from "@react-navigation/native-stack";
 import { ClinicInfoNavigatorProps } from "./UserNavigator";
 import ClinicInfoDashboardScreen from "../screens/ClinicInfoScreen/ClinicInfoDashboardScreen";
-import { IClinicInfo } from "../types/clinic.types";
 import { useEffect } from "react";
 import { clinicService } from "../services";
 import { useToast } from "native-base";
