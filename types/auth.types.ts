@@ -1,10 +1,11 @@
 // Interface cho thông tin người dùng
 
 // ModuleID:
-// 1. Admin
-// 2. Clinic
-// 3. Patient
-// 4. User
+// Admin = 1,
+// ClinicOwner = 2,
+// Patient = 3,
+// Guest = 4,
+// ClinicStaff = 5,
 
 export interface IUserInfo {
   id: string;

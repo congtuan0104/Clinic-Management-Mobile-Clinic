@@ -125,19 +125,12 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
   const dispatch = useAppDispatch();
   const onInvalid = (errors: any) => console.error(errors);
 
-  // const handleSetEmail = async () => {
-  //   let emailSet = getValues('email')
-  //   setEmailInput(emailSet)
-  //   console.log("email trong handle :", emailInput)
-  //   console.log('emaiSet', emailSet)
-  // };
 
   const handleCheckEmail = async () => {
     //console.log("go here");
     console.log('getvalues:', getValues("email"));
     let emailSet = getValues('email')
-    //await handleSetEmail();
-    //console.log("email luc nay:", emailInput)
+    
     if (!emailSet || emailSet == "") {
       toast.show({
         render: () => {
