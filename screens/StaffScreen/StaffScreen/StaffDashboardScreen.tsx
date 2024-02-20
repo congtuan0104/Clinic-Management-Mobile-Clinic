@@ -105,7 +105,7 @@ export default function StaffDashboardScreen({
                               }}
                             >
                               <FontAwesome5
-                                name="edit"
+                                name="eye"
                                 size={18}
                                 color={appColor.primary}
                               />
