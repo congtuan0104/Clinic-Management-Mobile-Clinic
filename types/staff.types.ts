@@ -86,8 +86,8 @@ export interface ICreateStaffPayload {
 
 export interface IStaff {
   id: number;
-  experience: number;
-  description: string;
+  experience?: number;
+  description?: string;
   specialize: string;
   clinicId: string;
   isDisabled: boolean;
