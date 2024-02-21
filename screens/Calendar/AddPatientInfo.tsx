@@ -90,7 +90,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
     setDatePickerVisible(false);
   };
 
-  console.log("render lai");
+  //console.log("render lai");
   const handleConfirm = (date: Date) => {
     console.log("date confirmed: ", date);
     hideDatePicker();
@@ -122,7 +122,6 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
       anamnesis: "",
   }
   });
-  const dispatch = useAppDispatch();
   const onInvalid = (errors: any) => console.error(errors);
 
 

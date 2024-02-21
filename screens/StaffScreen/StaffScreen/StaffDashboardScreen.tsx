@@ -21,8 +21,10 @@ export default function StaffDashboardScreen({
 
   const [staffList, setStaffList] = useState<IClinicMember[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpenAddStaffModal, setIsOpenAddStaffModal] =
-    useState<boolean>(false);
+  const [isOpenAddStaffModal, setIsOpenAddStaffModal] = useState<boolean>(false);
+  const [isReRender, setIsReRender] = useState(false);
+
+  const handleReRender = () => setIsReRender(!isReRender)
   const getStaffList = async () => {
     try {
       if (clinic?.id) {
@@ -39,7 +41,7 @@ export default function StaffDashboardScreen({
   };
   useEffect(() => {
     getStaffList();
-  }, [clinic?.id]);
+  }, [clinic?.id, isReRender]);
   return (
     <Box
       bgColor="#fff"
@@ -162,7 +164,7 @@ export default function StaffDashboardScreen({
         onClose={() => {
           setIsOpenAddStaffModal(false);
         }}
-        getStaffList={getStaffList}
+        handleReRender={handleReRender}
       />
     </Box>
   );
