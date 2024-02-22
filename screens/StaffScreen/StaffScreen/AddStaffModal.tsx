@@ -20,18 +20,18 @@ import { ClinicSelector, changeRoles } from "../../../store";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useEffect, useState } from "react";
 import ToastAlert from "../../../components/Toast/Toast";
-import { authApi, clinicService, staffApi } from "../../../services";
+import { authApi, clinicService, staffApi, clinicServiceApi } from "../../../services";
 import { useAppSelector } from "../../../hooks";
 import {
   IRole,
-  IRoleCreate,
+  IClinicService,
   IRolePermission,
   ICreateStaffPayload,
 } from "../../../types";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-
+import { MultipleSelectList } from 'react-native-dropdown-select-list'
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { appColor } from "../../../theme";
 import { AuthModule, PERMISSION } from "../../../enums";
@@ -90,12 +90,14 @@ export default function AddStaffModal({
   const clinic = useAppSelector(ClinicSelector);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [roleList, setRoleList] = useState<IRole[]>([]);
+  const [serviceList, setServiceList] = useState<IClinicService[]>([]);
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>();
   const [isDisplay, setIsDisplay] = useState<boolean>(false);
   const [isNotifyVisible, setIsNotifyVisible] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [selectedService, setSelectedService] = useState([]);
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
@@ -148,8 +150,22 @@ export default function AddStaffModal({
     }
   };
 
+  const getServices = async () => {
+    try {
+      const response = await clinicServiceApi.getClinicServices(clinic!.id, false);
+      console.log('service list:', response)
+      if (response.status && response.data) {
+        setServiceList(response.data);
+      } else {
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   useEffect(() => {
     getRoleList();
+    getServices();
   }, [clinic?.id]);
    // danh sách role được phép thực hiện dịch vụ
    const doctorRoles = roleList?.
@@ -207,6 +223,7 @@ export default function AddStaffModal({
   
   const handleResetInput = () => {
     reset(); 
+    setSelectedService([]);
     setIsDisplay(false);
     setIsDisabled(false);
   }
@@ -230,6 +247,7 @@ export default function AddStaffModal({
       specialize: data.specialize,
       experience: data.experience,
       description: data.description,
+      services: selectedService?.map(Number) || [],
     };
     console.log('payload:', payload);
     if (payload.userId && payload.userId !== "") {
@@ -253,6 +271,7 @@ export default function AddStaffModal({
       });
     }
     reset();
+    setSelectedService([]);
     setIsLoading(false);
     setIsDisplay(false);
     setIsDisabled(false);
@@ -570,6 +589,26 @@ export default function AddStaffModal({
           {errors.experience && <Text>{errors.experience.message}</Text>}
         </FormControl.ErrorMessage>
       </FormControl>
+      <FormControl.Label
+          _text={{
+            bold: true,
+          }}
+        >
+          Dịch vụ
+        </FormControl.Label>
+      <MultipleSelectList 
+        setSelected={(val: any) => setSelectedService(val)} 
+        data={serviceList?.map((service) => ({
+          key: service.id.toString(),
+          value: service.serviceName,
+        })) || []} 
+        save="key"
+        onSelect={() => console.log('val:', selectedService)} 
+        label="Dịch vụ"
+        placeholder="Chọn dịch vụ"
+        boxStyles={{borderRadius:20, marginTop:-15, backgroundColor: "#F5F5FC",}}
+        searchPlaceholder="Tìm kiếm"
+    />
     </>
     )
   };
