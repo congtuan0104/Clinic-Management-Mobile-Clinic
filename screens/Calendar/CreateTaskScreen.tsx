@@ -66,7 +66,7 @@ export default function CreateTask({
     try {
       if (clinic?.id)
       {
-        const response = await staffApi.getStaffs({ clinicId: clinic?.id });
+        const response = await staffApi.getStaffs({ clinicId: clinic?.id, isDisabled: false, isAcceptInvite: true });
         console.log('response: ', response);
         if (response.status && response.data) {
           setDoctorList(response.data)
