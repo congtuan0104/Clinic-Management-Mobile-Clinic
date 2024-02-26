@@ -28,6 +28,7 @@ import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { patientApi, authApi } from "../../services";
 import { AuthModule } from "../../enums";
+import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 
 const chevronDown = require("../../assets/chevron_down.png");
 interface IFormData {
@@ -35,8 +36,8 @@ interface IFormData {
   lastName: string;
   email: string;
   phone?: string;
-  birth: string;
-  gender: string;
+  birth?: string;
+  gender?: string;
   address?: string;
   idCard?: string;
   healthInsuranceCode?: string;
@@ -53,8 +54,8 @@ const schema: yup.ObjectSchema<IFormData> = yup.object({
     .required("Email không được để trống")
     .email("Email không hợp lệ"),
   phone: yup.string().required("Số điện thoại không được để trống"),
-  birth: yup.string().required("Ngày sinh không được để trống"),
-  gender: yup.string().required("Giới tính không được để trống"),
+  birth: yup.string(),
+  gender: yup.string(),
   address: yup.string(),
   idCard: yup.string(),
   healthInsuranceCode: yup.string(),
@@ -68,6 +69,7 @@ interface AddPatientInfoProps {
 
 const dataBlood = ["O", "A", "B", "AB"];
 const genderData = ["Nam", "Nữ", "Không rõ"];
+const genNum = ["1","0","-1"];
 
 const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
   setIsAddPatientInfo,
@@ -75,10 +77,11 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
   const [selectedDate, setSelectedDate] = useState<Date>();
   const [datePickerVisible, setDatePickerVisible] = useState<boolean>(false);
   const [userId, setUserId] = useState<string>();
-  const [emailInput, setEmailInput] = useState<string>();
+  //const [emailInput, setEmailInput] = useState<string>();
   const [isDisplay, setIsDisplay] = useState<boolean>(false);
   const [isNotifyVisible, setIsNotifyVisible] = useState<boolean>(false);
   const [isDisabled, setIsDisabled] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const showDatePicker = () => {
     setDatePickerVisible(true);
   };
@@ -87,7 +90,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
     setDatePickerVisible(false);
   };
 
-  console.log("render lai");
+  //console.log("render lai");
   const handleConfirm = (date: Date) => {
     console.log("date confirmed: ", date);
     hideDatePicker();
@@ -106,7 +109,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
   } = useForm<IFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
-      email: emailInput? emailInput : "",
+      email: "",
       firstName: "",
       lastName: "",
       phone: "",
@@ -119,21 +122,14 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
       anamnesis: "",
   }
   });
-  const dispatch = useAppDispatch();
+  const onInvalid = (errors: any) => console.error(errors);
 
-  const handleSetEmail = async () => {
-    let emailSet = getValues('email')
-    setEmailInput(emailSet)
-    console.log("email trong handle :", emailInput)
-    console.log('emaiSet', emailSet)
-  };
 
   const handleCheckEmail = async () => {
-    console.log("go here");
+    //console.log("go here");
     console.log('getvalues:', getValues("email"));
     let emailSet = getValues('email')
-    await handleSetEmail();
-    console.log("email luc nay:", emailInput)
+    
     if (!emailSet || emailSet == "") {
       toast.show({
         render: () => {
@@ -161,8 +157,9 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         setValue("firstName", patientInfo.firstName);
         setValue("lastName", patientInfo.lastName);
         patientInfo.phone && setValue("phone", patientInfo.phone);
-        setValue("address", patientInfo.address);
-        setValue("birth", patientInfo.birthday!);
+        patientInfo.address && setValue("address", patientInfo.address);
+        patientInfo.birthday && setSelectedDate(new Date(patientInfo.birthday))
+        patientInfo.birthday && setValue("birth", patientInfo.birthday);
         setValue(
           "gender",
           patientInfo.gender ? patientInfo.gender.toString() : ""
@@ -170,12 +167,16 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         setIsNotifyVisible(true);
         setIsDisabled(true);
       } else {
-        if (res.status && res.data === null) setIsDisplay(true);
+        if (res.status && res.data === null) {
+          setIsDisplay(true);
+          setIsDisabled(true)
+        }
       }
     }
   };
 
   const handleSubmitForm = async (data: IFormData) => {
+    setIsLoading(true)
     if (!clinic?.id) return;
 
     const payload: ICreatePatientPayload = {
@@ -187,6 +188,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         lastName: data.lastName,
         phone: data.phone,
         address: data.address,
+        birthday: selectedDate? selectedDate : undefined,
         gender: Number(data.gender),
       },
       bloodGroup: data.blood,
@@ -202,7 +204,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
     console.log(payload);
 
     const res = await patientApi.createPatient(payload);
-
+    setIsLoading(false);
     if (res.status) {
       toast.show({
         render: () => {
@@ -231,6 +233,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         p={5}
         borderRadius={20}
       >
+        <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
         <DateTimePickerModal
           date={selectedDate}
           isVisible={datePickerVisible}
@@ -285,7 +288,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
                     Tài khoản bệnh nhân đã tồn tại, thông tin bệnh nhân sẽ được
                     cập nhật từ tài khoản này
                   </Text>
-                  <Button onPress={handleCheckEmail}>Xác nhận</Button>
+                  <Button onPress={handleSubmit(handleSubmitForm, onInvalid)}>Xác nhận</Button>
                 </>
               ) : null}
               {isDisplay ? (
@@ -376,6 +379,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
                           data={genderData}
                           onSelect={(selectedItem, index) => {
                             console.log(selectedItem, index);
+                            setValue("gender", genNum[index])
                           }}
                           defaultButtonText={"Chọn giới tính"}
                           buttonTextAfterSelection={(selectedItem, index) => {
@@ -662,7 +666,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
           <Text>Quay lại</Text>
         </Button>
         {isDisplay ? (
-          <Button flex={1} onPress={handleSubmit(handleSubmitForm)}>
+          <Button flex={1} onPress={handleSubmit(handleSubmitForm, onInvalid)}>
             Thêm bệnh nhân
           </Button>
         ) : null}

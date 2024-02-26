@@ -14,7 +14,7 @@ import {
 } from "react-native";
 import { useToast } from 'native-base'
 import { useAppSelector } from "../../hooks";
-import { ClinicSelector } from "../../store";
+import { ClinicSelector, userInfoSelector } from "../../store";
 import SelectDropdown from "react-native-select-dropdown";
 import { CalendarNavigatorProps } from "../../Navigator/UserNavigator";
 import Timeline from "react-native-timeline-flatlist";
@@ -22,14 +22,12 @@ import moment from "moment";
 import { CalendarList } from "react-native-calendars";
 import { IAppointment, IUpdateAppointmentPayload } from "../../types";
 import { APPOINTMENT_STATUS } from "../../enums";
-import { appointmentApi } from '../../services'
+import { appointmentApi, staffApi } from '../../services'
 import ToastAlert from "../../components/Toast/Toast";
 import Task from "./Task";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { SafeAreaView } from "react-native-safe-area-context";
-
-const leftArrowIcon = require("../../assets/left-arrow.png");
-const rightArrowIcon = require("../../assets/right-arrow.png");
+import { useFocusEffect } from '@react-navigation/native';
 
 
 const datesWhitelist = [
@@ -51,6 +49,7 @@ type TimelineEventsState = {
 
 export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   const clinic = useAppSelector(ClinicSelector);
+  const userInfo = useAppSelector(userInfoSelector);
   //const [markedDate, setMarkedDate] = useState<Date[]>([]);
   const [currentDate, setCurrentDate] = useState(
     `${moment().format("YYYY")}-${moment().format("MM")}-${moment().format(
@@ -74,16 +73,24 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       selectedColor: "#2E66E7",
     },
   });
-  // const vietnamMoment = moment().utcOffset("+07:00"); // Đặt múi giờ UTC+7 cho Việt Nam
-  // const formattedDate = `${vietnamMoment.format("YYYY-MM-DD")}`;
+
   const toast = useToast();
   const handleReRender = () => setIsReRender(!isReRender)
   const getAppointmentList = async () => {
     try {
       if (clinic?.id)
       {
+        let doctorId: number | undefined
+        if (userInfo?.moduleId === 5) //Nếu userInfo là bác sĩ
+          {
+            const doctorInfo = await staffApi.getStaffs({userId: userInfo.id})
+            console.log('doctor Info:', doctorInfo)
+            if (doctorInfo.status && doctorInfo.data)
+              doctorId = doctorInfo.data[0].id
+          }
         const response = await appointmentApi.getAppointmentList({
-          clinicId: clinic?.id,
+          clinicId: clinic?.id, 
+          doctorId: doctorId
         })
         console.log('response: ', response);
         if (response.status && response.data) {
@@ -95,10 +102,14 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       console.log(error);
     }
   };
-  useEffect(() =>{
-    getAppointmentList();
-    console.log('vao day')
-  }, [clinic?.id, isReRender])
+
+  useFocusEffect(
+    React.useCallback(() => {
+      getAppointmentList();
+      //console.log('vao day')
+    }, [clinic?.id, isReRender])
+  );
+
 
   console.log('render lai trang lich')
   const currentDateAppointments: Array<IAppointment> = useMemo(() => {

@@ -3,14 +3,13 @@ import { useEffect, useState } from "react";
 import { patientApi } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../hooks";
 import { ClinicSelector } from "../../store";
-import { IRole } from "../../types/role.types";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
 import { Ionicons } from "@expo/vector-icons";
 import { appColor } from "../../theme";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 import { IClinicMember, IPatient } from "../../types";
-//import AddStaffModal from "./AddStaffModal";
+import AddPatientInfo from "../Calendar/AddPatientInfo";
 
 import { PatientDashboardProps } from "../../Navigator/PatientNavigator";
 
@@ -22,8 +21,8 @@ export default function PatientScreen({
 
   const [patientList, setPatientList] = useState<IPatient[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpenAddStaffModal, setIsOpenAddStaffModal] =
-    useState<boolean>(false);
+  const [isAddPatient, setIsAddPatient] = useState<boolean>(false)
+
   const getPatientList = async () => {
     try {
       if (clinic?.id)
@@ -42,20 +41,10 @@ export default function PatientScreen({
   useEffect(() => {
     getPatientList();
   }, [clinic?.id]);
-  return (
-    <Box
-      bgColor="#fff"
-      minWidth="90%"
-      maxWidth="90%"
-      minH="95%"
-      maxH="95%"
-      alignSelf="center"
-      alignItems="center"
-      p={5}
-      borderRadius={20}
-      mt="5%"
-    >
-      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
+
+  const renderPatientList = () => {
+    return (
+      <>
       {patientList?.length ? (
         <>
           <HStack
@@ -69,7 +58,7 @@ export default function PatientScreen({
             </Text>
             <Pressable
               onPress={() => {
-                setIsOpenAddStaffModal(true);
+                setIsAddPatient(true);
               }}
             >
               <Ionicons
@@ -155,6 +144,27 @@ export default function PatientScreen({
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
+      </>
+    )
+  }
+  return (
+    <Box
+      bgColor="#fff"
+      minWidth="90%"
+      maxWidth="90%"
+      minH="95%"
+      maxH="95%"
+      alignSelf="center"
+      alignItems="center"
+      p={5}
+      borderRadius={20}
+      mt="5%"
+    >
+      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
+      {
+        isAddPatient? <AddPatientInfo setIsAddPatientInfo={setIsAddPatient} />
+        : renderPatientList()
+      }
       {/* <AddStaffModal
         isOpen={isOpenAddStaffModal}
         onClose={() => {

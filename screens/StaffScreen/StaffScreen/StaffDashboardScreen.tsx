@@ -24,6 +24,9 @@ export default function StaffDashboardScreen({
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isOpenAddStaffModal, setIsOpenAddStaffModal] =
     useState<boolean>(false);
+  const [isReRender, setIsReRender] = useState(false);
+
+  const handleReRender = () => setIsReRender(!isReRender);
   const getStaffList = async () => {
     try {
       if (clinic?.id) {
@@ -41,7 +44,7 @@ export default function StaffDashboardScreen({
   useFocusEffect(
     useCallback(() => {
       getStaffList();
-    }, [clinic?.id])
+    }, [clinic?.id, isReRender])
   );
   return (
     <Box
@@ -110,7 +113,7 @@ export default function StaffDashboardScreen({
                               }}
                             >
                               <FontAwesome5
-                                name="edit"
+                                name="eye"
                                 size={18}
                                 color={appColor.primary}
                               />
@@ -167,7 +170,7 @@ export default function StaffDashboardScreen({
         onClose={() => {
           setIsOpenAddStaffModal(false);
         }}
-        getStaffList={getStaffList}
+        handleReRender={handleReRender}
       />
     </Box>
   );

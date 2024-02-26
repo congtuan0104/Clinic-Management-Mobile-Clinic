@@ -66,7 +66,7 @@ export default function CreateTask({
     try {
       if (clinic?.id)
       {
-        const response = await staffApi.getStaffs({ clinicId: clinic?.id });
+        const response = await staffApi.getStaffs({ clinicId: clinic?.id, isDisabled: false, isAcceptInvite: true });
         console.log('response: ', response);
         if (response.status && response.data) {
           setDoctorList(response.data)
@@ -103,7 +103,7 @@ export default function CreateTask({
         const response = await clinicServiceApi.getClinicServices(clinic!.id);
         //console.log('response: ', response);
         if (response.status && response.data) {
-          setClinicServiceList(response.data)
+          setClinicServiceList(response.data.filter(service => !service.isDisabled))
         } else {
         }
       }
