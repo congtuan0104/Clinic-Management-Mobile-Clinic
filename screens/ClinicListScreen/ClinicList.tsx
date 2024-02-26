@@ -10,10 +10,8 @@ import {
   Text,
   Pressable,
   useToast,
-  Image,
 } from "native-base";
 import { appColor } from "../../theme";
-import { FontAwesome } from "@expo/vector-icons";
 import dayjs from "dayjs";
 import { changeClinic, updateClinic, userInfoSelector } from "../../store";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -79,7 +77,8 @@ export default function ClinicListNavigator({
   };
 
   const handleRenewSubscription = (clinicItem: IClinicInfo) => {
-    alert("Gia hạn gói!");
+    setChosenClinic(clinicItem);
+    setOpenPaymentModal(true);
   };
   const handleActiveClinic = (clinicItem: IClinicInfo) => {
     setChosenClinic(clinicItem);
@@ -219,7 +218,13 @@ export default function ClinicListNavigator({
                           <Text flex={3} fontWeight="bold" color="red.600">
                             Đang thanh toán
                           </Text>
-                          <Button flex={1} p={1}>
+                          <Button
+                            onPress={() => {
+                              handleRenewSubscription(clinicItem);
+                            }}
+                            flex={1}
+                            p={1}
+                          >
                             Thanh toán
                           </Button>
                         </>

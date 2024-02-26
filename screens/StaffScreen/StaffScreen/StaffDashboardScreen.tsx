@@ -1,5 +1,5 @@
 import { Box, HStack, Pressable, ScrollView, Text, VStack } from "native-base";
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { clinicService } from "../../../services";
 import { useAppDispatch, useAppSelector } from "../../../hooks";
 import { ClinicSelector } from "../../../store";
@@ -12,6 +12,7 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { IClinicMember } from "../../../types/staff.types";
 import AddStaffModal from "./AddStaffModal";
 import { StaffDashboardScreenProps } from "../../../Navigator/StaffInfoNavigator";
+import { useFocusEffect } from "@react-navigation/native";
 
 export default function StaffDashboardScreen({
   navigation,
@@ -37,9 +38,11 @@ export default function StaffDashboardScreen({
       console.log(error);
     }
   };
-  useEffect(() => {
-    getStaffList();
-  }, [clinic?.id]);
+  useFocusEffect(
+    useCallback(() => {
+      getStaffList();
+    }, [clinic?.id])
+  );
   return (
     <Box
       bgColor="#fff"
@@ -94,7 +97,9 @@ export default function StaffDashboardScreen({
                         color={appColor.textTitle}
                         fontSize={16}
                       >
-                        {staff.users? staff.users.firstName + " " + staff.users.lastName : null}
+                        {staff.users
+                          ? staff.users.firstName + " " + staff.users.lastName
+                          : null}
                       </Text>
                       <HStack space={2} alignItems="center">
                         {staff.role.name !== "Admin" && (
@@ -141,7 +146,7 @@ export default function StaffDashboardScreen({
                       </VStack>
                       <VStack>
                         <Text color={appColor.textSecondary}>
-                          {staff.users? staff.users.email: null}
+                          {staff.users ? staff.users.email : null}
                         </Text>
                         <Text color={appColor.textSecondary}>
                           {staff.role.name}
