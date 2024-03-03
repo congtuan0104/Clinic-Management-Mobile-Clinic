@@ -93,8 +93,8 @@ export default function ChattingNavigator({
                   alt="ff"
                 />
                 <Text fontWeight="bold" fontSize="16">
-                  {route.params.groupName.length > 20
-                    ? `${route.params.groupName.slice(0, 20)}...`
+                  {route.params.groupName.length > 17
+                    ? `${route.params.groupName.slice(0, 17)}...`
                     : route.params.groupName}
                 </Text>
               </HStack>
@@ -103,6 +103,9 @@ export default function ChattingNavigator({
           headerRight: () => (
             <>
               <Pressable
+                _pressed={{
+                  backgroundColor: "primary.100",
+                }}
                 borderWidth={1}
                 mr={2}
                 borderColor={appColor.primary}
@@ -116,11 +119,14 @@ export default function ChattingNavigator({
               >
                 <FontAwesome5
                   name="video"
-                  size={24}
+                  size={20}
                   color={appColor.backgroundPrimary}
                 />
               </Pressable>
               <Pressable
+                _pressed={{
+                  backgroundColor: "primary.100",
+                }}
                 borderWidth={1}
                 borderColor={appColor.primary}
                 borderRadius={100}
@@ -135,7 +141,7 @@ export default function ChattingNavigator({
               >
                 <Ionicons
                   name="ellipsis-vertical-outline"
-                  size={24}
+                  size={20}
                   color={appColor.primary}
                 />
               </Pressable>
