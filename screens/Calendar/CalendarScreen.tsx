@@ -56,7 +56,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       "DD"
     )}`
   );
-  //const [todoList, setTodoList] = useState<Array<IAppointment> | undefined>();
+  const [color, setColor] = useState<string>()
   const [appointmentList, setAppointmentList] = useState<IAppointment[]>([])
   const [currentDay, setCurrentDay] = useState(moment().format());
   const [isModalVisible, setModalVisible] = useState(false);
@@ -166,15 +166,38 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   const getTimelineEvents = async () => {
     console.log("appointment list in settimelineevent: ", currentDateAppointments);
     const newArray = currentDateAppointments?.map((item: IAppointment) => {
-      // console.log('start time string: ', startTimeString);
+      // Khởi tạo biến circleColor và lineColor với mặc định là "#009688"
+      let circleColor = "#009688";
+      let lineColor = "#009688";
+
+      // Kiểm tra trạng thái của mục để xác định màu của vòng tròn và đường thẳng
+      switch(item.status) {
+          case APPOINTMENT_STATUS.CONFIRM:
+              circleColor = "#51cf66";
+              lineColor = "#51cf66"; // Cập nhật lineColor nếu cần thiết
+              break;
+          case APPOINTMENT_STATUS.PENDING:
+              circleColor = "#fcc419";
+              lineColor = "#fcc419"; // Cập nhật lineColor nếu cần thiết
+              break;
+          case APPOINTMENT_STATUS.CHECK_IN:
+              circleColor = "#6964ff";
+              lineColor = "#6964ff"; // Cập nhật lineColor nếu cần thiết
+              break;
+          // Thêm các trạng thái khác nếu cần thiết
+          default:
+              circleColor = "#009688";
+              lineColor = "#009688"; // Mặc định là "#009688" nếu không có trạng thái khớp
+      }
+
       return {
-        time: item.startTime,
-        title: item.patient.firstName + ' ' + item.patient.lastName,
-        description: item.description? item.description : "",
-        circleColor: "#009688",
-        lineColor: "#009688",
+          time: item.startTime,
+          title: "Bệnh nhân: " + item.patient.firstName + ' ' + item.patient.lastName,
+          description: "Bác sĩ: " + item.doctor.firstName + ' ' + item.doctor.lastName,
+          circleColor: circleColor, // Sử dụng biến circleColor đã được xác định
+          lineColor: lineColor // Sử dụng biến lineColor đã được xác định
       };
-    });
+  });
 
     setTimelineEvents(newArray);
     console.log("timelineevent in gettimelineEvent after: ", timelineEvents);
@@ -235,6 +258,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
           <Task {...{ setModalVisible, isModalVisible }}>
             
             <View style={styles.taskContainer}>
+              <ScrollView>
               <Text
                 style={{
                   color: "#9CAAC4",
@@ -270,6 +294,21 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
               <View style={{ flexDirection: "row" }}>
                 <Text>{selectedTask?.doctor.firstName + ' ' + selectedTask?.doctor.lastName}</Text>
               </View>
+              <View style={styles.notesContent} />
+              <Text
+                  style={{
+                    color: "#9CAAC4",
+                    fontSize: 16,
+                    fontWeight: "600",
+                    marginVertical: 10,
+                    marginTop: 0
+                  }}
+                >
+                  Yêu cầu dịch vụ
+                </Text>
+                <View style={{ flexDirection: "row" }}>
+                  <Text>{selectedTask?.clinicServices.serviceName}</Text>
+                </View>
               <View style={styles.notesContent} />
               <View>
                 <Text
@@ -393,6 +432,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                 </Text>
               </TouchableOpacity>
             </View>
+              </ScrollView>
             </View>
           </Task>
         </>
@@ -430,6 +470,8 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
             }}
             nestedScrollEnabled={true}
           >
+            <View style={{ width: 350,
+                height: 350, alignSelf: 'center', borderRadius: 15, overflow: 'hidden' }}>
             <CalendarList
               style={{
                 width: 350,
@@ -459,8 +501,8 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                 selectedDayBackgroundColor: "#2E66E7",
                 selectedDayTextColor: "#ffffff",
                 todayTextColor: "#2E66E7",
-                backgroundColor: "#eaeef7",
-                calendarBackground: "#eaeef7",
+                backgroundColor: '#ffffff',
+                calendarBackground: '#ffffff',
                 textDisabledColor: "#d9dbe0",
               }}
               //markedDates={selectedDay}
@@ -470,24 +512,27 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
 
               }}
             />
-            <Timeline
-              style={{ flex: 1 }}
-              data={timelineEvents}
-              separator={true}
-              circleSize={20}
-              circleColor="rgb(45,156,219)"
-              lineColor="rgb(45,156,219)"
-              timeContainerStyle={{ minWidth: 52, marginTop: 0 }}
-              timeStyle={{
-                textAlign: "center",
-                backgroundColor: "#ff9797",
-                color: "white",
-                padding: 5,
-                borderRadius: 13,
-                overflow: "hidden"
-              }}
-              descriptionStyle={{ color: "gray" }}
-            />
+            </View>
+            <View
+            style={{marginTop: 10}}>
+              <Timeline
+                style={{ flex: 1 }}
+                data={timelineEvents}
+                separator={true}
+                circleSize={20}
+                
+                timeContainerStyle={{ minWidth: 52, marginTop: 0 }}
+                timeStyle={{
+                  textAlign: "center",
+                  fontWeight: "bold",
+                  color: "black",
+                  padding: 5,
+                  borderRadius: 13,
+                  overflow: "hidden"
+                }}
+                descriptionStyle={{ color: "gray" }}
+              />
+            </View>
             {currentDateAppointments?.map((item) => (
               <TouchableOpacity
                 onPress={() => {
@@ -513,7 +558,9 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                         height: 12,
                         width: 12,
                         borderRadius: 6,
-                        backgroundColor: "#64d4d2",
+                        backgroundColor: item.status === APPOINTMENT_STATUS.CONFIRM ? "#51cf66" :
+                        item.status === APPOINTMENT_STATUS.PENDING ? "#fcc419" :
+                        item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "#64d4d2",
                         marginRight: 8,
                       }}
                     />
@@ -524,10 +571,26 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                         fontWeight: "700",
                       }}
                     >
-                      {item.patient.firstName + " " + item.patient.lastName}
-                    </Text>
-                  </View>
+                      {"Bệnh nhân: " + item.patient.firstName + " " + item.patient.lastName}
+                    </Text>                   
+                  </View>                  
                   <View>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        marginLeft: 20,
+                        marginTop: 10,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          color: "#BBBBBB",
+                          fontSize: 16,
+                          marginRight: 5,
+                        }}
+                      >{"Thời gian: " + item.startTime}</Text>
+                      
+                    </View>
                     <View
                       style={{
                         flexDirection: "row",
@@ -538,16 +601,9 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                         style={{
                           color: "#BBBBBB",
                           fontSize: 16,
-                          marginRight: 5,
-                        }}
-                      >{item.startTime + "    "}</Text>
-                      <Text
-                        style={{
-                          color: "#BBBBBB",
-                          fontSize: 16,
                         }}
                       >
-                        {item.description}
+                        {"Trạng thái: " + item.status}
                       </Text>
                     </View>
                   </View>
@@ -556,7 +612,9 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                   style={{
                     height: 80,
                     width: 5,
-                    backgroundColor: "#64d4d2",
+                    backgroundColor: item.status === APPOINTMENT_STATUS.CONFIRM ? "#51cf66" :
+                     item.status === APPOINTMENT_STATUS.PENDING ? "#fcc419" :
+                     item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "#64d4d2",
                     borderRadius: 5,
                   }}
                 />
