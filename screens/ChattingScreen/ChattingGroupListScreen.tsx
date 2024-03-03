@@ -137,11 +137,10 @@ export default function ChattingGroupListScreen({
                       }}
                       color={appColor.textTitle}
                       style={{ flexWrap: "wrap" }}
-                      fontWeight="light"
-                      fontSize={20}
+                      fontSize={18}
                     >
-                      {item.groupName.length > 30
-                        ? `${item.groupName.slice(0, 30)}...`
+                      {item.groupName.length > 22
+                        ? `${item.groupName.slice(0, 22)}...`
                         : item.groupName}
                     </Text>
                     <Text
