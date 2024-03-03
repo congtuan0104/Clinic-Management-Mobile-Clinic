@@ -190,7 +190,7 @@ export default function ClinicListNavigator({
                             onPress={() => {
                               handleGoToClinic(clinicItem);
                             }}
-                            flex={1}
+                            flex={2}
                             p={1}
                           >
                             Xem
@@ -203,7 +203,7 @@ export default function ClinicListNavigator({
                             Đã hết hạn
                           </Text>
                           <Button
-                            flex={1}
+                            flex={2}
                             p={1}
                             onPress={() => {
                               handleRenewSubscription(clinicItem);
@@ -222,7 +222,7 @@ export default function ClinicListNavigator({
                             onPress={() => {
                               handleRenewSubscription(clinicItem);
                             }}
-                            flex={1}
+                            flex={2}
                             p={1}
                           >
                             Thanh toán
@@ -238,7 +238,7 @@ export default function ClinicListNavigator({
                             onPress={() => {
                               handleActiveClinic(clinicItem);
                             }}
-                            flex={1}
+                            flex={2}
                             p={1}
                           >
                             Kích hoạt
@@ -250,7 +250,7 @@ export default function ClinicListNavigator({
                           <Text flex={3} fontWeight="bold" color="amber.600">
                             Pending
                           </Text>
-                          <Button flex={1} p={1}>
+                          <Button flex={2} p={1}>
                             status = 5
                           </Button>
                         </>

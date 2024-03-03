@@ -26,6 +26,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { planService } from "../../../services/plan.services";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
+import { appColor } from "../../../theme";
 
 interface IProps {
   isEditMode?: boolean;
@@ -72,9 +73,58 @@ export default function AddRoleModal({
       if (planId) {
         const response = await planService.getPlanById(planId);
         if (response.status && response.data) {
-          const newPermissionList = response.data.planOptions.map(
+          let newPermissionList = response.data.planOptions.map(
             (item: any) => ({ ...item, checked: false })
           );
+          try {
+            // Lấy dữ liệu các role
+            const response = await clinicService.getUserGroupRole(clinic?.id);
+            if (response.status && response.data) {
+              const roleInfoIndex = response.data.findIndex(
+                (role) => role.name === selectedRole?.name
+              );
+              for (
+                let i = 0;
+                i < response.data[roleInfoIndex].rolePermissions.length;
+                i++
+              ) {
+                if (response.data !== undefined) {
+                  const item = response.data[roleInfoIndex].rolePermissions[i];
+                  const permissionIndex = newPermissionList.findIndex(
+                    (permissionItem: any) => permissionItem.id === item.id
+                  );
+                  if (permissionIndex !== -1) {
+                    newPermissionList[permissionIndex].checked = true;
+                  }
+                }
+              }
+            } else {
+              // Thông báo lỗi
+              toast.show({
+                render: () => {
+                  return (
+                    <ToastAlert
+                      title="Thất bại!"
+                      description="Có lỗi xảy ra! Vui lòng thử lại sau."
+                      status="error"
+                    />
+                  );
+                },
+              });
+            }
+          } catch (error: any) {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại!"
+                    description={error.response.data.message}
+                    status="error"
+                  />
+                );
+              },
+            });
+          }
           setPermissionList(newPermissionList);
         }
       } else {
@@ -93,7 +143,6 @@ export default function AddRoleModal({
         name: selectedRole?.name,
         description: selectedRole?.description,
       });
-      //  Handle checkbox list
       getPermissionList();
       // const tempPermissions = permissionList;
       // if (selectedRole?.rolePermissions) {
@@ -284,7 +333,7 @@ export default function AddRoleModal({
       }}
     >
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
-      <Modal.Content width="90%">
+      <Modal.Content width="90%" borderRadius={20}>
         <Modal.CloseButton />
         <Modal.Header>
           {!isEditMode ? "Thêm vai trò" : "Cập nhật vai trò"}
@@ -297,6 +346,7 @@ export default function AddRoleModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên vai trò
@@ -328,6 +378,7 @@ export default function AddRoleModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả{" "}
@@ -360,6 +411,7 @@ export default function AddRoleModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Chọn các quyền{" "}

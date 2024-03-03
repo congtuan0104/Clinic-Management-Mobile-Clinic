@@ -20,7 +20,12 @@ import { ClinicSelector, changeRoles } from "../../../store";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useEffect, useState } from "react";
 import ToastAlert from "../../../components/Toast/Toast";
-import { authApi, clinicService, staffApi, clinicServiceApi } from "../../../services";
+import {
+  authApi,
+  clinicService,
+  staffApi,
+  clinicServiceApi,
+} from "../../../services";
 import { useAppSelector } from "../../../hooks";
 import {
   IRole,
@@ -31,7 +36,7 @@ import {
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
-import { MultipleSelectList } from 'react-native-dropdown-select-list'
+import { MultipleSelectList } from "react-native-dropdown-select-list";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { appColor } from "../../../theme";
 import { AuthModule, PERMISSION } from "../../../enums";
@@ -84,7 +89,7 @@ const schema = yup.object().shape({
 export default function AddStaffModal({
   isOpen,
   onClose,
-  handleReRender
+  handleReRender,
 }: IProps) {
   const toast = useToast();
   const clinic = useAppSelector(ClinicSelector);
@@ -140,7 +145,6 @@ export default function AddStaffModal({
   const getRoleList = async () => {
     try {
       const response = await clinicService.getUserGroupRole(clinic?.id);
-      console.log('role list:', response)
       if (response.status && response.data) {
         setRoleList(response.data);
       } else {
@@ -152,8 +156,10 @@ export default function AddStaffModal({
 
   const getServices = async () => {
     try {
-      const response = await clinicServiceApi.getClinicServices(clinic!.id, false);
-      console.log('service list:', response)
+      const response = await clinicServiceApi.getClinicServices(
+        clinic!.id,
+        false
+      );
       if (response.status && response.data) {
         setServiceList(response.data);
       } else {
@@ -161,17 +167,18 @@ export default function AddStaffModal({
     } catch (error) {
       console.log(error);
     }
-  }
+  };
 
   useEffect(() => {
     getRoleList();
     getServices();
   }, [clinic?.id]);
-   // danh sách role được phép thực hiện dịch vụ
-   const doctorRoles = roleList?.
-   filter(role => role.rolePermissions.
-     map(p => p.id).
-     includes(PERMISSION.PERFORM_SERVICE)).map(role => role.id);
+  // danh sách role được phép thực hiện dịch vụ
+  const doctorRoles = roleList
+    ?.filter((role) =>
+      role.rolePermissions.map((p) => p.id).includes(PERMISSION.PERFORM_SERVICE)
+    )
+    .map((role) => role.id);
   /**
    * Kiểm tra nhân viên đã tồn tại chưa
    */
@@ -186,7 +193,7 @@ export default function AddStaffModal({
     const res = await authApi.findUserByEmail(getValues("email"));
     if (res.status && res.data) {
       const userInfoStaff = res.data;
-      
+
       if (userInfoStaff.moduleId !== AuthModule.ClinicStaff) {
         setError("email", { message: "Email đã tồn tại" });
         return;
@@ -201,7 +208,7 @@ export default function AddStaffModal({
         setError("email", { message: "Nhân viên đã tồn tại" });
         return;
       }
-      
+
       setUserId(userInfoStaff.id);
       setValue("firstName", userInfoStaff.firstName);
       setValue("lastName", userInfoStaff.lastName);
@@ -211,26 +218,26 @@ export default function AddStaffModal({
         setSelectedDate(new Date(userInfoStaff.birthday));
       userInfoStaff.gender &&
         setValue("gender", userInfoStaff.gender.toString());
-        setIsNotifyVisible(true);
-        setIsDisabled(true);
+      setIsNotifyVisible(true);
+      setIsDisabled(true);
     } else {
       if (res.status && res.data === null) {
         setIsDisplay(true);
-        setIsDisabled(true)
+        setIsDisabled(true);
       }
     }
   };
-  
+
   const handleResetInput = () => {
-    reset(); 
+    reset();
     setSelectedService([]);
     setIsDisplay(false);
     setIsDisabled(false);
-  }
+  };
   const onSubmit = async (data: IFormData) => {
     setIsLoading(true);
     if (!clinic?.id) return;
-    console.log('IFormData:', data)
+    console.log("IFormData:", data);
     const payload: ICreateStaffPayload = {
       clinicId: clinic.id,
       userId: userId,
@@ -241,7 +248,7 @@ export default function AddStaffModal({
         phone: data.phone,
         address: data.address,
         gender: Number(data.gender),
-        birthday: selectedDate? selectedDate : undefined,
+        birthday: selectedDate ? selectedDate : undefined,
       },
       roleId: Number(data.roleId),
       specialize: data.specialize,
@@ -249,7 +256,7 @@ export default function AddStaffModal({
       description: data.description,
       services: selectedService?.map(Number) || [],
     };
-    console.log('payload:', payload);
+    console.log("payload:", payload);
     if (payload.userId && payload.userId !== "") {
       delete payload.userInfo;
     }
@@ -538,90 +545,96 @@ export default function AddStaffModal({
   const renderInputDoctor = () => {
     return (
       <>
-      <FormControl isRequired isInvalid={errors.specialize ? true : false}>
-        <FormControl.Label
-          _text={{
-            bold: true,
-          }}
-        >
-          Chuyên môn
-        </FormControl.Label>
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              type="text"
-              placeholder="Nhập chuyên môn"
-              onChangeText={onChange}
-              value={value}
-              onBlur={onBlur}
-            />
-          )}
-          name="specialize"
-        />
-        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-          {errors.specialize && <Text>{errors.specialize.message}</Text>}
-        </FormControl.ErrorMessage>
-      </FormControl>
+        <FormControl isRequired isInvalid={errors.specialize ? true : false}>
+          <FormControl.Label
+            _text={{
+              bold: true,
+            }}
+          >
+            Chuyên môn
+          </FormControl.Label>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                type="text"
+                placeholder="Nhập chuyên môn"
+                onChangeText={onChange}
+                value={value}
+                onBlur={onBlur}
+              />
+            )}
+            name="specialize"
+          />
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            {errors.specialize && <Text>{errors.specialize.message}</Text>}
+          </FormControl.ErrorMessage>
+        </FormControl>
 
-      <FormControl isRequired isInvalid={errors.experience ? true : false}>
+        <FormControl isRequired isInvalid={errors.experience ? true : false}>
+          <FormControl.Label
+            _text={{
+              bold: true,
+            }}
+          >
+            Kinh nghiệm
+          </FormControl.Label>
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <Input
+                type="text"
+                placeholder="Nhập số năm kinh nghiệm"
+                onChangeText={onChange}
+                value={value?.toString()}
+                onBlur={onBlur}
+              />
+            )}
+            name="experience"
+          />
+          <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
+            {errors.experience && <Text>{errors.experience.message}</Text>}
+          </FormControl.ErrorMessage>
+        </FormControl>
         <FormControl.Label
-          _text={{
-            bold: true,
-          }}
-        >
-          Kinh nghiệm
-        </FormControl.Label>
-        <Controller
-          control={control}
-          render={({ field: { onChange, onBlur, value } }) => (
-            <Input
-              type="text"
-              placeholder="Nhập số năm kinh nghiệm"
-              onChangeText={onChange}
-              value={value?.toString()}
-              onBlur={onBlur}
-            />
-          )}
-          name="experience"
-        />
-        <FormControl.ErrorMessage leftIcon={<WarningOutlineIcon size="xs" />}>
-          {errors.experience && <Text>{errors.experience.message}</Text>}
-        </FormControl.ErrorMessage>
-      </FormControl>
-      <FormControl.Label
           _text={{
             bold: true,
           }}
         >
           Dịch vụ
         </FormControl.Label>
-      <MultipleSelectList 
-        setSelected={(val: any) => setSelectedService(val)} 
-        data={serviceList?.map((service) => ({
-          key: service.id.toString(),
-          value: service.serviceName,
-        })) || []} 
-        save="key"
-        onSelect={() => console.log('val:', selectedService)} 
-        label="Dịch vụ"
-        placeholder="Chọn dịch vụ"
-        boxStyles={{borderRadius:20, marginTop:-15, backgroundColor: "#F5F5FC",}}
-        searchPlaceholder="Tìm kiếm"
-    />
-    </>
-    )
+        <MultipleSelectList
+          setSelected={(val: any) => setSelectedService(val)}
+          data={
+            serviceList?.map((service) => ({
+              key: service.id.toString(),
+              value: service.serviceName,
+            })) || []
+          }
+          save="key"
+          onSelect={() => console.log("val:", selectedService)}
+          label="Dịch vụ"
+          placeholder="Chọn dịch vụ"
+          boxStyles={{
+            borderRadius: 20,
+            marginTop: -15,
+            backgroundColor: "#F5F5FC",
+          }}
+          searchPlaceholder="Tìm kiếm"
+        />
+      </>
+    );
   };
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       <DateTimePickerModal
-          date={selectedDate}
-          isVisible={datePickerVisible}
-          mode="date"
-          onConfirm={handleConfirm}
-          onCancel={hideDatePicker}
-        />
+        date={selectedDate}
+        isVisible={datePickerVisible}
+        mode="date"
+        onConfirm={handleConfirm}
+        onCancel={hideDatePicker}
+      />
       <Modal.Content width="90%">
         <Modal.CloseButton />
         <Modal.Header>Thêm nhân viên</Modal.Header>
@@ -630,7 +643,11 @@ export default function AddStaffModal({
             <ScrollView minWidth="100%" maxWidth="100%">
               <VStack space={5}>
                 {/**Email input */}
-                <FormControl isRequired isInvalid={errors.email ? true : false} isReadOnly={isDisabled}>
+                <FormControl
+                  isRequired
+                  isInvalid={errors.email ? true : false}
+                  isReadOnly={isDisabled}
+                >
                   <FormControl.Label
                     _text={{
                       bold: true,
@@ -644,10 +661,8 @@ export default function AddStaffModal({
                       <Input
                         type="text"
                         placeholder="Nhập email"
-                        
                         onChangeText={onChange}
                         value={value}
-                        
                       />
                     )}
                     name="email"
@@ -673,7 +688,11 @@ export default function AddStaffModal({
                   </>
                 ) : null}
                 {isDisplay ? renderInput() : null}
-                {doctorRoles?.includes(Number(watch('roleId'))) ? renderInputDoctor() : <></>}
+                {doctorRoles?.includes(Number(watch("roleId"))) ? (
+                  renderInputDoctor()
+                ) : (
+                  <></>
+                )}
               </VStack>
             </ScrollView>
           </Box>
@@ -688,10 +707,11 @@ export default function AddStaffModal({
             >
               Hủy
             </Button>
-            {isDisplay? 
+            {isDisplay ? (
               <Button onPress={handleSubmit(onSubmit)}>Lưu</Button>
-              : <></>
-            }
+            ) : (
+              <></>
+            )}
             <Button onPress={handleResetInput}>Xóa thông tin</Button>
           </Button.Group>
         </Modal.Footer>
