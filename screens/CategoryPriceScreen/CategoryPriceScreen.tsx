@@ -14,6 +14,7 @@ import { IClinicService } from "../../types";
 import DeleteDialog from "./DeleteDialog";
 import { CategoryPriceNavigatorProps } from "../../Navigator/UserNavigator";
 import { Searchbar } from "react-native-paper";
+const { format } = require("number-currency-format");
 
 export default function StaffDashboardScreen({
   navigation,
@@ -112,13 +113,11 @@ export default function StaffDashboardScreen({
         <>
           <HStack
             width="full"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             alignItems="center"
-            mt={-3}
+            mt={0}
+            mb={3}
           >
-            <Text my="2" fontWeight="bold" fontSize={20}>
-              Bảng giá dịch vụ
-            </Text>
             <Pressable
               onPress={() => {
                 setIsOpenAddServiceModal(true);
@@ -130,6 +129,9 @@ export default function StaffDashboardScreen({
                 color={appColor.primary}
               />
             </Pressable>
+            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
+              Tạo dịch vụ mới
+            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5}>
@@ -198,7 +200,11 @@ export default function StaffDashboardScreen({
                             </VStack>
                             <VStack>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.price + "đ"}
+                                {format(serviceItem.price, {
+                                  decimalsDigits: 0,
+                                  decimalSeparator: "",
+                                })}
+                                đ
                               </Text>
                               <Text color={appColor.textSecondary}>
                                 {serviceItem.isDisabled
@@ -275,7 +281,11 @@ export default function StaffDashboardScreen({
                             </VStack>
                             <VStack>
                               <Text color={appColor.textSecondary}>
-                                {serviceItem.price + "đ"}
+                                {format(serviceItem.price, {
+                                  decimalsDigits: 0,
+                                  decimalSeparator: "",
+                                })}
+                                đ
                               </Text>
                               <Text color={appColor.textSecondary}>
                                 {serviceItem.isDisabled
