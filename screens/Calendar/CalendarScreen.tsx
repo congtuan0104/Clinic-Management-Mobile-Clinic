@@ -479,9 +479,11 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                 alignSelf: 'center', 
               }}
               current={currentDay}
-              minDate={moment().format()}
+              //minDate={moment().format()}
+              pastScrollRange={12}
+              allowSelectionOutOfRange={true}
               horizontal
-              pastScrollRange={0}
+              
               pagingEnabled
               calendarWidth={350}
               onDayPress={(day) => {
