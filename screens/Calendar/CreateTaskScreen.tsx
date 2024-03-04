@@ -119,6 +119,8 @@ export default function CreateTask({
 
   const handleSubmit = async () => {
     setIsLoading(true);
+    const lastTwoChars = startTime.slice(-2); // Lấy 2 ký tự cuối cùng
+    const firstThreeChars = startTime.slice(0, 3); // Lấy 3 ký tự đầu tiên
     const payload: INewAppointmentPayload = {
       clinicId: clinic!.id,
       doctorId: doctorSelected!.id,
@@ -126,7 +128,7 @@ export default function CreateTask({
       serviceId: serviceSelected!.id,
       date: currentDay,
       startTime: startTime? startTime : "",
-      endTime: startTime? startTime : "",
+      endTime: lastTwoChars==="00"? firstThreeChars + "15" : firstThreeChars + "45",
       description: notesText,
       status: APPOINTMENT_STATUS.CONFIRM
     }
