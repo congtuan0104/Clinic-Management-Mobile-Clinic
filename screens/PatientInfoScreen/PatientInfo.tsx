@@ -109,7 +109,7 @@ export default function StaffInfoScreen({
                   });
                 }}
               >
-                Xem hồ sơ bệnh án
+                Xem lịch sử khám bệnh
               </Button>
             </HStack>
             <HStack width="full">
