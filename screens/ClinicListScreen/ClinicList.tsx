@@ -106,22 +106,28 @@ export default function ClinicListNavigator({
         >
           <HStack justifyContent="flex-start" alignItems="center" mt={0} mb={3}>
             {user?.moduleId === 2 && (
-              <Pressable
-                onPress={() => {
-                  navigation.navigate("SubscriptionNavigator");
-                }}
-                mr={2}
-              >
-                <Ionicons
-                  name="add-circle-outline"
-                  size={25}
-                  color={appColor.primary}
-                />
-              </Pressable>
+              <>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("SubscriptionNavigator");
+                  }}
+                  mr={2}
+                >
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={25}
+                    color={appColor.primary}
+                  />
+                </Pressable>
+                <Text
+                  color={appColor.inputLabel}
+                  fontWeight="bold"
+                  fontSize={16}
+                >
+                  Thêm phòng khám
+                </Text>
+              </>
             )}
-            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
-              Thêm phòng khám
-            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5}>
@@ -292,22 +298,28 @@ export default function ClinicListNavigator({
               mb={3}
             >
               {user?.moduleId === 2 && (
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("SubscriptionNavigator");
-                  }}
-                  mr={2}
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={25}
-                    color={appColor.primary}
-                  />
-                </Pressable>
+                <>
+                  <Pressable
+                    onPress={() => {
+                      navigation.navigate("SubscriptionNavigator");
+                    }}
+                    mr={2}
+                  >
+                    <Ionicons
+                      name="add-circle-outline"
+                      size={25}
+                      color={appColor.primary}
+                    />
+                  </Pressable>
+                  <Text
+                    color={appColor.inputLabel}
+                    fontWeight="bold"
+                    fontSize={16}
+                  >
+                    Thêm phòng khám
+                  </Text>
+                </>
               )}
-              <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
-                Thêm phòng khám
-              </Text>
             </HStack>
             <Text fontSize={20} color="gray.500">
               Hiện tại bạn chưa có hoặc tham gia bất kì phòng khám nào
