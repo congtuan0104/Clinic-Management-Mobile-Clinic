@@ -110,7 +110,7 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
                 ? "Nam"
                 : userInfo?.gender === 0
                 ? "Nữ"
-                : ""}
+                : "Chưa cập nhật"}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
