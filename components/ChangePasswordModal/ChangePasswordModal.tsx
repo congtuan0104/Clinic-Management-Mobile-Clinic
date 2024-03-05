@@ -125,7 +125,7 @@ const ChangePasswordModal = (props: any) => {
     <Modal isOpen={showModal} onClose={() => setShowModal(false)}>
       <Modal.Content borderRadius={20}>
         <Modal.CloseButton />
-        <Modal.Header backgroundColor="secondary.200">
+        <Modal.Header>
           <Text fontWeight="bold" fontSize={16}>
             Đổi mật khẩu
           </Text>

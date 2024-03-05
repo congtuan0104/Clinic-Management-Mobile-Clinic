@@ -62,17 +62,16 @@ export default function StaffDashboardScreen({
         <>
           <HStack
             width="full"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             alignItems="center"
-            mt={-3}
+            mt={0}
+            mb={3}
           >
-            <Text my="2" fontWeight="bold" fontSize={20}>
-              Danh sách nhân viên
-            </Text>
             <Pressable
               onPress={() => {
                 setIsOpenAddStaffModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -80,6 +79,9 @@ export default function StaffDashboardScreen({
                 color={appColor.primary}
               />
             </Pressable>
+            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
+              Thêm nhân viên
+            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5}>

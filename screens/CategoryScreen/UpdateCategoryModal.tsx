@@ -125,6 +125,7 @@ export default function UpdateCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên danh mục
@@ -153,6 +154,7 @@ export default function UpdateCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Ghi chú
@@ -184,6 +186,7 @@ export default function UpdateCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả

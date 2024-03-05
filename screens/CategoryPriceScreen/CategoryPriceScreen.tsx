@@ -123,6 +123,7 @@ export default function StaffDashboardScreen({
               onPress={() => {
                 setIsOpenAddServiceModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"

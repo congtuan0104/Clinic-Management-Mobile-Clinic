@@ -175,6 +175,7 @@ export default function AddServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên dịch vụ
@@ -203,6 +204,7 @@ export default function AddServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Giá dịch vụ
@@ -231,6 +233,7 @@ export default function AddServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Loại dịch vụ
@@ -278,6 +281,7 @@ export default function AddServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả dịch vụ
@@ -344,7 +348,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#D4D4D5",
   },
-  dropdown1BtnTxtStyle: { color: "black", textAlign: "left", fontSize: 13 },
+  dropdown1BtnTxtStyle: { color: "#B0B0B0", textAlign: "left", fontSize: 15 },
   dropdown1DropdownStyle: {
     backgroundColor: "#EFEFEF",
     marginTop: -70,

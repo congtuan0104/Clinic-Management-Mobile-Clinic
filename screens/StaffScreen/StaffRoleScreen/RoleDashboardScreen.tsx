@@ -7,6 +7,7 @@ import {
   Text,
   VStack,
   useToast,
+  Pressable,
 } from "native-base";
 import { ClinicSelector, changeRoles, userInfoSelector } from "../../../store";
 import { appColor } from "../../../theme";
@@ -19,7 +20,6 @@ import AddRoleModal from "./AddRoleModal";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
-import { Pressable } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import DeleteRoleModal from "./DeleteRoleModal";
 export default function RoleDashboardScreen({
@@ -71,17 +71,16 @@ export default function RoleDashboardScreen({
         <>
           <HStack
             width="full"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             alignItems="center"
-            mt={-3}
+            mt={0}
+            mb={3}
           >
-            <Text my="2" fontSize={20} fontWeight="bold" flex-start>
-              Danh sách vai trò
-            </Text>
             <Pressable
               onPress={() => {
                 setIsOpenModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -89,6 +88,9 @@ export default function RoleDashboardScreen({
                 color={appColor.primary}
               />
             </Pressable>
+            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
+              Thêm vai trò
+            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5}>

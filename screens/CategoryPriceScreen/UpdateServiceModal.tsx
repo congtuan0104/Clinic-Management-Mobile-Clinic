@@ -174,6 +174,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên dịch vụ
@@ -202,6 +203,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Giá dịch vụ
@@ -230,6 +232,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Loại dịch vụ
@@ -277,6 +280,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả dịch vụ
@@ -310,6 +314,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Trạng thái dịch vụ

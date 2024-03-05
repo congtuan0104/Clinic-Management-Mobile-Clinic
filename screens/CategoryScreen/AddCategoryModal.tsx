@@ -141,6 +141,7 @@ export default function AddCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Loại danh mục
@@ -184,6 +185,7 @@ export default function AddCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên danh mục
@@ -212,6 +214,7 @@ export default function AddCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Ghi chú
@@ -243,6 +246,7 @@ export default function AddCategoryModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả
