@@ -31,7 +31,6 @@ export default function StaffDashboardScreen({
     try {
       if (clinic?.id) {
         const response = await clinicService.getStaffClinic(clinic?.id);
-        console.log("response: ", response);
         if (response.status && response.data) {
           setStaffList(response.data);
         } else {
@@ -120,7 +119,7 @@ export default function StaffDashboardScreen({
                             </Pressable>
                             <Pressable
                               onPress={() => {
-                                navigation.navigate("StaffSchedule");
+                                // navigation.navigate("StaffSchedule");
                               }}
                             >
                               <MaterialIcons

@@ -7,13 +7,13 @@ import { Feather } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { StaffInfoNavigatorScreenProps } from "./RoleNavigator";
 import StaffDashboardScreen from "../screens/StaffScreen/StaffScreen/StaffDashboardScreen";
-import StaffInfoScreen from "../screens/StaffScreen/StaffScreen/StaffInfoScreen/StaffInfo";
+import StaffInfoScreen from "../screens/StaffScreen/StaffScreen/StaffInfoScreen/StaffInfoScreen";
 import StaffScheduleScreen from "../screens/StaffScreen/StaffScreen/StaffInfoScreen/StaffSchedule";
 import { IClinicMember } from "../types/staff.types";
 export type StaffInfoNavigatorStackParamList = {
   StaffInfo: { staff: IClinicMember };
   StaffDashboard: undefined;
-  StaffSchedule: undefined;
+  StaffSchedule: { staffId: string };
 };
 
 export type StaffDashboardScreenProps = NativeStackScreenProps<
