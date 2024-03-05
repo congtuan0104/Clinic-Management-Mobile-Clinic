@@ -186,8 +186,8 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
               break;
           // Thêm các trạng thái khác nếu cần thiết
           default:
-              circleColor = "#009688";
-              lineColor = "#009688"; // Mặc định là "#009688" nếu không có trạng thái khớp
+              circleColor = "red";
+              lineColor = "red"; // Mặc định là "#009688" nếu không có trạng thái khớp
       }
 
       return {
@@ -562,7 +562,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                         borderRadius: 6,
                         backgroundColor: item.status === APPOINTMENT_STATUS.CONFIRM ? "#51cf66" :
                         item.status === APPOINTMENT_STATUS.PENDING ? "#fcc419" :
-                        item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "#64d4d2",
+                        item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "red",
                         marginRight: 8,
                       }}
                     />
@@ -616,7 +616,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                     width: 5,
                     backgroundColor: item.status === APPOINTMENT_STATUS.CONFIRM ? "#51cf66" :
                      item.status === APPOINTMENT_STATUS.PENDING ? "#fcc419" :
-                     item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "#64d4d2",
+                     item.status === APPOINTMENT_STATUS.CHECK_IN ? "#6964ff" : "red",
                     borderRadius: 5,
                   }}
                 />
