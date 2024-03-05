@@ -1,5 +1,5 @@
-import { Gender } from '../enums';
-import { IRole, IUserInfo } from '.';
+import { Gender } from "../enums";
+import { IRole, IUserInfo } from ".";
 
 export interface IClinicMember {
   id: string;
@@ -14,7 +14,7 @@ export interface IClinicMember {
     gender: number;
     birthday: string;
   } | null;
-  
+
   role: {
     id: number;
     name: string;
@@ -123,4 +123,11 @@ export interface IStaffPermission {
   optionName: string;
   isServiceOption: boolean;
 }
-
+export interface IStaffSchedule {
+  id: number;
+  staffId: number;
+  day: number;
+  startTime: string;
+  endTime: string;
+  isDisabled: boolean;
+}

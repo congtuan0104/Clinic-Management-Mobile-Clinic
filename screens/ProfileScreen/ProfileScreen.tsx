@@ -86,24 +86,26 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
       <Box alignItems="flex-start" width="100%">
         <VStack space="5">
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Họ và tên
             </Text>
-            <Text color={appColor.textSecondary}>
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
               {userInfo?.firstName + " " + userInfo?.lastName}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Địa chỉ
             </Text>
-            <Text color={appColor.textSecondary}>{userInfo?.address}</Text>
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
+              {userInfo?.address ? userInfo.address : "Chưa cập nhật"}
+            </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Giới tính
             </Text>
-            <Text color={appColor.textSecondary}>
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
               {userInfo?.gender === 1
                 ? "Nam"
                 : userInfo?.gender === 0
@@ -112,26 +114,32 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Email
             </Text>
-            <Text color={appColor.textSecondary}>{userInfo?.email}</Text>
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
+              {userInfo?.email}
+            </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Ngày sinh
             </Text>
-            <Text color={appColor.textSecondary}>
-              {dayjs(userInfo?.birthday).format("DD/MM/YYYY")}
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
+              {userInfo?.phone
+                ? dayjs(userInfo?.birthday).format("DD/MM/YYYY")
+                : "Chưa cập nhật"}
             </Text>
           </HStack>
           <HStack justifyContent="space-between" width="full">
-            <Text fontWeight="bold" color={appColor.textSecondary}>
+            <Text flex={1} fontWeight="bold" color={appColor.textSecondary}>
               Số điện thoại
             </Text>
-            <Text color={appColor.textSecondary}>{userInfo?.phone}</Text>
+            <Text flex={2} textAlign="right" color={appColor.textSecondary}>
+              {userInfo?.phone ? userInfo.phone : "Chưa cập nhật"}
+            </Text>
           </HStack>
-          <HStack width="full" mt={10}>
+          <HStack width="full" mt={4}>
             <Button width="full" onPress={handleChangeUserInfo}>
               Thay đổi thông tin cá nhân
             </Button>

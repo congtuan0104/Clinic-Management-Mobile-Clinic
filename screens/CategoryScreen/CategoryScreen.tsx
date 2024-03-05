@@ -1,5 +1,5 @@
 import { Box, HStack, Pressable, ScrollView, Text, VStack } from "native-base";
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from "react-native";
 import { useEffect, useMemo, useState } from "react";
 import { categoryApi } from "../../services";
 import { useAppDispatch, useAppSelector } from "../../hooks";
@@ -13,8 +13,8 @@ import { MaterialIcons } from "@expo/vector-icons";
 import { ICategory } from "../../types";
 import AddCategoryModal from "./AddCategoryModal";
 import { CategoryNavigatorProps } from "../../Navigator/UserNavigator";
-import { List } from 'react-native-paper';
-import UpdateCategoryModal  from './UpdateCategoryModal';
+import { List } from "react-native-paper";
+import UpdateCategoryModal from "./UpdateCategoryModal";
 import DeleteDialog from "./DeleteDialog";
 
 export default function StaffDashboardScreen({
@@ -24,35 +24,36 @@ export default function StaffDashboardScreen({
   const clinic = useAppSelector(ClinicSelector);
   const [categoryList, setCategoryList] = useState<ICategory[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] = useState<boolean>(false);
-  const [isOpenCategoryModal, setIsOpenCategoryModal] = useState<boolean>(false);
+  const [isOpenAddCategoryModal, setIsOpenAddCategoryModal] =
+    useState<boolean>(false);
+  const [isOpenCategoryModal, setIsOpenCategoryModal] =
+    useState<boolean>(false);
   const [category, setCategory] = useState<ICategory>();
   const [expanded, setExpanded] = useState(false);
   const [isOpenDialog, setIsOpenDialog] = useState(false);
   const [isReRender, setIsReRender] = useState(false);
 
-  const handleReRender = () => setIsReRender(!isReRender)
+  const handleReRender = () => setIsReRender(!isReRender);
   const onCloseDialog = () => setIsOpenDialog(false);
 
   const handlePress = () => setExpanded(!expanded);
 
-  const handleSetCategory = async (item: ICategory) => setCategory(item)
+  const handleSetCategory = async (item: ICategory) => setCategory(item);
   const handleOpenUpdateModal = async (item: ICategory) => {
-    await handleSetCategory(item)
-    setIsOpenCategoryModal(true)
-  }
+    await handleSetCategory(item);
+    setIsOpenCategoryModal(true);
+  };
   const handleDeleteButton = async (item: ICategory) => {
-    await handleSetCategory(item)
-    setIsOpenDialog(true)
-  }
+    await handleSetCategory(item);
+    setIsOpenDialog(true);
+  };
   const getCategoryList = async () => {
     try {
-      if (clinic?.id)
-      {
+      if (clinic?.id) {
         const response = await categoryApi.getCategories(clinic?.id);
-        console.log('response: ', response);
+        console.log("response: ", response);
         if (response.status && response.data) {
-          setCategoryList(response.data)
+          setCategoryList(response.data);
         } else {
         }
       }
@@ -81,17 +82,16 @@ export default function StaffDashboardScreen({
         <>
           <HStack
             width="full"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             alignItems="center"
-            mt={-3}
+            mt={0}
+            mb={3}
           >
-            <Text my="2" fontWeight="bold" fontSize={20}>
-              Danh mục, phân loại
-            </Text>
             <Pressable
               onPress={() => {
                 setIsOpenAddCategoryModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -99,60 +99,82 @@ export default function StaffDashboardScreen({
                 color={appColor.primary}
               />
             </Pressable>
+            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
+              Tạo danh mục mới
+            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5} w={"100%"}>
-                <List.Section style={{width: 310}}>
-                    <List.Accordion
-                        title="Loại dịch vụ"
-                        left={props => <List.Icon {...props} icon="folder" />}>
-                        {categoryList.map(item => (
-                          <TouchableOpacity
-                            onPress={() => handleOpenUpdateModal(item)}>
-                            {item.type===1? <List.Item title={item.name} 
-                            right={props => 
-                              <HStack space={3}>
-                                <List.Icon {...props} icon="square-edit-outline" />
-                                <TouchableOpacity onPress={() => handleDeleteButton(item)}>
-                                  <List.Icon {...props} icon="delete" />
-                                </TouchableOpacity>
-                              </HStack>
-                            }/>
-                             : null}
-                          </TouchableOpacity>
-                          ))}
-                    </List.Accordion>
-                    <List.Accordion
-                        title="Loại thiết bị"
-                        left={props => <List.Icon {...props} icon="folder" />}
-                        expanded={expanded}
-                        onPress={handlePress}
-                        style={{ width: '100%' }}> 
-                        {categoryList.map(item => (
-                        <TouchableOpacity
-                          onPress={() => handleOpenUpdateModal(item)}
-                        >
-                          {item.type===2? <List.Item title={item.name} 
-                          right={props => (
+              <List.Section style={{ width: 310 }}>
+                <List.Accordion
+                  title="Loại dịch vụ"
+                  left={(props) => <List.Icon {...props} icon="folder" />}
+                >
+                  {categoryList.map((item) => (
+                    <TouchableOpacity
+                      onPress={() => handleOpenUpdateModal(item)}
+                    >
+                      {item.type === 1 ? (
+                        <List.Item
+                          title={item.name}
+                          right={(props) => (
                             <HStack space={3}>
-                              <List.Icon {...props} icon="square-edit-outline" />
-                              <TouchableOpacity onPress={() => handleDeleteButton(item)}>
+                              <List.Icon
+                                {...props}
+                                icon="square-edit-outline"
+                              />
+                              <TouchableOpacity
+                                onPress={() => handleDeleteButton(item)}
+                              >
                                 <List.Icon {...props} icon="delete" />
                               </TouchableOpacity>
                             </HStack>
-                            )
-                            }
-                            /> : null}
-                        </TouchableOpacity>))}
-                    </List.Accordion>
-                </List.Section>
+                          )}
+                        />
+                      ) : null}
+                    </TouchableOpacity>
+                  ))}
+                </List.Accordion>
+                <List.Accordion
+                  title="Loại thiết bị"
+                  left={(props) => <List.Icon {...props} icon="folder" />}
+                  expanded={expanded}
+                  onPress={handlePress}
+                  style={{ width: "100%" }}
+                >
+                  {categoryList.map((item) => (
+                    <TouchableOpacity
+                      onPress={() => handleOpenUpdateModal(item)}
+                    >
+                      {item.type === 2 ? (
+                        <List.Item
+                          title={item.name}
+                          right={(props) => (
+                            <HStack space={3}>
+                              <List.Icon
+                                {...props}
+                                icon="square-edit-outline"
+                              />
+                              <TouchableOpacity
+                                onPress={() => handleDeleteButton(item)}
+                              >
+                                <List.Icon {...props} icon="delete" />
+                              </TouchableOpacity>
+                            </HStack>
+                          )}
+                        />
+                      ) : null}
+                    </TouchableOpacity>
+                  ))}
+                </List.Accordion>
+              </List.Section>
             </VStack>
           </ScrollView>
         </>
       ) : (
         <Text>Danh sách rỗng</Text>
       )}
-      {category && isOpenCategoryModal ?
+      {category && isOpenCategoryModal ? (
         <UpdateCategoryModal
           isOpen={isOpenCategoryModal}
           onClose={() => {
@@ -160,16 +182,16 @@ export default function StaffDashboardScreen({
           }}
           category={category}
           handleReRender={handleReRender}
-        />: null
-      }
-      {category && isOpenDialog ?
-        <DeleteDialog 
-        isOpen={isOpenDialog}
-        onClose={onCloseDialog}
-        category={category}
-        handleReRender={handleReRender}
-        /> : null
-      }
+        />
+      ) : null}
+      {category && isOpenDialog ? (
+        <DeleteDialog
+          isOpen={isOpenDialog}
+          onClose={onCloseDialog}
+          category={category}
+          handleReRender={handleReRender}
+        />
+      ) : null}
       <AddCategoryModal
         isOpen={isOpenAddCategoryModal}
         onClose={() => {

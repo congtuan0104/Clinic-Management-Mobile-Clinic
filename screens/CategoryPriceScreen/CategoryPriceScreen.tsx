@@ -82,6 +82,7 @@ export default function StaffDashboardScreen({
     getClinicServiceList();
   }, [clinic?.id, isReRender]);
 
+  console.log(clinicServiceList[0]);
   return (
     <Box
       bgColor="#fff"
@@ -122,6 +123,7 @@ export default function StaffDashboardScreen({
               onPress={() => {
                 setIsOpenAddServiceModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -182,7 +184,14 @@ export default function StaffDashboardScreen({
                               </Pressable>
                             </HStack>
                           </HStack>
-
+                          <Text
+                            mt={2}
+                            textAlign="justify"
+                            color={appColor.textSecondary}
+                            fontSize={14}
+                          >
+                            {serviceItem.description}
+                          </Text>
                           <HStack space={4} mt={2}>
                             <VStack>
                               <Text
@@ -263,7 +272,14 @@ export default function StaffDashboardScreen({
                               </Pressable>
                             </HStack>
                           </HStack>
-
+                          <Text
+                            mt={2}
+                            textAlign="justify"
+                            color={appColor.textSecondary}
+                            fontSize={14}
+                          >
+                            {serviceItem.description}
+                          </Text>
                           <HStack space={4} mt={2}>
                             <VStack>
                               <Text

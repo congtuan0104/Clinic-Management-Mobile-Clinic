@@ -16,7 +16,6 @@ import { userInfoSelector } from "../../store";
 import { firebase } from "@react-native-firebase/database";
 import { Notification } from "../../types/notification.types";
 import dayjs from "dayjs";
-import ToastAlert from "../../components/Toast/Toast";
 const NotificationListScreen = ({
   navigation,
   route,
@@ -45,29 +44,6 @@ const NotificationListScreen = ({
     return () => reference.off("child_added", onChildAdd);
   }, [userInfo?.id]);
 
-  const handleReadNotification = (id: string) => {
-    const updatedNotificationList = notificationList.map((notification) => {
-      if (notification.id === id) {
-        return {
-          ...notification,
-          isRead: true,
-        };
-      }
-      return notification;
-    });
-    setInitialNotificationList(updatedNotificationList);
-    setNotificationList(updatedNotificationList);
-  };
-
-  const showUnreadNotification = () => {
-    const unreadNotificationList = notificationList.filter(
-      (notification) => notification.isRead === false
-    );
-    setNotificationList(unreadNotificationList);
-  };
-  const showAllNotification = () => {
-    setNotificationList(initialNotificationList);
-  };
   return (
     <Box
       backgroundColor="#fff"
@@ -80,14 +56,6 @@ const NotificationListScreen = ({
       minH="95%"
       mt="5%"
     >
-      <HStack space={5} mb={5}>
-        <Button width={24} onPress={showAllNotification} borderRadius={20}>
-          Tất cả
-        </Button>
-        <Button width={24} onPress={showUnreadNotification} borderRadius={20}>
-          Chưa đọc
-        </Button>
-      </HStack>
       <ScrollView>
         <VStack space={5}>
           {notificationList?.length ? (
@@ -102,7 +70,6 @@ const NotificationListScreen = ({
                     "DD/MM/YYYY HH:mm:ss"
                   )}
                   isRead={notification.isRead}
-                  handleReadNotification={handleReadNotification}
                 />
               );
             })

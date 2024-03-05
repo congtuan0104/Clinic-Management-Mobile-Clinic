@@ -139,17 +139,16 @@ export default function MedicalSuppliesScreen({
         <>
           <HStack
             width="full"
-            justifyContent="space-between"
+            justifyContent="flex-start"
             alignItems="center"
-            mt={-3}
+            mt={0}
+            mb={3}
           >
-            <Text my="2" fontWeight="bold" fontSize={20}>
-              Kho thuốc, vật tư
-            </Text>
             <Pressable
               onPress={() => {
                 setIsOpenAddServiceModal(true);
               }}
+              mr={2}
             >
               <Ionicons
                 name="add-circle-outline"
@@ -157,6 +156,9 @@ export default function MedicalSuppliesScreen({
                 color={appColor.primary}
               />
             </Pressable>
+            <Text color={appColor.inputLabel} fontWeight="bold" fontSize={16}>
+              Tạo vật tư mới
+            </Text>
           </HStack>
           <ScrollView>
             <VStack space={5}>
@@ -209,7 +211,13 @@ export default function MedicalSuppliesScreen({
                               </Pressable>
                             </HStack>
                           </HStack>
-
+                          <Text
+                            color={appColor.textSecondary}
+                            fontSize={14}
+                            textAlign="justify"
+                          >
+                            {medicalSupply.description}
+                          </Text>
                           <HStack space={4} mt={2}>
                             <VStack>
                               <Text
@@ -310,7 +318,13 @@ export default function MedicalSuppliesScreen({
                               </Pressable>
                             </HStack>
                           </HStack>
-
+                          <Text
+                            color={appColor.textSecondary}
+                            fontSize={14}
+                            textAlign="justify"
+                          >
+                            {medicalSupply.description}
+                          </Text>
                           <HStack space={4} mt={2}>
                             <VStack>
                               <Text

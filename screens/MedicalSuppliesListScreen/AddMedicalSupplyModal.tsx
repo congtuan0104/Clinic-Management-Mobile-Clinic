@@ -227,6 +227,7 @@ export default function AddMedicalSupplyModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên vật tư
@@ -260,6 +261,7 @@ export default function AddMedicalSupplyModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Loại vật tư
@@ -311,6 +313,7 @@ export default function AddMedicalSupplyModal({
                       <FormControl.Label
                         _text={{
                           bold: true,
+                          color: appColor.inputLabel,
                         }}
                       >
                         Số lượng
@@ -345,6 +348,7 @@ export default function AddMedicalSupplyModal({
                       <FormControl.Label
                         _text={{
                           bold: true,
+                          color: appColor.inputLabel,
                         }}
                       >
                         Đơn vị tính
@@ -375,6 +379,7 @@ export default function AddMedicalSupplyModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Hạn sử dụng
@@ -403,6 +408,7 @@ export default function AddMedicalSupplyModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Nhà sản xuất
@@ -431,6 +437,7 @@ export default function AddMedicalSupplyModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Mô tả dịch vụ

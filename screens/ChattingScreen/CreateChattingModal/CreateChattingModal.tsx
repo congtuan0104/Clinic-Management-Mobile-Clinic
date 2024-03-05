@@ -164,14 +164,9 @@ export default function CreateChattingModal({
       }}
     >
       <Modal.Content width="90%" borderRadius={20}>
-        <Modal.CloseButton _icon={{ color: "#fff" }} variant="outline" />
-        <Modal.Header backgroundColor="primary.300">
-          <Text
-            color={appColor.white}
-            fontFamily="body"
-            fontWeight="bold"
-            fontSize={20}
-          >
+        <Modal.CloseButton variant="outline" />
+        <Modal.Header>
+          <Text fontFamily="body" fontWeight="bold" fontSize={16}>
             Tạo nhóm
           </Text>
         </Modal.Header>

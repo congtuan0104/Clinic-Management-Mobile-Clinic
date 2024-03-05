@@ -242,6 +242,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Tên vật tư
@@ -275,6 +276,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Loại vật tư
@@ -326,6 +328,7 @@ export default function UpdateServiceModal({
                       <FormControl.Label
                         _text={{
                           bold: true,
+                          color: appColor.inputLabel,
                         }}
                       >
                         Số lượng
@@ -360,6 +363,7 @@ export default function UpdateServiceModal({
                       <FormControl.Label
                         _text={{
                           bold: true,
+                          color: appColor.inputLabel,
                         }}
                       >
                         Đơn vị tính
@@ -390,6 +394,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Hạn sử dụng
@@ -418,6 +423,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Nhà sản xuất
@@ -444,9 +450,7 @@ export default function UpdateServiceModal({
                 {/* description */}
                 <FormControl isInvalid={errors.description ? true : false}>
                   <FormControl.Label
-                    _text={{
-                      bold: true,
-                    }}
+                    _text={{ color: appColor.inputLabel, bold: true }}
                   >
                     Mô tả dịch vụ
                   </FormControl.Label>
@@ -478,6 +482,7 @@ export default function UpdateServiceModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.inputLabel,
                     }}
                   >
                     Trạng thái dịch vụ

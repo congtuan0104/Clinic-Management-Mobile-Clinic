@@ -1,48 +1,35 @@
 import React from "react";
-import { HStack, Image, Pressable, Text, VStack } from "native-base";
+import { Box, HStack, Image, Pressable, Text, VStack } from "native-base";
 import PropTypes from "prop-types";
+import { appColor } from "../../theme";
 type Props = {
   id: string;
   image: string;
   content: string;
   time: string;
   isRead: boolean;
-  handleReadNotification: (id: string) => void;
 };
-const NotificationItem = ({
-  image,
-  content,
-  time,
-  isRead,
-  id,
-  handleReadNotification,
-}: Props) => {
+const NotificationItem = ({ image, content, time, isRead, id }: Props) => {
   return (
-    <Pressable
-      onPress={() => {
-        handleReadNotification(id);
-      }}
-    >
+    <Pressable onPress={() => {}}>
       <HStack
-        backgroundColor={isRead ? "#DFDEFF" : "secondary.100"}
+        backgroundColor="#DFDEFF"
         p={2}
-        pl={3}
-        space={3}
+        pl={6}
+        space={6}
         alignItems="center"
-        borderRadius={10}
+        borderRadius={20}
         justifyContent="space-evenly"
       >
-        <Image
-          size={60}
-          borderRadius={100}
-          source={{
-            //   uri: "https://wallpaperaccess.com/full/317501.jpg",
-            uri: image,
-          }}
-          alt="Alternate Text"
-        />
-        <VStack width="4/5" maxW="4/5">
-          <Text color="#3d3d66" fontSize={14}>
+        <Box
+          backgroundColor={appColor.backgroundPrimary}
+          minW="2%"
+          maxW="2%"
+          height="90%"
+          borderRadius={10}
+        ></Box>
+        <VStack minW="90%" maxW="90%">
+          <Text textAlign="justify" color={appColor.textTitle} fontSize={14}>
             {content}
           </Text>
           <Text color="#70708c" fontSize={12}>

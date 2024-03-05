@@ -72,6 +72,8 @@ export default function ClinicInfoDashboardScreen({
               color={appColor.textTitle}
               fontWeight="extrabold"
               fontSize="17"
+              textAlign="center"
+              mb={2}
             >
               {clinic?.name}
             </Text>

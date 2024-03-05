@@ -104,23 +104,29 @@ export default function ClinicListNavigator({
           height="full"
           p={5}
         >
-          <HStack justifyContent="space-between" alignItems="center">
-            <Heading fontSize={20} mb={3}>
-              Danh sách phòng khám
-            </Heading>
+          <HStack justifyContent="flex-start" alignItems="center" mt={0} mb={3}>
             {user?.moduleId === 2 && (
-              <Pressable
-                onPress={() => {
-                  navigation.navigate("SubscriptionNavigator");
-                }}
-                mb={3}
-              >
-                <Ionicons
-                  name="add-circle-outline"
-                  size={25}
-                  color={appColor.primary}
-                />
-              </Pressable>
+              <>
+                <Pressable
+                  onPress={() => {
+                    navigation.navigate("SubscriptionNavigator");
+                  }}
+                  mr={2}
+                >
+                  <Ionicons
+                    name="add-circle-outline"
+                    size={25}
+                    color={appColor.primary}
+                  />
+                </Pressable>
+                <Text
+                  color={appColor.inputLabel}
+                  fontWeight="bold"
+                  fontSize={16}
+                >
+                  Thêm phòng khám
+                </Text>
+              </>
             )}
           </HStack>
           <ScrollView>
@@ -140,11 +146,16 @@ export default function ClinicListNavigator({
                           color={appColor.textTitle}
                           fontWeight="bold"
                           fontSize={20}
-                          textAlign="left"
+                          textAlign="center"
+                          mb={2}
                         >
                           {clinicItem.name}
                         </Text>
-                        <Text color={appColor.textTitle} fontSize={14}>
+                        <Text
+                          textAlign="justify"
+                          color={appColor.textTitle}
+                          fontSize={14}
+                        >
                           <Text
                             color={appColor.textTitle}
                             fontSize={14}
@@ -156,7 +167,11 @@ export default function ClinicListNavigator({
                         </Text>
                         {clinicItem?.subscriptions[0]?.status === 3 && (
                           <>
-                            <Text color={appColor.textTitle} fontSize={14}>
+                            <Text
+                              color={appColor.textTitle}
+                              fontSize={14}
+                              mb={2}
+                            >
                               <Text
                                 color={appColor.textTitle}
                                 fontSize={14}
@@ -167,9 +182,7 @@ export default function ClinicListNavigator({
                               {dayjs(
                                 clinicItem.subscriptions[0].expiredAt
                               ).format("DD/MM/YYYY")}{" "}
-                            </Text>
-                            <Text color={appColor.textTitle} fontSize={14}>
-                              <Text>(Còn lại </Text>
+                              <Text>(Còn </Text>
                               {dayjs(
                                 clinicItem.subscriptions[0].expiredAt
                               ).diff(dayjs(), "day")}
@@ -278,23 +291,34 @@ export default function ClinicListNavigator({
             maxH="90%"
             alignSelf="center"
           >
-            <HStack justifyContent="space-between" alignItems="center">
-              <Heading fontSize={20} mb={3}>
-                Danh sách phòng khám
-              </Heading>
+            <HStack
+              justifyContent="flex-start"
+              alignItems="center"
+              mt={0}
+              mb={3}
+            >
               {user?.moduleId === 2 && (
-                <Pressable
-                  onPress={() => {
-                    navigation.navigate("SubscriptionNavigator");
-                  }}
-                  mb={3}
-                >
-                  <Ionicons
-                    name="add-circle-outline"
-                    size={25}
-                    color={appColor.primary}
-                  />
-                </Pressable>
+                <>
+                  <Pressable
+                    onPress={() => {
+                      navigation.navigate("SubscriptionNavigator");
+                    }}
+                    mr={2}
+                  >
+                    <Ionicons
+                      name="add-circle-outline"
+                      size={25}
+                      color={appColor.primary}
+                    />
+                  </Pressable>
+                  <Text
+                    color={appColor.inputLabel}
+                    fontWeight="bold"
+                    fontSize={16}
+                  >
+                    Thêm phòng khám
+                  </Text>
+                </>
               )}
             </HStack>
             <Text fontSize={20} color="gray.500">
