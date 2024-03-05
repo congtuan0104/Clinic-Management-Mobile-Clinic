@@ -125,10 +125,14 @@ export default function StaffInfoScreen({
               }
               alt="avatar"
             />
-            {/* <Text color={appColor.textTitle} fontWeight="extrabold" fontSize="17">
-              {staff?.lastName + " " + staff?.firstName}
+            <Text
+              color={appColor.textTitle}
+              fontWeight="extrabold"
+              fontSize="17"
+            >
+              {staff?.users?.firstName + " " + staff?.users?.lastName}
             </Text>
-            <Text color={appColor.textSecondary}>{staff?.email}</Text> */}
+            <Text color={appColor.textSecondary}>{staff?.users?.email}</Text>
           </Box>
           <Box
             pb={3}
