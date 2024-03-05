@@ -24,6 +24,7 @@ import { appColor } from "../../theme";
 import { useAppSelector } from "../../hooks";
 import { userInfoSelector } from "../../store";
 import CreateChattingModal from "./CreateChattingModal/CreateChattingModal";
+import { useFocusEffect } from "@react-navigation/native";
 export default function ChattingGroupListScreen({
   navigation,
   route,
@@ -52,10 +53,11 @@ export default function ChattingGroupListScreen({
       console.log(error);
     }
   };
-  React.useEffect(() => {
-    getListGroupChat();
-  }, [groupMessageList]);
-
+  useFocusEffect(
+    React.useCallback(() => {
+      getListGroupChat();
+    }, [groupMessageList])
+  );
   // Thực hiện việc navigate đến màn hình chat cụ thể
   const navigateToChatDetail = (item: GroupChatInfo) => {
     navigation.navigate("ChattingDetail", {

@@ -26,7 +26,7 @@ export type ChatDetailStackParamList = {
   ChattingGroupList: undefined;
   ChattingDetail: { group: GroupChatInfo };
   CreateChattingGroup: undefined;
-  ChattingDetailSettings: { groupId: number };
+  ChattingDetailSettings: { group: GroupChatInfo };
   VideoCall: { groupId: number };
 };
 
@@ -97,9 +97,35 @@ export default function ChattingNavigator({
       <ChattingStackNavigator.Screen
         name="ChattingDetailSettings"
         component={ChattingDetailSettings}
-        options={{
-          headerShown: false,
-        }}
+        options={({ route, navigation }) => ({
+          headerTitle: (props) => {
+            return (
+              <HStack
+                marginLeft={-15}
+                space={2}
+                justifyContent="center"
+                alignItems="center"
+              >
+                <Image
+                  source={
+                    route.params.group.type === "one-on-one"
+                      ? { uri: getGroupImage(route.params.group) }
+                      : require("../assets/images/chat/groupchatdefault.png")
+                  }
+                  borderRadius={100}
+                  size="12"
+                  alt={route.params.group.groupName}
+                  background="gray.300"
+                />
+                <Text fontWeight="bold" fontSize="16">
+                  {renderGroupName(route.params.group)}
+                </Text>
+              </HStack>
+            );
+          },
+
+          headerShadowVisible: false,
+        })}
       />
       <ChattingStackNavigator.Screen
         name="VideoCall"
@@ -170,7 +196,7 @@ export default function ChattingNavigator({
                 alignItems="center"
                 onPress={() => {
                   navigation.navigate("ChattingDetailSettings", {
-                    groupId: route.params.group.id,
+                    group: route.params.group,
                   });
                 }}
               >
