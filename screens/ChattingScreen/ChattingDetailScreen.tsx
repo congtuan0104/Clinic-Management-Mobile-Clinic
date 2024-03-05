@@ -17,6 +17,7 @@ import storage from "@react-native-firebase/storage";
 import { helpers } from "../../utils/helper";
 import uuid from "react-native-uuid";
 import { LoadingSpinner } from "../../components/LoadingSpinner/LoadingSpinner";
+import { IGroupChatMember } from "../../types";
 
 export interface MsgType {
   link?: string;
@@ -34,7 +35,7 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
   // Lấy thông tin user
   const userInfo = useAppSelector(userInfoSelector);
 
-  const { groupId } = route.params;
+  const { group } = route.params;
   const [msg, setMsg] = React.useState<string>("");
   const [allChat, setallChat] = React.useState<MsgType[]>([]);
   const [disabled, setdisabled] = React.useState(false);
@@ -48,14 +49,32 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
       .database(
         "https://clinus-1d1d1-default-rtdb.asia-southeast1.firebasedatabase.app/"
       )
-      .ref(`/chats/${groupId}`);
+      .ref(`/chats/${group.id}`);
     const onChildAdd = reference.on("child_added", (snapshot) => {
       setallChat((state) => [snapshot.val(), ...state]);
     });
     // Stop listening for updates when no longer required
     return () => reference.off("child_added", onChildAdd);
-  }, [groupId]);
+  }, [group]);
 
+  const getAvatarByUserId = (userId: string) => {
+    const groupChatMember = group.groupChatMember;
+    if (groupChatMember) {
+      const userInfo = groupChatMember.find(
+        (member: IGroupChatMember) => member.userId === userId
+      );
+      return userInfo?.avatar;
+    }
+  };
+  const getNameByUserId = (userId: string) => {
+    const groupChatMember = group.groupChatMember;
+    if (groupChatMember) {
+      const userInfo = groupChatMember.find(
+        (member: IGroupChatMember) => member.userId === userId
+      );
+      return userInfo?.firstName + " " + userInfo?.lastName;
+    }
+  };
   // Hiệu ứng khi gửi tin nhắn
   const opacity = React.useRef(new Animated.Value(1)).current;
   const handlePressIn = () => {
@@ -99,7 +118,7 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
       .database(
         "https://clinus-1d1d1-default-rtdb.asia-southeast1.firebasedatabase.app/"
       )
-      .ref(`/chats/${groupId}`);
+      .ref(`/chats/${group.id}`);
     reference.once("value").then((snapshot) => {
       currentLength = snapshot.val() === null ? 0 : snapshot.val().length;
       firebase
@@ -107,7 +126,7 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
         .database(
           "https://clinus-1d1d1-default-rtdb.asia-southeast1.firebasedatabase.app/"
         )
-        .ref(`/chats/${groupId}/${currentLength}`)
+        .ref(`/chats/${group.id}/${currentLength}`)
         .set(msgData)
         .then(() => {
           console.log("data set");
@@ -173,11 +192,11 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
     try {
       setShowModal(false);
       // Get reference to DB and send it to firebase storage.
-      const reference = storage().ref(`/chats/${groupId}/${imageName}`);
+      const reference = storage().ref(`/chats/${group.id}/${imageName}`);
       await reference.putFile(imageUri);
       // Get url of image from firebase storage returning
       const url = await storage()
-        .ref(`/chats/${groupId}/${imageName}`)
+        .ref(`/chats/${group.id}/${imageName}`)
         .getDownloadURL();
       handleUploadToRealtimeDB(imageName, "image", url);
     } catch (error) {
@@ -210,11 +229,11 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
             await handleSendImage(file.name, file.uri);
           } else {
             const filename = file.name;
-            const reference = storage().ref(`/chats/${groupId}/${filename}`);
+            const reference = storage().ref(`/chats/${group.id}/${filename}`);
             try {
               await reference.putFile(file.uri);
               const url = await storage()
-                .ref(`/chats/${groupId}/${filename}`)
+                .ref(`/chats/${group.id}/${filename}`)
                 .getDownloadURL();
               handleUploadToRealtimeDB(filename, "file", url);
             } catch (error) {
@@ -245,7 +264,8 @@ const ChattingDetailScreen: React.FC<ChattingDetailScreenProps> = ({
                   time={item.timestamp}
                   type={item.type}
                   link={item.link ? item.link : null}
-                  username={item.senderName}
+                  username={getNameByUserId(item.senderId)}
+                  avatar={getAvatarByUserId(item.senderId)}
                 />
               );
             }}

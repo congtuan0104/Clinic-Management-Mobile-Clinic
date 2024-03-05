@@ -57,17 +57,19 @@ export default function ChattingGroupListScreen({
   }, [groupMessageList]);
 
   // Thực hiện việc navigate đến màn hình chat cụ thể
-  const navigateToChatDetail = (
-    item: GroupChatInfo,
-    groupId: number,
-    groupName: string
-  ) => {
+  const navigateToChatDetail = (item: GroupChatInfo) => {
     navigation.navigate("ChattingDetail", {
-      groupId: groupId,
-      groupName: renderGroupName(item),
+      group: item,
     });
   };
 
+  const getGroupImage = (group: GroupChatInfo) => {
+    const groupMember = group.groupChatMember?.find(
+      (member: IGroupChatMember, index: number) =>
+        member.userId !== userInfo?.id
+    );
+    return groupMember?.avatar;
+  };
   const renderGroupName = (group: GroupChatInfo) => {
     if (group.type === "one-on-one") {
       const groupMember = group.groupChatMember?.find(
@@ -138,11 +140,7 @@ export default function ChattingGroupListScreen({
           data={searchList}
           showsVerticalScrollIndicator={false}
           renderItem={({ item }) => (
-            <TouchableOpacity
-              onPress={() =>
-                navigateToChatDetail(item, item.id, item.groupName)
-              }
-            >
+            <TouchableOpacity onPress={() => navigateToChatDetail(item)}>
               <Box alignItems="center" py="2">
                 <HStack
                   width="90%"
@@ -151,10 +149,14 @@ export default function ChattingGroupListScreen({
                   alignItems="center"
                 >
                   <Image
-                    bg="#fff"
+                    bg="gray.300"
                     size={16}
                     borderRadius={40}
-                    source={require("../../assets/images/chat/groupchatdefault.png")}
+                    source={
+                      item.type === "one-on-one"
+                        ? { uri: getGroupImage(item) }
+                        : require("../../assets/images/chat/groupchatdefault.png")
+                    }
                     alt={item.groupName}
                   />
                   <VStack>
@@ -168,14 +170,16 @@ export default function ChattingGroupListScreen({
                     >
                       {renderGroupName(item)}
                     </Text>
-                    <Text
-                      color={appColor.textSecondary}
-                      _dark={{
-                        color: "warmGray.200",
-                      }}
-                    >
-                      {item.groupChatMember?.length + " thành viên"}
-                    </Text>
+                    {item.type === "group" && (
+                      <Text
+                        color={appColor.textSecondary}
+                        _dark={{
+                          color: "warmGray.200",
+                        }}
+                      >
+                        {item.groupChatMember?.length + " thành viên"}
+                      </Text>
+                    )}
                   </VStack>
                   <Spacer />
                 </HStack>

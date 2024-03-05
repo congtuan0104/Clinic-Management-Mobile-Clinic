@@ -18,10 +18,13 @@ import {
 import ChattingDetailSettings from "../screens/ChattingScreen/ChattingDetailSettings";
 import { VideoCall } from "../screens/VideoCall";
 import { appColor } from "../theme";
+import { GroupChatInfo, IGroupChatMember } from "../types";
+import { userInfoSelector } from "../store";
+import { useAppSelector } from "../hooks";
 
 export type ChatDetailStackParamList = {
   ChattingGroupList: undefined;
-  ChattingDetail: { groupId: number; groupName: string };
+  ChattingDetail: { group: GroupChatInfo };
   CreateChattingGroup: undefined;
   ChattingDetailSettings: { groupId: number };
   VideoCall: { groupId: number };
@@ -54,6 +57,35 @@ export default function ChattingNavigator({
   navigation,
   route,
 }: ChattingNavigatorProps) {
+  const userInfo = useAppSelector(userInfoSelector);
+
+  const getGroupImage = (group: GroupChatInfo) => {
+    const groupMember = group.groupChatMember?.find(
+      (member: IGroupChatMember, index: number) =>
+        member.userId !== userInfo?.id
+    );
+    return groupMember?.avatar;
+  };
+  const renderGroupName = (group: GroupChatInfo) => {
+    if (group.type === "one-on-one") {
+      const groupMember = group.groupChatMember?.find(
+        (member: IGroupChatMember, index: number) =>
+          member.userId !== userInfo?.id
+      );
+      const memberName = groupMember?.firstName + " " + groupMember?.lastName;
+      if (memberName.length > 17) {
+        return `${memberName.slice(0, 17)}...`;
+      } else {
+        return memberName;
+      }
+    } else {
+      if (group.groupName.length > 17) {
+        return `${group.groupName.slice(0, 17)}...`;
+      } else {
+        return group.groupName;
+      }
+    }
+  };
   return (
     <ChattingStackNavigator.Navigator initialRouteName="ChattingGroupList">
       <ChattingStackNavigator.Screen
@@ -87,15 +119,18 @@ export default function ChattingNavigator({
                 alignItems="center"
               >
                 <Image
-                  source={require("../assets/images/chat/groupchatdefault.png")}
+                  source={
+                    route.params.group.type === "one-on-one"
+                      ? { uri: getGroupImage(route.params.group) }
+                      : require("../assets/images/chat/groupchatdefault.png")
+                  }
                   borderRadius={100}
                   size="12"
-                  alt="ff"
+                  alt={route.params.group.groupName}
+                  background="gray.300"
                 />
                 <Text fontWeight="bold" fontSize="16">
-                  {route.params.groupName.length > 17
-                    ? `${route.params.groupName.slice(0, 17)}...`
-                    : route.params.groupName}
+                  {renderGroupName(route.params.group)}
                 </Text>
               </HStack>
             );
@@ -113,7 +148,7 @@ export default function ChattingNavigator({
                 p={2}
                 onPress={() => {
                   navigation.navigate("VideoCall", {
-                    groupId: route.params.groupId,
+                    groupId: route.params.group.id,
                   });
                 }}
               >
@@ -135,7 +170,7 @@ export default function ChattingNavigator({
                 alignItems="center"
                 onPress={() => {
                   navigation.navigate("ChattingDetailSettings", {
-                    groupId: route.params.groupId,
+                    groupId: route.params.group.id,
                   });
                 }}
               >

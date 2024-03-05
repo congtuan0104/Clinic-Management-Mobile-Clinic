@@ -20,6 +20,7 @@ export interface IGroupChatMember {
   email: string;
   firstName: string;
   lastName: string;
+  avatar: string;
 }
 export interface ICreateGroupChatRequest {
   groupName: string;
