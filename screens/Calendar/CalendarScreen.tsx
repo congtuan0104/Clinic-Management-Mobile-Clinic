@@ -30,14 +30,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from '@react-navigation/native';
 
 
-const datesWhitelist = [
-  {
-    start: moment(),
-    end: moment().add(365, "days"), // total 4 days enabled
-  },
-];
-
-
 
 type TimelineEventsState = {
   time: string;
@@ -50,7 +42,6 @@ type TimelineEventsState = {
 export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   const clinic = useAppSelector(ClinicSelector);
   const userInfo = useAppSelector(userInfoSelector);
-  //const [markedDate, setMarkedDate] = useState<Date[]>([]);
   const [currentDate, setCurrentDate] = useState(
     `${moment().format("YYYY")}-${moment().format("MM")}-${moment().format(
       "DD"
@@ -106,19 +97,28 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   useFocusEffect(
     React.useCallback(() => {
       getAppointmentList();
-      //console.log('vao day')
     }, [clinic?.id, isReRender])
   );
 
+  function compare( a:IAppointment, b:IAppointment ) {
+    if ( a.startTime < b.startTime ){
+      return -1;
+    }
+    if ( a.startTime > b.startTime ){
+      return 1;
+    }
+    return 0;
+  }  
 
   console.log('render lai trang lich')
   const currentDateAppointments: Array<IAppointment> = useMemo(() => {
-    //const currentDateObj = new Date(currentDate);
+    
     return appointmentList.filter((item) => {
       return (     
         currentDate === item.date
       );
-    });
+    }).sort(compare);
+    // return appointmentList.sort(compare)
   }, [currentDate]);
 
   const markedDate = useMemo(
@@ -140,23 +140,23 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   );
   console.log("markedDate: ", markedDate);
   useEffect(() => {
-    console.log("toldoList before: ", currentDateAppointments);
+    // console.log("toldoList before: ", currentDateAppointments);
     console.log("current day: ", currentDate);
     const fetchData = async () => {
       try {
         await getTimelineEvents();
-        console.log(
-          "timeline events after getTimelineEvents: ",
-          timelineEvents
-        );
-        console.log("currentDateAppointments after: ", currentDateAppointments);
+        // console.log(
+        //   "timeline events after getTimelineEvents: ",
+        //   timelineEvents
+        // );
+        //console.log("currentDateAppointments after: ", currentDateAppointments);
       } catch (error) {
         console.error("Error fetching data:", error);
       }
     };
 
     fetchData();
-    console.log("currentDateAppointments after after: ", currentDateAppointments);
+    //console.log("currentDateAppointments after after: ", currentDateAppointments);
   }, [currentDate]);
 
   const handleModalVisible = () => {
