@@ -1,12 +1,9 @@
 import React, { Fragment, useEffect, useMemo, useState } from "react";
 import {
-  Alert,
   Dimensions,
   Image,
-  Platform,
   ScrollView,
   StyleSheet,
-  Switch,
   Text,
   TextInput,
   TouchableOpacity,
@@ -30,7 +27,6 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { useFocusEffect } from '@react-navigation/native';
 
 
-
 type TimelineEventsState = {
   time: string;
   title: string;
@@ -47,7 +43,6 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
       "DD"
     )}`
   );
-  const [color, setColor] = useState<string>()
   const [appointmentList, setAppointmentList] = useState<IAppointment[]>([])
   const [currentDay, setCurrentDay] = useState(moment().format());
   const [isModalVisible, setModalVisible] = useState(false);
@@ -66,7 +61,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
   });
 
   const toast = useToast();
-  const handleReRender = () => setIsReRender(!isReRender)
+
   const getAppointmentList = async () => {
     try {
       if (clinic?.id)
@@ -158,10 +153,6 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
     fetchData();
     //console.log("currentDateAppointments after after: ", currentDateAppointments);
   }, [currentDate]);
-
-  const handleModalVisible = () => {
-    setModalVisible(!isModalVisible);
-  };
 
   const getTimelineEvents = async () => {
     console.log("appointment list in settimelineevent: ", currentDateAppointments);
@@ -402,10 +393,7 @@ export default function CalendarScreen({ navigation }: CalendarNavigatorProps) {
                     defaultButtonText={selectedTask?.status}
                   />
                 </View>
-                {/* <Switch
-                value={selectedTask?.alarm?.isOn || false}
-                onValueChange={handleAlarmSet}
-              /> */}
+                
               </View>
               <View>
               <TouchableOpacity
