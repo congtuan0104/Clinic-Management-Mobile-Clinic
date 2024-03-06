@@ -126,7 +126,7 @@ export default function CreateTask({
       doctorId: doctorSelected!.id,
       patientId: patientSelected!.id,
       serviceId: serviceSelected!.id,
-      date: currentDay,
+      date: currentDay.slice(0,10),
       startTime: startTime? startTime : "",
       endTime: lastTwoChars==="00"? firstThreeChars + "15" : firstThreeChars + "45",
       description: notesText,
