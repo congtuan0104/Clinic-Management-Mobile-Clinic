@@ -78,7 +78,9 @@ export default function ClinicInfoDashboardScreen({
               {clinic?.name}
             </Text>
             {/* <Text color={appColor.textSecondary}>{clinic?.description}</Text> */}
-            <HTMLView value={clinic.description} stylesheet={styles} />
+            {clinic.description && (
+              <HTMLView value={clinic.description} stylesheet={styles} />
+            )}
           </Box>
           <Box alignItems="flex-start" width="100%">
             <VStack space="5">
@@ -87,7 +89,7 @@ export default function ClinicInfoDashboardScreen({
                   Địa chỉ
                 </Text>
                 <Text textAlign="right" flex={4} color={appColor.textSecondary}>
-                  {clinic?.address}
+                  {clinic?.address ? clinic.address : "Chưa cập nhật"}
                 </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
@@ -95,7 +97,7 @@ export default function ClinicInfoDashboardScreen({
                   Email liên hệ
                 </Text>
                 <Text textAlign="right" flex={4} color={appColor.textSecondary}>
-                  {clinic?.email}
+                  {clinic?.email ? clinic.email : "Chưa cập nhật"}
                 </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
@@ -103,7 +105,7 @@ export default function ClinicInfoDashboardScreen({
                   SĐT liên hệ
                 </Text>
                 <Text textAlign="right" flex={4} color={appColor.textSecondary}>
-                  {clinic?.phone}
+                  {clinic?.phone ? clinic.phone : "Chưa cập nhật"}
                 </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
@@ -111,7 +113,9 @@ export default function ClinicInfoDashboardScreen({
                   Ngày mua
                 </Text>
                 <Text textAlign="right" flex={4} color={appColor.textSecondary}>
-                  {dayjs(clinic?.createdAt).format("DD/MM/YYYY")}
+                  {clinic.createdAt
+                    ? dayjs(clinic?.createdAt).format("DD/MM/YYYY")
+                    : "Chưa cập nhật"}
                 </Text>
               </HStack>
               <HStack justifyContent="space-between" width="full">
@@ -119,9 +123,11 @@ export default function ClinicInfoDashboardScreen({
                   Hạn dùng
                 </Text>
                 <Text textAlign="right" flex={4} color={appColor.textSecondary}>
-                  {dayjs(clinic?.subscriptions[0].expiredAt).format(
-                    "DD/MM/YYYY"
-                  )}
+                  {clinic?.subscriptions[0].expiredAt
+                    ? dayjs(clinic?.subscriptions[0].expiredAt).format(
+                        "DD/MM/YYYY"
+                      )
+                    : "Chưa cập nhật"}
                 </Text>
               </HStack>
             </VStack>
