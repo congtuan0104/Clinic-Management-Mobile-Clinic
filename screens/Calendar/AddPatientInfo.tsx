@@ -69,7 +69,7 @@ interface AddPatientInfoProps {
 
 const dataBlood = ["O", "A", "B", "AB"];
 const genderData = ["Nam", "Nữ", "Không rõ"];
-const genNum = ["1","0","-1"];
+const genNum = ["1", "0", "-1"];
 
 const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
   setIsAddPatientInfo,
@@ -120,16 +120,15 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
       idCard: "",
       healthInsuranceCode: "",
       anamnesis: "",
-  }
+    },
   });
   const onInvalid = (errors: any) => console.error(errors);
 
-
   const handleCheckEmail = async () => {
     //console.log("go here");
-    console.log('getvalues:', getValues("email"));
-    let emailSet = getValues('email')
-    
+    console.log("getvalues:", getValues("email"));
+    let emailSet = getValues("email");
+
     if (!emailSet || emailSet == "") {
       toast.show({
         render: () => {
@@ -158,7 +157,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         setValue("lastName", patientInfo.lastName);
         patientInfo.phone && setValue("phone", patientInfo.phone);
         patientInfo.address && setValue("address", patientInfo.address);
-        patientInfo.birthday && setSelectedDate(new Date(patientInfo.birthday))
+        patientInfo.birthday && setSelectedDate(new Date(patientInfo.birthday));
         patientInfo.birthday && setValue("birth", patientInfo.birthday);
         setValue(
           "gender",
@@ -169,14 +168,14 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
       } else {
         if (res.status && res.data === null) {
           setIsDisplay(true);
-          setIsDisabled(true)
+          setIsDisabled(true);
         }
       }
     }
   };
 
   const handleSubmitForm = async (data: IFormData) => {
-    setIsLoading(true)
+    setIsLoading(true);
     if (!clinic?.id) return;
 
     const payload: ICreatePatientPayload = {
@@ -188,7 +187,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
         lastName: data.lastName,
         phone: data.phone,
         address: data.address,
-        birthday: selectedDate? selectedDate : undefined,
+        birthday: selectedDate ? selectedDate : undefined,
         gender: Number(data.gender),
       },
       bloodGroup: data.blood,
@@ -241,7 +240,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
           onConfirm={handleConfirm}
           onCancel={hideDatePicker}
         />
-        <Heading mb={2}>Nhập thông tin bệnh nhân</Heading>
+        {/* <Heading mb={2}>Nhập thông tin bệnh nhân</Heading> */}
         <ScrollView
           minWidth="100%"
           maxWidth="100%"
@@ -288,7 +287,9 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
                     Tài khoản bệnh nhân đã tồn tại, thông tin bệnh nhân sẽ được
                     cập nhật từ tài khoản này
                   </Text>
-                  <Button onPress={handleSubmit(handleSubmitForm, onInvalid)}>Xác nhận</Button>
+                  <Button onPress={handleSubmit(handleSubmitForm, onInvalid)}>
+                    Xác nhận
+                  </Button>
                 </>
               ) : null}
               {isDisplay ? (
@@ -379,7 +380,7 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
                           data={genderData}
                           onSelect={(selectedItem, index) => {
                             console.log(selectedItem, index);
-                            setValue("gender", genNum[index])
+                            setValue("gender", genNum[index]);
                           }}
                           defaultButtonText={"Chọn giới tính"}
                           buttonTextAfterSelection={(selectedItem, index) => {
@@ -655,15 +656,21 @@ const AddPatientInfo: React.FC<AddPatientInfoProps> = ({
       </Box>
       <HStack mt={5} space={5} minW="90%" maxW="90%" alignSelf="center">
         <Button
-          borderColor={appColor.backgroundPrimary}
+          borderColor="secondary.300"
           borderWidth={1}
           backgroundColor={appColor.white}
           flex={1}
           onPress={() => {
             setIsAddPatientInfo(false);
           }}
+          _text={{
+            color: "secondary.300",
+          }}
+          _pressed={{
+            backgroundColor: "secondary.100",
+          }}
         >
-          <Text>Quay lại</Text>
+          Quay lại
         </Button>
         {isDisplay ? (
           <Button flex={1} onPress={handleSubmit(handleSubmitForm, onInvalid)}>

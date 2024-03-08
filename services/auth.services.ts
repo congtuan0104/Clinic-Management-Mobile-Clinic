@@ -13,7 +13,7 @@ import {
   IUserInfoUpdateRequest,
   IChangePasswordRequest,
   IAddNewPasswordRequest,
-  IUserInfo
+  IUserInfo,
 } from "../types";
 import { IInviteClinicMemberRequest } from "../types/clinic.types";
 
@@ -28,6 +28,7 @@ export const authApi = {
       lastName: data.lastName,
       email: data.email,
       password: data.password,
+      moduleId: 2,
     });
   },
   loginWithGoogle(
@@ -73,7 +74,7 @@ export const authApi = {
   },
 
   resetPassword(email: string): Promise<IResetPasswordResponse> {
-    return axiosClient.post('/auth/reset-password', { email });
+    return axiosClient.post("/auth/reset-password", { email });
   },
 
   resendVerifyEmail(email: string): Promise<IApiResponse<any>> {
@@ -82,7 +83,7 @@ export const authApi = {
     });
   },
 
-  updateUserInfo(data : IUserInfoUpdateRequest, userId: string): Promise<any> {
+  updateUserInfo(data: IUserInfoUpdateRequest, userId: string): Promise<any> {
     return axiosClient.put(`/auth/user/${userId}`, data);
   },
 
@@ -91,10 +92,15 @@ export const authApi = {
   },
 
   addNewPassword(data: IAddNewPasswordRequest): Promise<any> {
-    return axiosClient.put('/auth/add-new-password', data);
+    return axiosClient.put("/auth/add-new-password", data);
   },
 
-  findUserByEmail(email: string, emailVerified?: string): Promise<IApiResponse<IUserInfo>> {
-    return axiosClient.get('/auth/find-user-by-email', { params: { email, emailVerified } });
+  findUserByEmail(
+    email: string,
+    emailVerified?: string
+  ): Promise<IApiResponse<IUserInfo>> {
+    return axiosClient.get("/auth/find-user-by-email", {
+      params: { email, emailVerified },
+    });
   },
 };

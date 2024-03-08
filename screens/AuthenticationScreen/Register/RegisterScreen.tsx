@@ -15,6 +15,7 @@ import {
   HStack,
   Image,
   ScrollView,
+  useToast,
 } from "native-base";
 
 import { useForm, Controller, SubmitHandler } from "react-hook-form";
@@ -23,6 +24,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { appColor, theme } from "../../../theme";
 import { authApi } from "../../../services";
 import { LoadingSpinner } from "../../../components/LoadingSpinner/LoadingSpinner";
+import ToastAlert from "../../../components/Toast/Toast";
 
 interface IRegisterFormData {
   firstName: string;
@@ -53,12 +55,15 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   navigation,
   route,
 }) => {
+  const toast = useToast();
+
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { setLogin } = route.params;
   const {
     control,
     handleSubmit,
     formState: { errors },
+    reset,
   } = useForm<IRegisterFormData>({
     resolver: yupResolver(schema),
     defaultValues: {
@@ -74,21 +79,47 @@ const RegisterScreen: React.FC<RegisterScreenProps> = ({
   const onSubmit = async (data: IRegisterFormData) => {
     setIsLoading(true);
     const { confirmPassword, ...registerData } = data;
-    console.log(registerData);
     // Send data to server
     await authApi
       .register(registerData)
       .then(async (response) => {
-        if (response.data)
-          // Redirect đến trang Validate
-          navigation.navigate("ValidateNotification", {
-            setLogin,
-            email: data.email,
-          });
+        {
+          if (response.status) {
+            reset();
+            // Redirect đến trang Validate
+            navigation.navigate("ValidateNotification", {
+              setLogin,
+              email: data.email,
+            });
+          } else {
+            toast.show({
+              render: () => {
+                return (
+                  <ToastAlert
+                    title="Thất bại!"
+                    description={response.message}
+                    status="error"
+                  />
+                );
+              },
+            });
+          }
+        }
       })
-      .catch((error) => {
+      .catch((error: any) => {
         // Print error to the screen
-        console.log(error.response.data);
+        console.log(error);
+        toast.show({
+          render: () => {
+            return (
+              <ToastAlert
+                title="Thất bại!"
+                description={error.response.data.message}
+                status="error"
+              />
+            );
+          },
+        });
       });
     setIsLoading(false);
   };
