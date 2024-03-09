@@ -11,20 +11,12 @@ import UpdateUserInfoScreen from "../screens/UpdateUserInfo/UpdateUserInfoScreen
 import CategoryScreen from "../screens/CategoryScreen/CategoryScreen";
 import CategoryPriceScreen from "../screens/CategoryPriceScreen/CategoryPriceScreen";
 import CustomDrawer from "../components/CustomDrawer/CustomDrawer";
-import PatientScreen from "../screens/PatientScreen/PatientScreen";
-import PatientInfo from "../screens/PatientInfoScreen/PatientInfo";
-import MedicalRecord from "../screens/MedicalRecord/MedicalRecord";
 import ChattingNavigator from "./ChattingNavigator";
 import ProfileNavigator from "./ProfileNavigator";
 import SubscriptionNavigator from "./SubscriptionNavigator";
 import NotificationNavigator from "./NotificationNavigator";
-import { clinicService } from "../services";
-import ToastAlert from "../components/Toast/Toast";
-import { useToast } from "native-base";
-import { LoadingSpinner } from "../components/LoadingSpinner/LoadingSpinner";
 import { IClinicInfo } from "../types/clinic.types";
 import RoleNavigator from "./RoleNavigator";
-
 import PatientNavigator from "./PatientNavigator";
 
 // Import custom icons
@@ -45,6 +37,7 @@ import { useAppSelector } from "../hooks";
 import { userInfoSelector } from "../store";
 import { IStaffPermission } from "../types/staff.types";
 import { staffServices } from "../services/staff.servcies";
+import StatisticNavigator from "./StatisticNavigator";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -66,6 +59,7 @@ export type UserNavigatorDrawerParamList = {
   CategoryNavigator: undefined;
   CategoryPriceNavigator: undefined;
   MedicalSuppliesNavigator: undefined;
+  StatisticNavigator: undefined;
 };
 
 export const userNavigationRef =
@@ -134,6 +128,11 @@ export type PatientNavigatorProps = NativeStackScreenProps<
 export type MedicalSuppliesNavigatorProps = NativeStackScreenProps<
   UserNavigatorDrawerParamList,
   "MedicalSuppliesNavigator"
+>;
+
+export type StatisticNavigatorProps = NativeStackScreenProps<
+  UserNavigatorDrawerParamList,
+  "StatisticNavigator"
 >;
 
 const UserNavigatorDrawer =
@@ -309,6 +308,20 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
               component={CalendarScreen}
             />
             <UserNavigatorDrawer.Screen
+              name="StatisticNavigator"
+              options={{
+                title: "Thống kê, báo cáo",
+                drawerIcon: ({ color }) => (
+                  <MaterialCommunityIcons
+                    name="desktop-mac-dashboard"
+                    size={24}
+                    color={color}
+                  />
+                ),
+              }}
+              component={StatisticNavigator}
+            />
+            <UserNavigatorDrawer.Screen
               name="ChattingNavigator"
               options={{
                 title: "Nhắn tin",
@@ -426,6 +439,25 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
                   }}
                 />
               </>
+            )}
+            {/**Quản lý thong ke, bao cao (id === 9) */}
+            {permissions.findIndex(
+              (permissions: IStaffPermission) => permissions.id === 9
+            ) !== -1 && (
+              <UserNavigatorDrawer.Screen
+                name="StatisticNavigator"
+                options={{
+                  title: "Thống kê, báo cáo",
+                  drawerIcon: ({ color }) => (
+                    <MaterialCommunityIcons
+                      name="desktop-mac-dashboard"
+                      size={24}
+                      color={color}
+                    />
+                  ),
+                }}
+                component={StatisticNavigator}
+              />
             )}
             <UserNavigatorDrawer.Screen
               name="ChattingNavigator"
