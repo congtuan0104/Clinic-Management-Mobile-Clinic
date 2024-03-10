@@ -11,7 +11,9 @@ import {
   FormControl,
   WarningOutlineIcon,
   Button,
+  View,
 } from "native-base";
+import { LineChart, lineDataItem } from "react-native-gifted-charts";
 import DateTimePickerModal from "react-native-modal-datetime-picker";
 import { useCallback, useEffect, useState } from "react";
 import { useFocusEffect } from "@react-navigation/native";
@@ -27,10 +29,20 @@ import { appColor } from "../../theme";
 import { Controller, useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
+import { G } from "react-native-svg";
+const { format } = require("number-currency-format");
+const customParseFormat = require("dayjs/plugin/customParseFormat");
+dayjs.extend(customParseFormat);
 
 export interface IForm {
   startDate?: string | undefined;
   endDate?: string | undefined;
+}
+export interface IChartData {
+  value: number;
+  date: string;
+  label: string;
+  labelTextStyle: any;
 }
 // Validate
 const schema: yup.ObjectSchema<IForm> = yup.object({
@@ -84,10 +96,9 @@ export default function StatisticDashboardScreen({
   };
 
   // Handle period
-  const [periodStatistic, setPeriodStatistic] = useState<
-    IClinicStatisticPeriod[] | null
-  >(null);
-
+  const [revenueStatistic, setRevenueStatistic] = useState<lineDataItem[]>();
+  const [appointmentStatistic, setAppointmentStatistic] =
+    useState<lineDataItem[]>();
   const {
     control,
     handleSubmit,
@@ -148,7 +159,6 @@ export default function StatisticDashboardScreen({
   };
 
   const onSubmit = async (data: IForm) => {
-    console.log("Submit: ", data);
     // Call API
     if (clinic?.id) {
       try {
@@ -158,7 +168,49 @@ export default function StatisticDashboardScreen({
           dayjs(endDate).format("YYYY/MM/DD")
         );
         if (response.status && response.data) {
-          console.log(response.data);
+          // Handle revenue
+          const revenueData: IChartData[] = [];
+          for (let i = 0; i < response.data.length; i++) {
+            const revenueItem: IChartData = {
+              value: response.data[i].revenue,
+              date: response.data[i].date,
+              label:
+                (i % 3 === 0) === true
+                  ? dayjs(response.data[i].date, "MMM DD YYYY")
+                      .locale("en")
+                      .format("DD/MM")
+                  : "",
+              labelTextStyle: {
+                color: appColor.textSecondary,
+                width: 50,
+                marginLeft: -14,
+              },
+            };
+            revenueData.push(revenueItem);
+          }
+          setRevenueStatistic(revenueData);
+          // Handle Appointment
+          const appointmentData: IChartData[] = [];
+          for (let i = 0; i < response.data.length; i++) {
+            const appointmentItem: IChartData = {
+              value: response.data[i].numberOfAppointments,
+              date: response.data[i].date,
+              label:
+                (i % 3 === 0) === true
+                  ? dayjs(response.data[i].date, "MMM DD YYYY")
+                      .locale("en")
+                      .format("DD/MM")
+                  : "",
+              labelTextStyle: {
+                color: appColor.textSecondary,
+                width: 50,
+                marginLeft: -14,
+              },
+            };
+            appointmentData.push(appointmentItem);
+          }
+          console.log(appointmentData);
+          setAppointmentStatistic(appointmentData);
         } else {
           toast.show({
             render: () => {
@@ -192,7 +244,7 @@ export default function StatisticDashboardScreen({
       getStatisticCurrentDay();
     }, [clinic?.id])
   );
-
+  console.log(StatisticCurrentDay);
   return (
     <Box
       bgColor="#fff"
@@ -206,6 +258,7 @@ export default function StatisticDashboardScreen({
       borderRadius={20}
       mt="5%"
     >
+      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
       <DateTimePickerModal
         date={startDate}
         isVisible={startDateDatePickerVisible}
@@ -241,7 +294,7 @@ export default function StatisticDashboardScreen({
           </Text>
           <Text
             alignSelf="flex-start"
-            fontSize={16}
+            fontSize={14}
             fontWeight="bold"
             color={appColor.textTitle}
             width="full"
@@ -336,14 +389,7 @@ export default function StatisticDashboardScreen({
             </HStack>
           </VStack>
         </Box>
-        <Box
-          width="full"
-          alignItems="center"
-          py={3}
-          mb={3}
-          borderBottomWidth={1}
-          borderBottomColor="#EDEDF2"
-        >
+        <Box width="full" alignItems="center" py={3} mb={3}>
           <Text
             alignSelf="flex-start"
             fontSize={25}
@@ -352,7 +398,7 @@ export default function StatisticDashboardScreen({
             width="full"
             mt={-4}
           >
-            Thống kê doanh thu
+            Thống kê
           </Text>
           <HStack space="5%">
             {/**StartDate */}
@@ -426,10 +472,198 @@ export default function StatisticDashboardScreen({
               </FormControl.ErrorMessage>
             </FormControl>
           </HStack>
+          <View mt={4} w="full">
+            <Text
+              fontSize={16}
+              fontWeight="bold"
+              color={appColor.inputLabel}
+              mb={4}
+            >
+              Biểu đồ doanh thu
+            </Text>
+            <LineChart
+              isAnimated
+              areaChart
+              width={280}
+              curved
+              data={revenueStatistic}
+              height={300}
+              // showVerticalLines
+              spacing={30}
+              initialSpacing={25}
+              endSpacing={30}
+              color1={appColor.primary}
+              textColor1={appColor.primary}
+              hideDataPoints={false}
+              dataPointsColor1={appColor.primary}
+              startFillColor1={appColor.primary}
+              startOpacity={0.8}
+              endOpacity={0.3}
+              yAxisTextStyle={{
+                color: appColor.textSecondary,
+              }}
+              // maxValue={5000000}
+              yAxisLabelWidth={50}
+              yAxisLabelSuffix="M"
+              formatYLabel={(label: string) => {
+                const newVal = parseInt(label) / 1000000;
+                return format(newVal, {
+                  decimalsDigits: 2,
+                  decimalSeparator: ".",
+                });
+              }}
+              pointerConfig={{
+                pointerStripHeight: 160,
+                pointerStripColor: "#fe6837",
+                pointerStripWidth: 4,
+                pointerColor: "lightgray",
+                radius: 6,
+                pointerLabelWidth: 100,
+                pointerLabelHeight: 90,
+                activatePointersOnLongPress: true,
+                autoAdjustPointerLabelPosition: false,
+                pointerLabelComponent: (items: any) => {
+                  return (
+                    <View
+                      style={{
+                        height: 90,
+                        width: 100,
+                        justifyContent: "center",
+                        marginTop: -30,
+                        marginLeft: -40,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          // color: appColor.primary,
+                          fontSize: 14,
+                          textAlign: "center",
+                        }}
+                      >
+                        {dayjs(items[0].date, "MMM DD YYYY")
+                          .locale("en")
+                          .format("DD/MM")}
+                      </Text>
+
+                      <View
+                      // style={{
+                      //   paddingHorizontal: 14,
+                      //   paddingVertical: 6,
+                      //   borderRadius: 16,
+                      //   backgroundColor: "white",
+                      // }}
+                      >
+                        <Text
+                          style={{ fontWeight: "bold", textAlign: "center" }}
+                        >
+                          {format(items[0].value, {
+                            decimalsDigits: 0,
+                            decimalSeparator: "",
+                          })}
+                          đ
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                },
+              }}
+            />
+          </View>
+          {/**Appointment chart */}
+          <View mt={4} w="full">
+            <Text
+              fontSize={16}
+              fontWeight="bold"
+              color={appColor.inputLabel}
+              mb={4}
+            >
+              Biểu đồ lịch hẹn khám
+            </Text>
+            <LineChart
+              isAnimated
+              areaChart
+              width={280}
+              curved
+              data={appointmentStatistic}
+              height={300}
+              // showVerticalLines
+              spacing={30}
+              initialSpacing={25}
+              endSpacing={30}
+              color1={appColor.primary}
+              textColor1={appColor.primary}
+              hideDataPoints={false}
+              dataPointsColor1={appColor.primary}
+              startFillColor1={appColor.primary}
+              startOpacity={0.8}
+              endOpacity={0.3}
+              yAxisTextStyle={{
+                color: appColor.textSecondary,
+              }}
+              // maxValue={}
+              yAxisLabelWidth={50}
+              pointerConfig={{
+                pointerStripHeight: 160,
+                pointerStripColor: "#fe6837",
+                pointerStripWidth: 4,
+                pointerColor: "lightgray",
+                radius: 6,
+                pointerLabelWidth: 100,
+                pointerLabelHeight: 90,
+                activatePointersOnLongPress: true,
+                autoAdjustPointerLabelPosition: false,
+                pointerLabelComponent: (items: any) => {
+                  return (
+                    <View
+                      style={{
+                        height: 90,
+                        width: 100,
+                        justifyContent: "center",
+                        marginTop: -30,
+                        marginLeft: -40,
+                      }}
+                    >
+                      <Text
+                        style={{
+                          // color: appColor.primary,
+                          fontSize: 14,
+                          textAlign: "center",
+                        }}
+                      >
+                        {dayjs(items[0].date, "MMM DD YYYY")
+                          .locale("en")
+                          .format("DD/MM")}
+                      </Text>
+
+                      <View
+                      // style={{
+                      //   paddingHorizontal: 14,
+                      //   paddingVertical: 6,
+                      //   borderRadius: 16,
+                      //   backgroundColor: "white",
+                      // }}
+                      >
+                        <Text
+                          style={{ fontWeight: "bold", textAlign: "center" }}
+                        >
+                          {items[0].value}
+                        </Text>
+                      </View>
+                    </View>
+                  );
+                },
+              }}
+            />
+          </View>
         </Box>
-        <Button onPress={handleSubmit(onSubmit)}>fff</Button>
+        <Button
+          onPress={() => {
+            navigation.goBack();
+          }}
+        >
+          Quay lại
+        </Button>
       </ScrollView>
-      <LoadingSpinner showLoading={isLoading} setShowLoading={setIsLoading} />
     </Box>
   );
 }
