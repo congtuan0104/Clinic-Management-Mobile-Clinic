@@ -635,7 +635,7 @@ export default function AddStaffModal({
         onConfirm={handleConfirm}
         onCancel={hideDatePicker}
       />
-      <Modal.Content width="90%">
+      <Modal.Content borderRadius={20} width="90%">
         <Modal.CloseButton />
         <Modal.Header>Thêm nhân viên</Modal.Header>
         <Modal.Body>
@@ -651,6 +651,7 @@ export default function AddStaffModal({
                   <FormControl.Label
                     _text={{
                       bold: true,
+                      color: appColor.textTitle,
                     }}
                   >
                     Địa chỉ Email
@@ -700,7 +701,15 @@ export default function AddStaffModal({
         <Modal.Footer>
           <Button.Group space={2}>
             <Button
-              bg="grey"
+              backgroundColor={appColor.white}
+              _text={{
+                color: "secondary.300",
+              }}
+              borderColor="secondary.300"
+              borderWidth={1}
+              _pressed={{
+                backgroundColor: "secondary.100",
+              }}
               onPress={() => {
                 onClose();
               }}

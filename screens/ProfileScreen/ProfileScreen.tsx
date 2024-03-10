@@ -38,9 +38,9 @@ const ProfileScreen = ({ navigation, route }: UserProfileScreenProps) => {
     navigation.navigate("UpdateUserInfo");
   };
 
-  useEffect(() => {
-    FCMConfig(userInfo?.id);
-  }, []);
+  // useEffect(() => {
+  //   FCMConfig(userInfo?.id);
+  // }, []);
   return (
     <Box
       bgColor="#fff"

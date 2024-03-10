@@ -3,7 +3,6 @@ import { Alert } from "react-native";
 import { notificationService } from "../services/notification.services";
 import { useAppSelector } from "../hooks";
 import { userInfoSelector } from "../store";
-
 const requestUserPermission = async () => {
   const authStatus = await messaging().requestPermission();
   const enabled =
@@ -23,7 +22,7 @@ const getFCMToken = async (userId: string) => {
       .getToken()
       .then(async (token: string) => {
         try {
-          // console.log("FCM token: ", token);
+          // console.log(token);
           // send token to server
           const response = await notificationService.postFCMTokenToServer(
             userId,
@@ -72,6 +71,12 @@ export const FCMConfig = (userId: any) => {
 
   // Handle foreground messages using setBackgroundMessageHandler
   messaging().onMessage(async (remoteMessage) => {
-    Alert.alert("A new FCM message arrived!", JSON.stringify(remoteMessage));
+    if (remoteMessage.notification?.title) {
+      Alert.alert(
+        remoteMessage?.notification?.title,
+        `${remoteMessage.notification.body}`,
+        [{ text: "Đã hiểu" }]
+      );
+    }
   });
 };

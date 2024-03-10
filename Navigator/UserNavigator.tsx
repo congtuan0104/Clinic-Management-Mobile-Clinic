@@ -38,6 +38,7 @@ import { userInfoSelector } from "../store";
 import { IStaffPermission } from "../types/staff.types";
 import { staffServices } from "../services/staff.servcies";
 import StatisticNavigator from "./StatisticNavigator";
+import { FCMConfig } from "../config/firebaseCloudMessage";
 
 export type UserNavigatorDrawerParamList = {
   // undefined: the route doesn't have params
@@ -151,6 +152,7 @@ export default function UserScreen({ navigation, route }: UserNavigatorProps) {
     }
   };
   React.useEffect(() => {
+    FCMConfig(user?.id);
     // Get permission in clinic
     getStaffPermissions();
   }, [clinic]);

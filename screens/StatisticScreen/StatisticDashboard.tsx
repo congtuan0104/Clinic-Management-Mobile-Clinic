@@ -209,7 +209,6 @@ export default function StatisticDashboardScreen({
             };
             appointmentData.push(appointmentItem);
           }
-          console.log(appointmentData);
           setAppointmentStatistic(appointmentData);
         } else {
           toast.show({
