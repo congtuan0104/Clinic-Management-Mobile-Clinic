@@ -74,3 +74,25 @@ export interface IInviteClinicMemberRequest {
   roleId: number;
   clinicId: string;
 }
+
+export interface IClinicStatisticOneDay {
+  totalPatients: number;
+  totalAppointments: number;
+  totalRevenue: number;
+  totalExaminations: number;
+}
+
+export interface IClinicStatisticOneDay {
+  totalPatients: number;
+  totalAppointments: number;
+  totalRevenue: number;
+  totalExaminations: number;
+}
+
+export interface IClinicStatisticPeriod {
+  date: string;
+  numberOfPatients: number;
+  numberOfAppointments: number;
+  numberOfExaminations: number;
+  revenue: number;
+}

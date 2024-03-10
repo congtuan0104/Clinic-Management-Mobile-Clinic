@@ -4,6 +4,8 @@ import {
   IClinicInfo,
   IUserInClinicInfo,
   IClinicCreate,
+  IClinicStatisticOneDay,
+  IClinicStatisticPeriod,
 } from "../types/clinic.types";
 import { IRole } from "../types/role.types";
 import { IClinicMember } from "../types/staff.types";
@@ -78,5 +80,29 @@ export const clinicService = {
   },
   async getClinicMember(clinicId: any): Promise<IApiResponse<IClinicMember[]>> {
     return axiosClient.get(`clinics/${clinicId}/users`);
+  },
+  async getStatisticOneDay(
+    clinicId: string,
+    date: string
+  ): Promise<IApiResponse<IClinicStatisticOneDay>> {
+    return axiosClient.get(`statitics`, {
+      params: {
+        clinicId,
+        date,
+      },
+    });
+  },
+  async getStatisticPeriod(
+    clinicId: string,
+    startDate: string,
+    endDate: string
+  ): Promise<IApiResponse<IClinicStatisticPeriod[]>> {
+    return axiosClient.get(`statitics/by-date`, {
+      params: {
+        clinicId,
+        startDate,
+        endDate,
+      },
+    });
   },
 };
